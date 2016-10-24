@@ -115,7 +115,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
 			m.p.printf("\n if !empty[%d] {", i)
 		}
-		switch m.KeyTyp {
+		switch s.KeyTyp {
 		case "Int64":
 			data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)
 		default:

@@ -354,7 +354,7 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 	var omitempty bool
 
 	var deprecated bool
-	zebraId := -1
+	var zebraId int64 = -1
 
 	// parse tag; otherwise field name is field tag
 	if f.Tag != nil {
@@ -400,7 +400,7 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 					" to non-zero integer: %v", where, err)
 				return nil
 			}
-			zebraId = id
+			zebraId = int64(id)
 		}
 
 	}

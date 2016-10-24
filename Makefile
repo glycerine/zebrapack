@@ -11,6 +11,9 @@ GGEN = ./_generated/generated.go ./_generated/generated_test.go
 
 MGEN = ./msgp/defgen_test.go ./msgp/nestedgen_test.go
 
+# generated zebra layer above msgp
+ZGEN = ./zebra/zebra_gen.go
+
 SHELL := /bin/bash
 
 BIN = $(GOBIN)/zebrapack
@@ -30,6 +33,10 @@ $(GGEN): ./_generated/def.go
 $(MGEN): ./msgp/defs_test.go
 	go generate ./msgp
 
+$(ZGEN): ./zebra/zebra.go
+	go install
+	go generate ./zebra
+
 test: all
 	go test -v ./msgp
 	go test -v ./_generated
@@ -39,7 +46,7 @@ bench: all
 	go test -bench . ./_generated
 
 clean:
-	$(RM) $(GGEN) $(MGEN)
+	$(RM) $(GGEN) $(MGEN) zebra/zebra_gen*
 
 wipe: clean
 	$(RM) $(BIN)

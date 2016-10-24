@@ -434,6 +434,7 @@ type Struct struct {
 	Fields           []StructField // field list
 	AsTuple          bool          // write as an array instead of a map
 	hasOmitEmptyTags bool
+	KeyTyp           string
 }
 
 func (s *Struct) ZeroLiteral(v string) string {
@@ -485,7 +486,7 @@ type StructField struct {
 
 	// ZebraId defaults to -1, meaning not-tagged with a zebra id.
 	// if ZebraId >= 0, then the tag `zebra:"N"` was found, with ZebraId == N.
-	ZebraId int
+	ZebraId int64
 }
 
 // BaseElem is an element that
