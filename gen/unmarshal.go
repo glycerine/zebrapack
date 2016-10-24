@@ -52,9 +52,13 @@ func (u *unmarshalGen) Execute(p Elem) error {
 
 	u.p.comment("UnmarshalMsg implements msgp.Unmarshaler")
 
-	u.p.printf("\nfunc (%s %s) UnmarshalMsg(bts []byte) (o []byte, err error) {", p.Varname(), methodReceiver(p))
+	vname := p.Varname()
+	methRcvr := methodReceiver(p)
+	u.p.printf("\nfunc (%s %s) UnmarshalMsg(bts []byte) (o []byte, err error) {\n return %s.UnmarshalMsgWithCfg(bts, nil)\n}", vname, methRcvr, vname)
+
+	u.p.printf("\nfunc (%s %s) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []byte, err error) {", vname, methRcvr)
 	// u.p.printf("\nvar nbs msgp.NilBitsStack;\nvar sawTopNil bool\n if msgp.IsNil(bts) {\n 	sawTopNil = true\n fmt.Printf(\"len of bts pre push: %%v\\n\", len(bts));	bts = nbs.PushAlwaysNil(bts[1:]);\n	fmt.Printf(\"len of bts post push: %%v\\n\", len(bts));\n   }\n")
-	u.p.printf("\nvar nbs msgp.NilBitsStack;\nvar sawTopNil bool\n if msgp.IsNil(bts) {\n 	sawTopNil = true\n  bts = nbs.PushAlwaysNil(bts[1:]);\n	}\n")
+	u.p.printf("\nvar nbs msgp.NilBitsStack;\nnbs.Init(cfg)\nvar sawTopNil bool\n if msgp.IsNil(bts) {\n 	sawTopNil = true\n  bts = nbs.PushAlwaysNil(bts[1:]);\n	}\n")
 	next(u, p)
 	u.p.print("\n	if sawTopNil {bts = nbs.PopAlwaysNil()}\n o = bts")
 	u.p.nakedReturn()

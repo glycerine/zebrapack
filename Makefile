@@ -4,6 +4,7 @@
 # Installation can still be performed with a
 # normal `go install`.
 
+
 # generated integration test files
 GGEN = ./_generated/generated.go ./_generated/generated_test.go
 # generated unit test files
@@ -14,7 +15,9 @@ SHELL := /bin/bash
 
 BIN = $(GOBIN)/zebrapack
 
-.PHONY: clean wipe install get-deps bench all
+.PHONY: clean wipe install get-deps bench all dev
+
+dev: clean install test
 
 $(BIN): */*.go
 	@go install ./...

@@ -27,6 +27,12 @@ type NilBitsStack struct {
 	UnsafeZeroCopy bool
 }
 
+func (r *NilBitsStack) Init(cfg *RuntimeConfig) {
+	if cfg != nil {
+		r.UnsafeZeroCopy = cfg.UnsafeZeroCopy
+	}
+}
+
 func (r *NilBitsStack) IsNil(bts []byte) bool {
 	if r.AlwaysNil {
 		return true
