@@ -279,6 +279,9 @@ type Map struct {
 	Keyidx string // key variable name
 	Validx string // value variable name
 	Value  Elem   // value element
+
+	KeyTyp     string
+	KeyDeclTyp string
 }
 
 func (m *Map) ZeroLiteral(v string) string {
@@ -309,7 +312,7 @@ func (m *Map) TypeName() string {
 	if m.common.alias != "" {
 		return m.common.alias
 	}
-	m.common.Alias("map[string]" + m.Value.TypeName())
+	m.common.Alias("map[" + m.KeyDeclTyp + "]" + m.Value.TypeName())
 	return m.common.alias
 }
 

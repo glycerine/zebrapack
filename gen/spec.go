@@ -17,6 +17,7 @@ const (
 	arrayHeader = "ArrayHeader"
 	mapKey      = "MapKeyPtr"
 	stringTyp   = "String"
+	int64Typ    = "Int64"
 	u32         = "uint32"
 )
 

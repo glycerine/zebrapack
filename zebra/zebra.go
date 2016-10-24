@@ -19,15 +19,19 @@ structure of a ZebraPack file:
 
 
 */
-package msgp
+package zebra
+
+import (
+	"github.com/glycerine/zebrapack/msgp"
+)
 
 //go:generate zebrapack
 
 // ZPacket is the on-the-wire format for dat
 type ZPacket struct {
-	Ty Ztype          // type
-	Id StructTypeId   // id
-	Da map[int][]byte // data
+	Ty Ztype              // type
+	Id StructTypeId       // id
+	Da map[int64]msgp.Raw // data
 }
 
 // Ztype describes type of the field

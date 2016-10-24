@@ -149,7 +149,7 @@ func (e *encodeGen) gMap(m *Map) {
 	e.writeAndCheck(mapHeader, lenAsUint32, vname)
 
 	e.p.printf("\nfor %s, %s := range %s {", m.Keyidx, m.Validx, vname)
-	e.writeAndCheck(stringTyp, literalFmt, m.Keyidx)
+	e.writeAndCheck(m.KeyTyp, literalFmt, m.Keyidx)
 	next(e, m.Value)
 	e.p.closeblock()
 }

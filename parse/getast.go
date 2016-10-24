@@ -521,9 +521,19 @@ func (fs *FileSet) parseExpr(e ast.Expr) gen.Elem {
 	case *ast.MapType:
 		if k, ok := e.Key.(*ast.Ident); ok && k.Name == "string" {
 			if in := fs.parseExpr(e.Value); in != nil {
-				return &gen.Map{Value: in}
+				return &gen.Map{Value: in, KeyTyp: "String", KeyDeclTyp: "string"}
 			}
 		}
+
+		// support int keys too now.
+		fmt.Printf("debug: FileSet.parseExpr for map type...\n")
+		if k, ok := e.Key.(*ast.Ident); ok && k.Name == "int64" {
+			if in := fs.parseExpr(e.Value); in != nil {
+				fmt.Printf("debug: FileSet.parseExpr for map[int64]msgp.Raw type...\n")
+				return &gen.Map{Value: in, KeyTyp: "Int64", KeyDeclTyp: "int64"}
+			}
+		}
+
 		return nil
 
 	case *ast.Ident:

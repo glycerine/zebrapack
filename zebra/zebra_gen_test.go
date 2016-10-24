@@ -1,4 +1,4 @@
-package msgp
+package zebra
 
 // NOTE: THIS FILE WAS PRODUCED BY THE
 // MSGP CODE GENERATION TOOL (github.com/glycerine/zebrapack)

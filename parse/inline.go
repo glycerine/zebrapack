@@ -1,6 +1,7 @@
 package parse
 
 import (
+	"fmt"
 	"github.com/glycerine/zebrapack/gen"
 )
 
@@ -141,6 +142,6 @@ func (f *FileSet) nextInline(ref *gen.Elem, root string) {
 	case *gen.Ptr:
 		f.nextInline(&el.Value, root)
 	default:
-		panic("bad elem type")
+		panic(fmt.Sprintf("bad elem type %T/val=%#v", el, el))
 	}
 }
