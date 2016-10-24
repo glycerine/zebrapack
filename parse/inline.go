@@ -1,7 +1,7 @@
 package parse
 
 import (
-	"github.com/tinylib/msgp/gen"
+	"github.com/glycerine/zebrapack/gen"
 )
 
 // This file defines when and how we
@@ -55,9 +55,7 @@ func (f *FileSet) findShim(id string, be *gen.BaseElem) {
 
 func (f *FileSet) nextShim(ref *gen.Elem, id string, be *gen.BaseElem) {
 	if (*ref).TypeName() == id {
-		vn := (*ref).Varname()
-		*ref = be.Copy()
-		(*ref).SetVarname(vn)
+		*ref = be
 	} else {
 		switch el := (*ref).(type) {
 		case *gen.Struct:
@@ -99,7 +97,7 @@ func (f *FileSet) propInline() {
 }
 
 const fatalloop = `detected infinite recursion in inlining loop!
-Please file a bug at github.com/tinylib/msgp/issues!
+Please file a bug at github.com/glycerine/zebrapack/issues!
 Thanks!
 `
 

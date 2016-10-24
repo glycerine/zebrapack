@@ -2,7 +2,7 @@ package _generated
 
 import (
 	"bytes"
-	"github.com/tinylib/msgp/msgp"
+	"github.com/glycerine/zebrapack/msgp"
 	"reflect"
 	"testing"
 	"time"
@@ -98,8 +98,8 @@ func Test1EncodeDecode(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(tt, tnew) {
-		t.Logf("in: %v", tt)
-		t.Logf("out: %v", tnew)
+		t.Logf("in: %#v", tt)
+		t.Logf("out: %#v", tnew)
 		t.Fatal("objects not equal")
 	}
 
@@ -118,8 +118,8 @@ func Test1EncodeDecode(t *testing.T) {
 	}
 
 	if !reflect.DeepEqual(tt, tanother) {
-		t.Logf("in: %v", tt)
-		t.Logf("out: %v", tanother)
+		t.Logf("in: %#v", tt)
+		t.Logf("out: %#v", tanother)
 		t.Fatal("objects not equal")
 	}
 }

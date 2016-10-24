@@ -139,65 +139,74 @@ type Reader struct {
 	// within R.
 	R       *fwd.Reader
 	scratch []byte
+
+	NilTracker
+}
+
+// NilTracker maintains a stack to assit
+// DecodeMsg methods when deserializing
+// from nil  fields.
+type NilTracker struct {
+	// simulate getting nils on the wire
+	AlwaysNil     bool
+	LifoAlwaysNil []bool
+}
+
+// AlwaysNilString returns a string representation
+// of the internal state of the stack for
+// debugging purposes.
+func (r *NilTracker) AlwaysNilString() string {
+	s := "bottom: "
+	for _, v := range r.LifoAlwaysNil {
+		if v {
+			s += "T"
+		} else {
+			s += "f"
+		}
+	}
+	return s
+}
+
+// PushAlwaysNil will set r.AlwaysNil to true
+// and store the previous value of r.AlwaysNil
+// on the internal stack.
+func (r *NilTracker) PushAlwaysNil() {
+	// save current state
+	r.LifoAlwaysNil = append(r.LifoAlwaysNil, r.AlwaysNil)
+	// set reader r to always return nils
+	r.AlwaysNil = true
+}
+
+// PopAlwaysNil pops the last entry off the
+// internal stack and uses it to set
+// r.AlwaysNil.
+func (r *NilTracker) PopAlwaysNil() {
+	n := len(r.LifoAlwaysNil)
+	//fmt.Printf("\n Reader.PopAlwaysNil() called! qlen = %d, '%s'\n",
+	//	n, r.AlwaysNilString())
+	if n == 0 {
+		panic("PopAlwaysNil called on empty lifo")
+		return
+	}
+	a := r.LifoAlwaysNil[n-1]
+	r.LifoAlwaysNil = r.LifoAlwaysNil[:n-1]
+	r.AlwaysNil = a
 }
 
 // Read implements `io.Reader`
 func (m *Reader) Read(p []byte) (int, error) {
+	if m.AlwaysNil {
+		return 0, nil
+	}
 	return m.R.Read(p)
-}
-
-// CopyNext reads the next object from m without decoding it and writes it to w.
-// It avoids unnecessary copies internally.
-func (m *Reader) CopyNext(w io.Writer) (int64, error) {
-	sz, o, err := getNextSize(m.R)
-	if err != nil {
-		return 0, err
-	}
-
-	var n int64
-	// Opportunistic optimization: if we can fit the whole thing in the m.R
-	// buffer, then just get a pointer to that, and pass it to w.Write,
-	// avoiding an allocation.
-	if int(sz) <= m.R.BufferSize() {
-		var nn int
-		var buf []byte
-		buf, err = m.R.Next(int(sz))
-		if err != nil {
-			if err == io.ErrUnexpectedEOF {
-				err = ErrShortBytes
-			}
-			return 0, err
-		}
-		nn, err = w.Write(buf)
-		n += int64(nn)
-	} else {
-		// Fall back to io.CopyN.
-		// May avoid allocating if w is a ReaderFrom (e.g. bytes.Buffer)
-		n, err = io.CopyN(w, m.R, int64(sz))
-		if err == io.ErrUnexpectedEOF {
-			err = ErrShortBytes
-		}
-	}
-	if err != nil {
-		return n, err
-	} else if n < int64(sz) {
-		return n, io.ErrShortWrite
-	}
-
-	// for maps and slices, read elements
-	for x := uintptr(0); x < o; x++ {
-		var n2 int64
-		n2, err = m.CopyNext(w)
-		if err != nil {
-			return n, err
-		}
-		n += n2
-	}
-	return n, nil
 }
 
 // ReadFull implements `io.ReadFull`
 func (m *Reader) ReadFull(p []byte) (int, error) {
+	if m.AlwaysNil {
+		return 0, nil
+	}
+
 	return m.R.ReadFull(p)
 }
 
@@ -212,6 +221,10 @@ func (m *Reader) BufferSize() int { return m.R.BufferSize() }
 
 // NextType returns the next object type to be decoded.
 func (m *Reader) NextType() (Type, error) {
+	if m.AlwaysNil {
+		return NilType, nil
+	}
+
 	p, err := m.R.Peek(1)
 	if err != nil {
 		return InvalidType, err
@@ -240,14 +253,20 @@ func (m *Reader) NextType() (Type, error) {
 // IsNil returns whether or not
 // the next byte is a null messagepack byte
 func (m *Reader) IsNil() bool {
+	if m.AlwaysNil {
+		return true
+	}
 	p, err := m.R.Peek(1)
 	return err == nil && p[0] == mnil
 }
 
-// getNextSize returns the size of the next object on the wire.
+func (m *Reader) peekNil() bool {
+	p, err := m.R.Peek(1)
+	return err == nil && p[0] == mnil
+}
+
 // returns (obj size, obj elements, error)
 // only maps and arrays have non-zero obj elements
-// for maps and arrays, obj size does not include elements
 //
 // use uintptr b/c it's guaranteed to be large enough
 // to hold whatever we can fit in memory.
@@ -342,6 +361,9 @@ func (m *Reader) Skip() error {
 // It will return a TypeError{} if the next
 // object is not a map.
 func (m *Reader) ReadMapHeader() (sz uint32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var p []byte
 	var lead byte
 	p, err = m.R.Peek(1)
@@ -379,6 +401,10 @@ func (m *Reader) ReadMapHeader() (sz uint32, err error) {
 // the reader and returns the value as a []byte. It uses
 // scratch for storage if it is large enough.
 func (m *Reader) ReadMapKey(scratch []byte) ([]byte, error) {
+	if m.checkAndConsumeNil() {
+		return nil, nil
+	}
+
 	out, err := m.ReadStringAsBytes(scratch)
 	if err != nil {
 		if tperr, ok := err.(TypeError); ok && tperr.Encoded == BinType {
@@ -398,6 +424,10 @@ func (m *Reader) ReadMapKey(scratch []byte) ([]byte, error) {
 // method; writing into the returned slice may
 // corrupt future reads.
 func (m *Reader) ReadMapKeyPtr() ([]byte, error) {
+	if m.checkAndConsumeNil() {
+		return nil, nil
+	}
+
 	p, err := m.R.Peek(1)
 	if err != nil {
 		return nil, err
@@ -442,6 +472,10 @@ fill:
 // array header and returns the size of the array
 // and the number of bytes read.
 func (m *Reader) ReadArrayHeader() (sz uint32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
+
 	var lead byte
 	var p []byte
 	p, err = m.R.Peek(1)
@@ -479,6 +513,9 @@ func (m *Reader) ReadArrayHeader() (sz uint32, err error) {
 
 // ReadNil reads a 'nil' MessagePack byte from the reader
 func (m *Reader) ReadNil() error {
+	if m.AlwaysNil {
+		return nil
+	}
 	p, err := m.R.Peek(1)
 	if err != nil {
 		return err
@@ -490,10 +527,36 @@ func (m *Reader) ReadNil() error {
 	return err
 }
 
+// checkAndConsumeNil returns true, nil if the
+// m.AlwaysNil flag is true.
+//
+// Otherwise, checkAndConsumeNil returns true if the next byte
+// was nil and we consumed it. We only consume
+// the next byte if it was a nil. We return
+// false if the next byte was not a nil. The
+// error return value provides diagnostics.
+func (m *Reader) checkAndConsumeNil() bool {
+	if m.AlwaysNil {
+		return true
+	}
+	p, err := m.R.Peek(1)
+	if err != nil {
+		return false
+	}
+	if p[0] != mnil {
+		return false //, badPrefix(NilType, p[0])
+	}
+	_, _ = m.R.Skip(1)
+	return true
+}
+
 // ReadFloat64 reads a float64 from the reader.
 // (If the value on the wire is encoded as a float32,
 // it will be up-cast to a float64.)
 func (m *Reader) ReadFloat64() (f float64, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var p []byte
 	p, err = m.R.Peek(9)
 	if err != nil {
@@ -521,6 +584,10 @@ func (m *Reader) ReadFloat64() (f float64, err error) {
 
 // ReadFloat32 reads a float32 from the reader
 func (m *Reader) ReadFloat32() (f float32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
+
 	var p []byte
 	p, err = m.R.Peek(5)
 	if err != nil {
@@ -537,6 +604,9 @@ func (m *Reader) ReadFloat32() (f float32, err error) {
 
 // ReadBool reads a bool from the reader
 func (m *Reader) ReadBool() (b bool, err error) {
+	if m.checkAndConsumeNil() {
+		return false, nil
+	}
 	var p []byte
 	p, err = m.R.Peek(1)
 	if err != nil {
@@ -556,6 +626,9 @@ func (m *Reader) ReadBool() (b bool, err error) {
 
 // ReadInt64 reads an int64 from the reader
 func (m *Reader) ReadInt64() (i int64, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var p []byte
 	var lead byte
 	p, err = m.R.Peek(1)
@@ -615,6 +688,9 @@ func (m *Reader) ReadInt64() (i int64, err error) {
 
 // ReadInt32 reads an int32 from the reader
 func (m *Reader) ReadInt32() (i int32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in int64
 	in, err = m.ReadInt64()
 	if in > math.MaxInt32 || in < math.MinInt32 {
@@ -627,6 +703,9 @@ func (m *Reader) ReadInt32() (i int32, err error) {
 
 // ReadInt16 reads an int16 from the reader
 func (m *Reader) ReadInt16() (i int16, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in int64
 	in, err = m.ReadInt64()
 	if in > math.MaxInt16 || in < math.MinInt16 {
@@ -639,6 +718,9 @@ func (m *Reader) ReadInt16() (i int16, err error) {
 
 // ReadInt8 reads an int8 from the reader
 func (m *Reader) ReadInt8() (i int8, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in int64
 	in, err = m.ReadInt64()
 	if in > math.MaxInt8 || in < math.MinInt8 {
@@ -651,6 +733,9 @@ func (m *Reader) ReadInt8() (i int8, err error) {
 
 // ReadInt reads an int from the reader
 func (m *Reader) ReadInt() (i int, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	if smallint {
 		var in int32
 		in, err = m.ReadInt32()
@@ -665,6 +750,9 @@ func (m *Reader) ReadInt() (i int, err error) {
 
 // ReadUint64 reads a uint64 from the reader
 func (m *Reader) ReadUint64() (u uint64, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var p []byte
 	var lead byte
 	p, err = m.R.Peek(1)
@@ -719,6 +807,9 @@ func (m *Reader) ReadUint64() (u uint64, err error) {
 
 // ReadUint32 reads a uint32 from the reader
 func (m *Reader) ReadUint32() (u uint32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in uint64
 	in, err = m.ReadUint64()
 	if in > math.MaxUint32 {
@@ -731,6 +822,9 @@ func (m *Reader) ReadUint32() (u uint32, err error) {
 
 // ReadUint16 reads a uint16 from the reader
 func (m *Reader) ReadUint16() (u uint16, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in uint64
 	in, err = m.ReadUint64()
 	if in > math.MaxUint16 {
@@ -743,6 +837,9 @@ func (m *Reader) ReadUint16() (u uint16, err error) {
 
 // ReadUint8 reads a uint8 from the reader
 func (m *Reader) ReadUint8() (u uint8, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in uint64
 	in, err = m.ReadUint64()
 	if in > math.MaxUint8 {
@@ -755,6 +852,9 @@ func (m *Reader) ReadUint8() (u uint8, err error) {
 
 // ReadUint reads a uint from the reader
 func (m *Reader) ReadUint() (u uint, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	if smallint {
 		var un uint32
 		un, err = m.ReadUint32()
@@ -772,6 +872,9 @@ func (m *Reader) ReadUint() (u uint, err error) {
 // NOTE: this is *not* an implementation
 // of io.ByteReader.
 func (m *Reader) ReadByte() (b byte, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var in uint64
 	in, err = m.ReadUint64()
 	if in > math.MaxUint8 {
@@ -786,6 +889,9 @@ func (m *Reader) ReadByte() (b byte, err error) {
 // from the reader and returns its value. It may
 // use 'scratch' for storage if it is non-nil.
 func (m *Reader) ReadBytes(scratch []byte) (b []byte, err error) {
+	if m.checkAndConsumeNil() {
+		return nil, nil
+	}
 	var p []byte
 	var lead byte
 	p, err = m.R.Peek(2)
@@ -829,6 +935,10 @@ func (m *Reader) ReadBytes(scratch []byte) (b []byte, err error) {
 // 'sz' bytes from the reader in an application-specific
 // way.
 func (m *Reader) ReadBytesHeader() (sz uint32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
+
 	var p []byte
 	p, err = m.R.Peek(1)
 	if err != nil {
@@ -867,6 +977,13 @@ func (m *Reader) ReadBytesHeader() (sz uint32, err error) {
 // ArrayError will be returned if the object is not
 // exactly the length of the input slice.
 func (m *Reader) ReadExactBytes(into []byte) error {
+	if m.checkAndConsumeNil() {
+		for i := range into {
+			into[i] = 0
+		}
+		return nil
+	}
+
 	p, err := m.R.Peek(2)
 	if err != nil {
 		return err
@@ -907,6 +1024,10 @@ func (m *Reader) ReadExactBytes(into []byte) error {
 // and returns its value as bytes. It may use 'scratch' for storage
 // if it is non-nil.
 func (m *Reader) ReadStringAsBytes(scratch []byte) (b []byte, err error) {
+	if m.checkAndConsumeNil() {
+		return nil, nil
+	}
+
 	var p []byte
 	var lead byte
 	p, err = m.R.Peek(1)
@@ -960,6 +1081,10 @@ fill:
 // for dealing with the next 'sz' bytes from
 // the reader in an application-specific manner.
 func (m *Reader) ReadStringHeader() (sz uint32, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
+
 	var p []byte
 	p, err = m.R.Peek(1)
 	if err != nil {
@@ -1001,6 +1126,10 @@ func (m *Reader) ReadStringHeader() (sz uint32, err error) {
 
 // ReadString reads a utf-8 string from the reader
 func (m *Reader) ReadString() (s string, err error) {
+	if m.checkAndConsumeNil() {
+		return "", nil
+	}
+
 	var p []byte
 	var lead byte
 	var read int64
@@ -1072,6 +1201,9 @@ fill:
 
 // ReadComplex64 reads a complex64 from the reader
 func (m *Reader) ReadComplex64() (f complex64, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
 	var p []byte
 	p, err = m.R.Peek(10)
 	if err != nil {
@@ -1093,6 +1225,10 @@ func (m *Reader) ReadComplex64() (f complex64, err error) {
 
 // ReadComplex128 reads a complex128 from the reader
 func (m *Reader) ReadComplex128() (f complex128, err error) {
+	if m.checkAndConsumeNil() {
+		return 0, nil
+	}
+
 	var p []byte
 	p, err = m.R.Peek(18)
 	if err != nil {
@@ -1115,6 +1251,10 @@ func (m *Reader) ReadComplex128() (f complex128, err error) {
 // ReadMapStrIntf reads a MessagePack map into a map[string]interface{}.
 // (You must pass a non-nil map into the function.)
 func (m *Reader) ReadMapStrIntf(mp map[string]interface{}) (err error) {
+	if m.checkAndConsumeNil() {
+		return nil
+	}
+
 	var sz uint32
 	sz, err = m.ReadMapHeader()
 	if err != nil {
@@ -1142,6 +1282,9 @@ func (m *Reader) ReadMapStrIntf(mp map[string]interface{}) (err error) {
 // ReadTime reads a time.Time object from the reader.
 // The returned time's location will be set to time.Local.
 func (m *Reader) ReadTime() (t time.Time, err error) {
+	if m.checkAndConsumeNil() {
+		return time.Time{}, nil
+	}
 	var p []byte
 	p, err = m.R.Peek(15)
 	if err != nil {
@@ -1166,6 +1309,9 @@ func (m *Reader) ReadTime() (t time.Time, err error) {
 // as map[string]interface{}. Integers are decoded as int64
 // and unsigned integers are decoded as uint64.
 func (m *Reader) ReadIntf() (i interface{}, err error) {
+	if m.checkAndConsumeNil() {
+		return
+	}
 	var t Type
 	t, err = m.NextType()
 	if err != nil {

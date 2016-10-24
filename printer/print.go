@@ -3,8 +3,8 @@ package printer
 import (
 	"bytes"
 	"fmt"
-	"github.com/tinylib/msgp/gen"
-	"github.com/tinylib/msgp/parse"
+	"github.com/glycerine/zebrapack/gen"
+	"github.com/glycerine/zebrapack/parse"
 	"github.com/ttacon/chalk"
 	"golang.org/x/tools/imports"
 	"io"
@@ -50,6 +50,9 @@ func PrintFile(file string, f *parse.FileSet, mode gen.Method) error {
 func format(file string, data []byte) error {
 	out, err := imports.Process(file, data, nil)
 	if err != nil {
+		fmt.Printf("\n\n debug: problem file:\n%s\n", file)
+		ioutil.WriteFile(file, data, 0600)
+		panic(err)
 		return err
 	}
 	return ioutil.WriteFile(file, out, 0600)
@@ -80,7 +83,7 @@ func generate(f *parse.FileSet, mode gen.Method) (*bytes.Buffer, *bytes.Buffer, 
 	outbuf := bytes.NewBuffer(make([]byte, 0, 4096))
 	writePkgHeader(outbuf, f.Package)
 
-	myImports := []string{"github.com/tinylib/msgp/msgp"}
+	myImports := []string{"github.com/glycerine/zebrapack/msgp", "fmt"}
 	for _, imp := range f.Imports {
 		if imp.Name != nil {
 			// have an alias, include it.
@@ -98,20 +101,20 @@ func generate(f *parse.FileSet, mode gen.Method) (*bytes.Buffer, *bytes.Buffer, 
 		testbuf = bytes.NewBuffer(make([]byte, 0, 4096))
 		writePkgHeader(testbuf, f.Package)
 		if mode&(gen.Encode|gen.Decode) != 0 {
-			writeImportHeader(testbuf, "bytes", "github.com/tinylib/msgp/msgp", "testing")
+			writeImportHeader(testbuf, "bytes", "github.com/glycerine/zebrapack/msgp", "testing")
 		} else {
-			writeImportHeader(testbuf, "github.com/tinylib/msgp/msgp", "testing")
+			writeImportHeader(testbuf, "github.com/glycerine/zebrapack/msgp", "testing")
 		}
 		testwr = testbuf
 	}
-	return outbuf, testbuf, f.PrintTo(gen.NewPrinter(mode, outbuf, testwr))
+	return outbuf, testbuf, f.PrintTo(gen.NewPrinter(mode, outbuf, testwr, f.Cfg))
 }
 
 func writePkgHeader(b *bytes.Buffer, name string) {
 	b.WriteString("package ")
 	b.WriteString(name)
 	b.WriteByte('\n')
-	b.WriteString("// NOTE: THIS FILE WAS PRODUCED BY THE\n// MSGP CODE GENERATION TOOL (github.com/tinylib/msgp)\n// DO NOT EDIT\n\n")
+	b.WriteString("// NOTE: THIS FILE WAS PRODUCED BY THE\n// MSGP CODE GENERATION TOOL (github.com/glycerine/zebrapack)\n// DO NOT EDIT\n\n")
 }
 
 func writeImportHeader(b *bytes.Buffer, imports ...string) {
