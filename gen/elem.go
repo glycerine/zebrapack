@@ -474,10 +474,15 @@ func (s *Struct) Complexity() int {
 }
 
 type StructField struct {
-	FieldTag  string // the string inside the `msg:""` tag
-	FieldName string // the name of the struct field
-	FieldElem Elem   // the field type
-	OmitEmpty bool   // if the tag `msg:",omitempty"` was found
+	FieldTag   string // the string inside the `msg:""` tag
+	FieldName  string // the name of the struct field
+	FieldElem  Elem   // the field type
+	OmitEmpty  bool   // if the tag `msg:",omitempty"` was found
+	Deprecated bool   // if the tag `deprecated:"true"` was found
+
+	// ZebraId defaults to -1, meaning not-tagged with a zebra id.
+	// if ZebraId >= 0, then the tag `zebra:"N"` was found, with ZebraId == N.
+	ZebraId int
 }
 
 // BaseElem is an element that

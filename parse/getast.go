@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/glycerine/zebrapack/cfg"
@@ -352,6 +353,9 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 	var extension bool
 	var omitempty bool
 
+	var deprecated bool
+	zebraId := -1
+
 	// parse tag; otherwise field name is field tag
 	if f.Tag != nil {
 		alltags := reflect.StructTag(strings.Trim(f.Tag.Value, "`"))
@@ -373,6 +377,32 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 		if len(tags[0]) > 0 {
 			sf[0].FieldTag = tags[0]
 		}
+
+		// check deprecated
+		dep := alltags.Get("deprecated")
+		if dep == "true" {
+			deprecated = true
+			// ignore these too, but still need them to detect
+			// gaps in the zebra:id fields
+		}
+
+		// check zebra
+		zebra := alltags.Get("zebra")
+		if zebra != "" {
+			// must be a non-negative number
+			id, err := strconv.Atoi(zebra)
+			if err != nil || id < 0 {
+				where := ""
+				if len(f.Names) > 0 {
+					where = " on '" + f.Names[0].Name + "'"
+				}
+				fatalf("bad `zebra` tag%s, could not convert"+
+					" to non-zero integer: %v", where, err)
+				return nil
+			}
+			zebraId = id
+		}
+
 	}
 
 	ex := fs.parseExpr(f.Type)
@@ -380,7 +410,9 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 		return nil
 	}
 
+	sf[0].Deprecated = deprecated
 	sf[0].OmitEmpty = omitempty
+	sf[0].ZebraId = zebraId
 
 	// parse field name
 	switch len(f.Names) {
@@ -394,10 +426,12 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 		sf = sf[0:0]
 		for _, nm := range f.Names {
 			sf = append(sf, gen.StructField{
-				FieldTag:  nm.Name,
-				FieldName: nm.Name,
-				FieldElem: ex.Copy(),
-				OmitEmpty: omitempty,
+				FieldTag:   nm.Name,
+				FieldName:  nm.Name,
+				FieldElem:  ex.Copy(),
+				OmitEmpty:  omitempty,
+				Deprecated: deprecated,
+				ZebraId:    zebraId,
 			})
 		}
 		return sf
