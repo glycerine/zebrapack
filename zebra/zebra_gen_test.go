@@ -689,8 +689,8 @@ func BenchmarkDecodeStructT(b *testing.B) {
 	}
 }
 
-func TestMarshalUnmarshalZPacket(t *testing.T) {
-	v := ZPacket{}
+func TestMarshalUnmarshalZStructPacket(t *testing.T) {
+	v := ZStructPacket{}
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -712,8 +712,8 @@ func TestMarshalUnmarshalZPacket(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgZPacket(b *testing.B) {
-	v := ZPacket{}
+func BenchmarkMarshalMsgZStructPacket(b *testing.B) {
+	v := ZStructPacket{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -721,8 +721,8 @@ func BenchmarkMarshalMsgZPacket(b *testing.B) {
 	}
 }
 
-func BenchmarkAppendMsgZPacket(b *testing.B) {
-	v := ZPacket{}
+func BenchmarkAppendMsgZStructPacket(b *testing.B) {
+	v := ZStructPacket{}
 	bts := make([]byte, 0, v.Msgsize())
 	bts, _ = v.MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
@@ -733,8 +733,8 @@ func BenchmarkAppendMsgZPacket(b *testing.B) {
 	}
 }
 
-func BenchmarkUnmarshalZPacket(b *testing.B) {
-	v := ZPacket{}
+func BenchmarkUnmarshalZStructPacket(b *testing.B) {
+	v := ZStructPacket{}
 	bts, _ := v.MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
@@ -747,8 +747,8 @@ func BenchmarkUnmarshalZPacket(b *testing.B) {
 	}
 }
 
-func TestEncodeDecodeZPacket(t *testing.T) {
-	v := ZPacket{}
+func TestEncodeDecodeZStructPacket(t *testing.T) {
+	v := ZStructPacket{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -757,7 +757,7 @@ func TestEncodeDecodeZPacket(t *testing.T) {
 		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
 	}
 
-	vn := ZPacket{}
+	vn := ZStructPacket{}
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
@@ -771,8 +771,8 @@ func TestEncodeDecodeZPacket(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeZPacket(b *testing.B) {
-	v := ZPacket{}
+func BenchmarkEncodeZStructPacket(b *testing.B) {
+	v := ZStructPacket{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -785,8 +785,8 @@ func BenchmarkEncodeZPacket(b *testing.B) {
 	en.Flush()
 }
 
-func BenchmarkDecodeZPacket(b *testing.B) {
-	v := ZPacket{}
+func BenchmarkDecodeZStructPacket(b *testing.B) {
+	v := ZStructPacket{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))

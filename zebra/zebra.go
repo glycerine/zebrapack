@@ -8,12 +8,12 @@ structure of a ZebraPack file:
 +---------------------------------------+
                  +
 +---------------------------------------+}
-|      Ztype (= StructInst)             | }
-+---------------------------------------+  }
-|      StructTypeId                     |   }
-+---------------------------------------+    }- one of these for each struct on the wire.
-|                                       |   }    These are ZPacket.
-| Msgpack2 map, with integer keys       |  }
+| ZStructPacket                         | }
+|                                       |  }
+| .Id: StructTypeId                     |   }
++---------------------------------------+    }- one ZStructPacket for each struct on the wire.
+|                                       |   }
+| .Da: Msgpack2 map, with integer keys  |  }
 |                                       | }
 +---------------------------------------+}
 
@@ -29,10 +29,9 @@ type Raw msgp.Raw
 
 //go:generate zebrapack
 
-// ZPacket is the on-the-wire format for dat
-type ZPacket struct {
-	Ty Zkind              // type. e.g. StructInst, a
-	Id StructTypeId       // TypeId, the specific type of struct.
+// ZPacket is the on-the-wire format for Structs
+type ZStructPacket struct {
+	Id StructTypeId       // TypeId, the specific type of struct. Of no
 	Da map[int64]msgp.Raw // data, keys are FieldId
 }
 
@@ -56,6 +55,7 @@ const (
 	Bytes  // []byte
 	Array
 	Map
+	Ptr
 
 	// metadata, but possibly not extensions.
 	StructInst
@@ -80,7 +80,7 @@ type SchemaT struct {
 	// partial SchemaT and have them be cumulative
 	// and without conflict. Just use different
 	// integer keys to differentiate. keys for
-	// the Structs should match the StructInstance.StructId,
+	// the Structs should match the StructInstance.StructTypeId,
 	// likewise the integer key for Interfaces should
 	// be referenced by the InterfaceInstance.IfaceId.
 	Structs    map[int64]StructT
@@ -118,7 +118,7 @@ type FieldT struct {
 	FieldId int64
 
 	Name string
-	Ztyp Zkind
+	Zknd Zkind
 	Varg bool              `msg:",omitempty"` // is a var-arg ... input? only used in Method.Inputs
 	Tag  map[string]string `msg:",omitempty"`
 }
