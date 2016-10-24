@@ -55,7 +55,7 @@ wipe: clean
 get-deps:
 	go get -d -t ./...
 
-all: install $(GGEN) $(MGEN)
+all: install $(GGEN) $(MGEN) $(ZGEN)
 
 # travis CI enters here
 travis:

@@ -25,20 +25,22 @@ import (
 	"github.com/glycerine/zebrapack/msgp"
 )
 
+type Raw msgp.Raw
+
 //go:generate zebrapack
 
 // ZPacket is the on-the-wire format for dat
 type ZPacket struct {
-	Ty Ztype              // type
-	Id StructTypeId       // id
-	Da map[int64]msgp.Raw // data
+	Ty Zkind              // type. e.g. StructInst, a
+	Id StructTypeId       // TypeId, the specific type of struct.
+	Da map[int64]msgp.Raw // data, keys are FieldId
 }
 
-// Ztype describes type of the field
-type Ztype int32
+// Zkind describes the basic type category of the field
+type Zkind int32
 
 const (
-	Nil Ztype = iota // nil is a msgpack type, encoded as 0xc0
+	Nil Zkind = iota // nil is a msgpack type, encoded as 0xc0
 	Bool
 	Int8
 	Int16
@@ -116,7 +118,7 @@ type FieldT struct {
 	FieldId int64
 
 	Name string
-	Ztyp Ztype
+	Ztyp Zkind
 	Varg bool              `msg:",omitempty"` // is a var-arg ... input? only used in Method.Inputs
 	Tag  map[string]string `msg:",omitempty"`
 }
