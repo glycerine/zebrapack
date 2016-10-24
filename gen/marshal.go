@@ -150,7 +150,7 @@ func (m *marshalGen) gMap(s *Map) {
 	vname := s.Varname()
 	m.rawAppend(mapHeader, lenAsUint32, vname)
 	m.p.printf("\nfor %s, %s := range %s {", s.Keyidx, s.Validx, vname)
-	m.rawAppend(stringTyp, literalFmt, s.Keyidx)
+	m.rawAppend(s.KeyTyp, literalFmt, s.Keyidx)
 	next(m, s.Value)
 	m.p.closeblock()
 }

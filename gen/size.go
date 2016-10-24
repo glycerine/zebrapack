@@ -171,7 +171,13 @@ func (s *sizeGen) gMap(m *Map) {
 	s.p.printf("\nif %s != nil {", vn)
 	s.p.printf("\nfor %s, %s := range %s {", m.Keyidx, m.Validx, vn)
 	s.p.printf("\n_ = %s", m.Validx) // we may not use the value
-	s.p.printf("\ns += msgp.StringPrefixSize + len(%s)", m.Keyidx)
+	s.p.printf("\n_ = %s", m.Keyidx) // we may not use the value
+	switch m.KeyTyp {
+	case "Int64":
+		s.p.printf("\ns += msgp.Int64Size")
+	default:
+		s.p.printf("\ns += msgp.StringPrefixSize + len(%s)", m.Keyidx)
+	}
 	s.state = expr
 	next(s, m.Value)
 	s.p.closeblock()

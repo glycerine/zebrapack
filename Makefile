@@ -40,6 +40,7 @@ $(ZGEN): ./zebra/zebra.go
 test: all
 	go test -v ./msgp
 	go test -v ./_generated
+	go test -v ./zebra
 
 bench: all
 	go test -bench . ./msgp
