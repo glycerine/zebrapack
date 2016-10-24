@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func decode(w io.Writer, cfg *cfg.MsgpConfig) *decodeGen {
+func decode(w io.Writer, cfg *cfg.ZebraConfig) *decodeGen {
 	return &decodeGen{
 		p:        printer{w: w},
 		hasfield: false,
@@ -21,7 +21,7 @@ type decodeGen struct {
 	p        printer
 	hasfield bool
 	depth    int
-	cfg      *cfg.MsgpConfig
+	cfg      *cfg.ZebraConfig
 	lifo     []bool
 
 	post postDefs

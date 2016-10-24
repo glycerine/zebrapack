@@ -3,6 +3,7 @@ package printer
 import (
 	"bytes"
 	"fmt"
+	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
 	"github.com/glycerine/zebrapack/parse"
 	"github.com/ttacon/chalk"
@@ -19,8 +20,8 @@ func infof(s string, v ...interface{}) {
 // PrintFile prints the methods for the provided list
 // of elements to the given file name and canonical
 // package path.
-func PrintFile(file string, f *parse.FileSet, mode gen.Method) error {
-	out, tests, err := generate(f, mode)
+func PrintFile(file string, f *parse.FileSet, mode gen.Method, cfg *cfg.ZebraConfig) error {
+	out, tests, err := generate(f, mode, cfg)
 	if err != nil {
 		return err
 	}
@@ -79,11 +80,12 @@ func dedupImports(imp []string) []string {
 	return r
 }
 
-func generate(f *parse.FileSet, mode gen.Method) (*bytes.Buffer, *bytes.Buffer, error) {
+func generate(f *parse.FileSet, mode gen.Method, cfg *cfg.ZebraConfig) (*bytes.Buffer, *bytes.Buffer, error) {
 	outbuf := bytes.NewBuffer(make([]byte, 0, 4096))
 	writePkgHeader(outbuf, f.Package)
 
-	myImports := []string{"github.com/glycerine/zebrapack/msgp", "fmt"}
+	myImports := []string{"fmt"}
+	myImports = append(myImports, "github.com/glycerine/zebrapack/msgp")
 	for _, imp := range f.Imports {
 		if imp.Name != nil {
 			// have an alias, include it.

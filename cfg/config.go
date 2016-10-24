@@ -4,7 +4,7 @@ import (
 	"flag"
 )
 
-type MsgpConfig struct {
+type ZebraConfig struct {
 	Out        string
 	GoFile     string
 	Encode     bool
@@ -14,7 +14,7 @@ type MsgpConfig struct {
 }
 
 // call DefineFlags before myflags.Parse()
-func (c *MsgpConfig) DefineFlags(fs *flag.FlagSet) {
+func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 	fs.StringVar(&c.Out, "o", "", "output file")
 	fs.StringVar(&c.GoFile, "file", "", "input file")
 	fs.BoolVar(&c.Encode, "io", true, "create Encode and Decode methods")
@@ -24,6 +24,6 @@ func (c *MsgpConfig) DefineFlags(fs *flag.FlagSet) {
 }
 
 // call c.ValidateConfig() after myflags.Parse()
-func (c *MsgpConfig) ValidateConfig() error {
+func (c *ZebraConfig) ValidateConfig() error {
 	return nil
 }

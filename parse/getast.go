@@ -24,7 +24,7 @@ type FileSet struct {
 	Identities map[string]gen.Elem // processed from specs
 	Directives []string            // raw preprocessor directives
 	Imports    []*ast.ImportSpec   // imports
-	Cfg        *cfg.MsgpConfig
+	Cfg        *cfg.ZebraConfig
 }
 
 // File parses a file at the relative path
@@ -33,7 +33,7 @@ type FileSet struct {
 // directory will be parsed.
 // If unexport is false, only exported identifiers are included in the FileSet.
 // If the resulting FileSet would be empty, an error is returned.
-func File(c *cfg.MsgpConfig) (*FileSet, error) {
+func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	name := c.GoFile
 	pushstate(name)
 	defer popstate()

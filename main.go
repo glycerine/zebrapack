@@ -38,7 +38,7 @@ import (
 
 func main() {
 	myflags := flag.NewFlagSet("zebrapack", flag.ExitOnError)
-	c := &cfg.MsgpConfig{}
+	c := &cfg.ZebraConfig{}
 	c.DefineFlags(myflags)
 
 	err := myflags.Parse(os.Args[1:])
@@ -83,7 +83,7 @@ func main() {
 //
 //	err := msgp.Run("path/to/myfile.go", gen.Size|gen.Marshal|gen.Unmarshal|gen.Test, false)
 //
-func Run(mode gen.Method, c *cfg.MsgpConfig) error {
+func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 	if mode&^gen.Test == 0 {
 		return nil
 	}
@@ -99,7 +99,7 @@ func Run(mode gen.Method, c *cfg.MsgpConfig) error {
 		return nil
 	}
 
-	return printer.PrintFile(newFilename(c.Out, c.GoFile, fs.Package), fs, mode)
+	return printer.PrintFile(newFilename(c.Out, c.GoFile, fs.Package), fs, mode, c)
 }
 
 // picks a new file name based on input flags and input filename(s).
