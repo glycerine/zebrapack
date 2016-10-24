@@ -1,8 +1,13 @@
-MessagePack Code Generator [![Build Status](https://travis-ci.org/tinylib/msgp.svg?branch=master)](https://travis-ci.org/tinylib/msgp)
-=======
+ZebraPack: a data description language and serialization format. This one is all black and white. No gray areas.
+==========
 
-// NOTE: the master branch https://github.com/glycerine/zebrapack is a friendly fork that has built atop/diverged from https://github.com/tinylib/msgp, in order to implement the `omitempty` tag on struct fields.
-// Now back to your regularly scheduled README...
+ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding. It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support.
+
+The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
+
+At this time it is experimental. See https://github.com/glycerine/zebra for the ideas that we are implementing here.
+
+# from the tinylib/msgp README
 
 This is a code generation tool and serialization library for [MessagePack](http://msgpack.org). It is targeted at the `go generate` [tool](http://tip.golang.org/cmd/go/#hdr-Generate_Go_files_by_processing_source). You can read more about MessagePack [in the wiki](http://github.com/tinylib/msgp/wiki), or at [msgpack.org](http://msgpack.org).
 
