@@ -460,7 +460,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 	}
 	if ex == nil {
 		skip = true
-		fmt.Printf("\n we see nil field %#v\n", f.Names[0])
+		//fmt.Printf("\n we see nil field %#v\n", f.Names[0])
 		// struct{} type fields, must track for zid checking.
 		// so we can't return early here.
 	}
