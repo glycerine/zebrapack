@@ -38,9 +38,11 @@ $(ZGEN): ./zebra/zebra.go
 	go generate ./zebra
 
 test: all
+	go test -v ./parse
 	go test -v ./msgp
 	go test -v ./_generated
 	go test -v ./zebra
+
 
 bench: all
 	go test -bench . ./msgp

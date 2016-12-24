@@ -88,7 +88,10 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		return nil, fmt.Errorf("no definitions in %s", name)
 	}
 
-	fs.process()
+	err = fs.process()
+	if err != nil {
+		return nil, err
+	}
 	fs.applyDirectives()
 	fs.propInline()
 
@@ -169,13 +172,16 @@ func (f *FileSet) resolve(ls linkset) {
 
 // process takes the contents of f.Specs and
 // uses them to populate f.Identities
-func (f *FileSet) process() {
+func (f *FileSet) process() error {
 
 	deferred := make(linkset)
 parse:
 	for name, def := range f.Specs {
 		pushstate(name)
-		el := f.parseExpr(def)
+		el, err := f.parseExpr(def)
+		if err != nil {
+			return err
+		}
 		if el == nil {
 			warnln("failed to parse")
 			popstate()
@@ -197,6 +203,7 @@ parse:
 	if len(deferred) > 0 {
 		f.resolve(deferred)
 	}
+	return nil
 }
 
 func strToMethod(s string) gen.Method {
@@ -318,14 +325,31 @@ func fieldName(f *ast.Field) string {
 	}
 }
 
-func (fs *FileSet) parseFieldList(fl *ast.FieldList) []gen.StructField {
+type zid struct {
+	zid       int64
+	fieldName string
+}
+
+type zidSetSlice []zid
+
+func (p zidSetSlice) Len() int           { return len(p) }
+func (p zidSetSlice) Less(i, j int) bool { return p[i].zid < p[j].zid }
+func (p zidSetSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+
+func (fs *FileSet) parseFieldList(fl *ast.FieldList) ([]gen.StructField, error) {
 	if fl == nil || fl.NumFields() == 0 {
-		return nil
+		return nil, nil
 	}
 	out := make([]gen.StructField, 0, fl.NumFields())
+	var zidSet []zid
 	for _, field := range fl.List {
 		pushstate(fieldName(field))
 		fds := fs.getField(field)
+		for _, x := range fds {
+			if x.ZebraId >= 0 {
+				zidSet = append(zidSet, zid{zid: x.ZebraId, fieldName: x.FieldName})
+			}
+		}
 		if len(fds) > 0 {
 			out = append(out, fds...)
 		} else {
@@ -333,7 +357,19 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) []gen.StructField {
 		}
 		popstate()
 	}
-	return out
+	// check zidSet sequential from 0, no gaps, no duplicates
+	if len(zidSet) > 0 {
+		sort.Sort(zidSetSlice(zidSet))
+		if zidSet[0].zid != 0 {
+			return nil, fmt.Errorf("zid (zebra id tags on struct fields) must start at 0; lowest zid was '%v' at field '%v'", zidSet[0].zid, zidSet[0].fieldName)
+		}
+		for i := range zidSet {
+			if zidSet[i].zid != int64(i) {
+				return nil, fmt.Errorf("zid sequence interrupted - commit conflict possible! gap or duplicate in zid sequence (saw %v; expected %v), near field '%v'", i, zidSet[i].zid, zidSet[i].fieldName)
+			}
+		}
+	}
+	return out, nil
 }
 
 func anyMatches(haystack []string, needle string) bool {
@@ -387,7 +423,7 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 		}
 
 		// check zebra
-		zebra := alltags.Get("zebra")
+		zebra := alltags.Get("zid")
 		if zebra != "" {
 			// must be a non-negative number
 			id, err := strconv.Atoi(zebra)
@@ -396,8 +432,9 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 				if len(f.Names) > 0 {
 					where = " on '" + f.Names[0].Name + "'"
 				}
-				fatalf("bad `zebra` tag%s, could not convert"+
+				err2 := fmt.Errorf("bad `zid` tag%s, could not convert"+
 					" to non-zero integer: %v", where, err)
+				fatalf(err2.Error())
 				return nil
 			}
 			zebraId = int64(id)
@@ -405,7 +442,10 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 
 	}
 
-	ex := fs.parseExpr(f.Type)
+	ex, err := fs.parseExpr(f.Type)
+	if err != nil {
+		fatalf(err.Error())
+	}
 	if ex == nil {
 		return nil
 	}
@@ -515,31 +555,37 @@ func stringify(e ast.Expr) string {
 // - *ast.StructType (struct {})
 // - *ast.SelectorExpr (a.B)
 // - *ast.InterfaceType (interface {})
-func (fs *FileSet) parseExpr(e ast.Expr) gen.Elem {
+func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 	switch e := e.(type) {
 
 	case *ast.MapType:
 		if k, ok := e.Key.(*ast.Ident); ok && k.Name == "string" {
-			if in := fs.parseExpr(e.Value); in != nil {
-				return &gen.Map{Value: in, KeyTyp: "String", KeyDeclTyp: "string"}
+			in, err := fs.parseExpr(e.Value)
+			panicOn(err)
+			if in != nil {
+				return &gen.Map{Value: in, KeyTyp: "String", KeyDeclTyp: "string"}, nil
 			}
 		}
 
 		// support int64/int32/int keys
 		if k, ok := e.Key.(*ast.Ident); ok {
-			if in := fs.parseExpr(e.Value); in != nil {
+			in, err := fs.parseExpr(e.Value)
+			if err != nil {
+				fatalf(err.Error())
+			}
+			if in != nil {
 				switch k.Name {
 				case "int64":
-					return &gen.Map{Value: in, KeyTyp: "Int64", KeyDeclTyp: "int64"}
+					return &gen.Map{Value: in, KeyTyp: "Int64", KeyDeclTyp: "int64"}, nil
 				case "int32":
-					return &gen.Map{Value: in, KeyTyp: "Int32", KeyDeclTyp: "int32"}
+					return &gen.Map{Value: in, KeyTyp: "Int32", KeyDeclTyp: "int32"}, nil
 				case "int":
-					return &gen.Map{Value: in, KeyTyp: "Int", KeyDeclTyp: "int"}
+					return &gen.Map{Value: in, KeyTyp: "Int", KeyDeclTyp: "int"}, nil
 				}
 			}
 		}
 
-		return nil
+		return nil, nil
 
 	case *ast.Ident:
 		b := gen.Ident(e.Name)
@@ -552,22 +598,25 @@ func (fs *FileSet) parseExpr(e ast.Expr) gen.Elem {
 				warnf("non-local identifier: %s\n", e.Name)
 			}
 		}
-		return b
+		return b, nil
 
 	case *ast.ArrayType:
 
 		// special case for []byte
 		if e.Len == nil {
 			if i, ok := e.Elt.(*ast.Ident); ok && i.Name == "byte" {
-				return &gen.BaseElem{Value: gen.Bytes}
+				return &gen.BaseElem{Value: gen.Bytes}, nil
 			}
 		}
 
 		// return early if we don't know
 		// what the slice element type is
-		els := fs.parseExpr(e.Elt)
+		els, err := fs.parseExpr(e.Elt)
+		if err != nil {
+			return nil, err
+		}
 		if els == nil {
-			return nil
+			return nil, nil
 		}
 
 		// array and not a slice
@@ -577,50 +626,58 @@ func (fs *FileSet) parseExpr(e ast.Expr) gen.Elem {
 				return &gen.Array{
 					Size: s.Value,
 					Els:  els,
-				}
+				}, nil
 
 			case *ast.Ident:
 				return &gen.Array{
 					Size: s.String(),
 					Els:  els,
-				}
+				}, nil
 
 			case *ast.SelectorExpr:
 				return &gen.Array{
 					Size: stringify(s),
 					Els:  els,
-				}
+				}, nil
 
 			default:
-				return nil
+				return nil, nil
 			}
 		}
-		return &gen.Slice{Els: els}
+		return &gen.Slice{Els: els}, nil
 
 	case *ast.StarExpr:
-		if v := fs.parseExpr(e.X); v != nil {
-			return &gen.Ptr{Value: v}
+		v, err := fs.parseExpr(e.X)
+		if err != nil {
+			return nil, err
 		}
-		return nil
+		if v != nil {
+			return &gen.Ptr{Value: v}, nil
+		}
+		return nil, nil
 
 	case *ast.StructType:
-		if fields := fs.parseFieldList(e.Fields); len(fields) > 0 {
-			return &gen.Struct{Fields: fields}
+		fields, err := fs.parseFieldList(e.Fields)
+		if err != nil {
+			return nil, err
 		}
-		return nil
+		if len(fields) > 0 {
+			return &gen.Struct{Fields: fields}, nil
+		}
+		return nil, nil
 
 	case *ast.SelectorExpr:
-		return gen.Ident(stringify(e))
+		return gen.Ident(stringify(e)), nil
 
 	case *ast.InterfaceType:
 		// support `interface{}`
 		if len(e.Methods.List) == 0 {
-			return &gen.BaseElem{Value: gen.Intf}
+			return &gen.BaseElem{Value: gen.Intf}, nil
 		}
-		return nil
+		return nil, nil
 
 	default: // other types not supported
-		return nil
+		return nil, nil
 	}
 }
 
@@ -664,4 +721,10 @@ func pushstate(s string) {
 // pop logging state
 func popstate() {
 	logctx = logctx[:len(logctx)-1]
+}
+
+func panicOn(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
