@@ -180,3 +180,40 @@ func Test001DuplicateOrMissingGapZidFieldsNotAllowed(t *testing.T) {
 
 	})
 }
+
+func Test002EmptyStructsNotMarshalled(t *testing.T) {
+
+	cv.Convey("skipped fields (e.g. struct{} empty values) shouldn't be marshalled", t, func() {
+
+		{
+			gofile, err := ioutil.TempFile(".", "tmp-test-001")
+			panicOn(err)
+			ofile := gofile.Name() + ".out"
+
+			s := "\npackage fred\n\n" +
+				"type Flint struct {\n" +
+				"   Barney string `zid:\"0\"`\n" +
+				"   Wilma  string `zid:\"1\"`\n" +
+				"   Skiperoo  func()   \n" +
+				"   Skiperoo2  struct{}   \n" +
+				"}\n"
+			fmt.Fprintf(gofile, s)
+			gofile.Close()
+
+			fmt.Printf("\n checking:\n%v\n", s)
+
+			cfg := cfg.ZebraConfig{
+				Out:        ofile,
+				GoFile:     gofile.Name(),
+				Encode:     true,
+				Marshal:    true,
+				Tests:      true,
+				Unexported: false,
+			}
+			_, err = File(&cfg)
+			cv.So(err, cv.ShouldBeNil)
+			os.Remove(gofile.Name())
+		}
+
+	})
+}
