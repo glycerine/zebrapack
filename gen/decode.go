@@ -136,7 +136,7 @@ func (d *decodeGen) assignAndCheck(name string, typ string) {
 }
 
 func (d *decodeGen) structAsTuple(s *Struct) {
-	nfields := len(s.Fields)
+	nfields := len(s.Fields) - s.SkipCount
 
 	sz := randIdent()
 	d.p.declare(sz, u32)
@@ -169,7 +169,7 @@ func (d *decodeGen) structAsTuple(s *Struct) {
 // be nested due to inlining.
 */
 func (d *decodeGen) structAsMap(s *Struct) {
-	n := len(s.Fields)
+	n := len(s.Fields) - s.SkipCount
 	if n == 0 {
 		return
 	}
@@ -180,7 +180,9 @@ func (d *decodeGen) structAsMap(s *Struct) {
 
 	fieldOrder := fmt.Sprintf("\n var decodeMsgFieldOrder%s = []string{", nStr)
 	for i := range s.Fields {
-		fieldOrder += fmt.Sprintf("%q,", s.Fields[i].FieldTag)
+		if !s.Fields[i].Skip {
+			fieldOrder += fmt.Sprintf("%q,", s.Fields[i].FieldTag)
+		}
 	}
 	fieldOrder += "}\n"
 	varname := strings.Replace(s.TypeName(), "\n", ";", -1)
