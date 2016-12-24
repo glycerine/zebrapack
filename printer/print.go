@@ -116,7 +116,7 @@ func writePkgHeader(b *bytes.Buffer, name string) {
 	b.WriteString("package ")
 	b.WriteString(name)
 	b.WriteByte('\n')
-	b.WriteString("// NOTE: THIS FILE WAS PRODUCED BY THE\n// MSGP CODE GENERATION TOOL (github.com/glycerine/zebrapack)\n// DO NOT EDIT\n\n")
+	b.WriteString("// NOTE: THIS FILE WAS PRODUCED BY THE\n// ZEBRAPACK CODE GENERATION TOOL (github.com/glycerine/zebrapack)\n// DO NOT EDIT\n\n")
 }
 
 func writeImportHeader(b *bytes.Buffer, imports ...string) {
