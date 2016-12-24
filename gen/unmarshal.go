@@ -132,6 +132,9 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 	u.p.printf(tmpl)
 
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		u.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
 		u.p.printf("\n%s[%d]=true;", found, i)
 		u.depth++

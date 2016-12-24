@@ -109,6 +109,9 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		m.Fuse(data)
 	}
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		if !m.p.ok() {
 			return
 		}

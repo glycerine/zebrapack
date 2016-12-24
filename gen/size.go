@@ -108,6 +108,9 @@ func (s *sizeGen) gStruct(st *Struct) {
 		data := msgp.AppendMapHeader(nil, nfields)
 		s.addConstant(strconv.Itoa(len(data)))
 		for i := range st.Fields {
+			if st.Fields[i].Skip {
+				continue
+			}
 			data = data[:0]
 			data = msgp.AppendString(data, st.Fields[i].FieldTag)
 			s.addConstant(strconv.Itoa(len(data)))

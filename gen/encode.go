@@ -121,6 +121,9 @@ func (e *encodeGen) structmap(s *Struct) {
 	}
 
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		if !e.p.ok() {
 			return
 		}

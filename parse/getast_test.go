@@ -78,6 +78,34 @@ func Test001DuplicateOrMissingGapZidFieldsNotAllowed(t *testing.T) {
 			s := "\npackage fred\n\n" +
 				"type Flint struct {\n" +
 				"   Barney string `zid:\"0\"`\n" +
+				"   Wilma  string `zid:\"-1\"`\n" +
+				"}\n"
+			fmt.Fprintf(gofile, s)
+			gofile.Close()
+
+			fmt.Printf("\n checking:\n%v\n", s)
+
+			cfg := cfg.ZebraConfig{
+				Out:        ofile,
+				GoFile:     gofile.Name(),
+				Encode:     true,
+				Marshal:    true,
+				Tests:      true,
+				Unexported: false,
+			}
+			_, err = File(&cfg)
+			cv.So(err, cv.ShouldNotBeNil)
+			os.Remove(gofile.Name())
+		}
+
+		{
+			gofile, err := ioutil.TempFile(".", "tmp-test-001")
+			panicOn(err)
+			ofile := gofile.Name() + ".out"
+
+			s := "\npackage fred\n\n" +
+				"type Flint struct {\n" +
+				"   Barney string `zid:\"0\"`\n" +
 				"   Wilma  string `zid:\"1\"`\n" +
 				"}\n"
 			fmt.Fprintf(gofile, s)
@@ -105,6 +133,32 @@ func Test001DuplicateOrMissingGapZidFieldsNotAllowed(t *testing.T) {
 			ofile := gofile.Name() + ".out"
 
 			s := "package p; type Flint struct {}"
+			fmt.Fprintf(gofile, s)
+			gofile.Close()
+
+			fmt.Printf("\n in file '%s', checking:\n%v\n", gofile.Name(), s)
+
+			cfg := cfg.ZebraConfig{
+				Out:        ofile,
+				GoFile:     gofile.Name(),
+				Encode:     true,
+				Marshal:    true,
+				Tests:      true,
+				Unexported: false,
+			}
+			_, err = File(&cfg)
+			cv.So(err, cv.ShouldBeNil) // is only a warning.
+			os.Remove(gofile.Name())
+			os.Remove(ofile)
+		}
+
+		{
+			// struct{} fields should still count in their zid
+			gofile, err := ioutil.TempFile(".", "tmp-test-001")
+			panicOn(err)
+			ofile := gofile.Name() + ".out"
+
+			s := "package hoo; type S2 struct {A struct{} `zid:\"0\"`;B string   `zid:\"1\"`;}"
 			fmt.Fprintf(gofile, s)
 			gofile.Close()
 

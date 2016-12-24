@@ -192,6 +192,9 @@ func (d *decodeGen) structAsMap(s *Struct) {
 	// -- templateDecodeMsg ends here --
 
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		d.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
 		d.p.printf("\n%s[%d]=true;", found, i)
 		//d.p.printf("\n fmt.Printf(\"I found field '%s' at depth=%d. dc.AlwaysNil = %%v\", dc.AlwaysNil);\n", s.Fields[i].FieldTag, d.depth)

@@ -16,6 +16,8 @@ import (
 	"github.com/ttacon/chalk"
 )
 
+var StopOnError bool
+
 // A FileSet is the in-memory representation of a
 // parsed file.
 type FileSet struct {
@@ -344,8 +346,13 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) ([]gen.StructField, error) 
 	var zidSet []zid
 	for _, field := range fl.List {
 		pushstate(fieldName(field))
-		fds := fs.getField(field)
+		fds, err := fs.getField(field)
+		if err != nil {
+			fatalf(err.Error())
+			return nil, err
+		}
 		for _, x := range fds {
+			//fmt.Printf("\n on field '%#v'\n", x)
 			if x.ZebraId >= 0 {
 				zidSet = append(zidSet, zid{zid: x.ZebraId, fieldName: x.FieldName})
 			}
@@ -353,7 +360,7 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) ([]gen.StructField, error) 
 		if len(fds) > 0 {
 			out = append(out, fds...)
 		} else {
-			warnln("ignored.")
+			warnln(fmt.Sprintf("ignored. heh, on '%#v'", fs))
 		}
 		popstate()
 	}
@@ -365,7 +372,7 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) ([]gen.StructField, error) 
 		}
 		for i := range zidSet {
 			if zidSet[i].zid != int64(i) {
-				return nil, fmt.Errorf("zid sequence interrupted - commit conflict possible! gap or duplicate in zid sequence (saw %v; expected %v), near field '%v'", i, zidSet[i].zid, zidSet[i].fieldName)
+				return nil, fmt.Errorf("zid sequence interrupted - commit conflict possible! gap or duplicate in zid sequence (saw %v; expected %v), near field '%v'", zidSet[i].zid, i, zidSet[i].fieldName)
 			}
 		}
 	}
@@ -384,11 +391,12 @@ func anyMatches(haystack []string, needle string) bool {
 }
 
 // translate *ast.Field into []gen.StructField
-func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
+func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 	sf := make([]gen.StructField, 1)
 	var extension bool
 	var omitempty bool
 
+	var skip bool
 	var deprecated bool
 	var zebraId int64 = -1
 
@@ -408,7 +416,9 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 		}
 		// ignore "-" fields
 		if tags[0] == "-" {
-			return nil
+			skip = true
+			// can't return early, need to track deprecated zid.
+			//return nil, nil
 		}
 		if len(tags[0]) > 0 {
 			sf[0].FieldTag = tags[0]
@@ -433,11 +443,12 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 					where = " on '" + f.Names[0].Name + "'"
 				}
 				err2 := fmt.Errorf("bad `zid` tag%s, could not convert"+
-					" to non-zero integer: %v", where, err)
+					" '%v' to non-zero integer: %v", where, zebra, err)
 				fatalf(err2.Error())
-				return nil
+				return nil, err2
 			}
 			zebraId = int64(id)
+			//fmt.Printf("\n we see zebraId: %v\n", zebraId)
 		}
 
 	}
@@ -445,14 +456,18 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 	ex, err := fs.parseExpr(f.Type)
 	if err != nil {
 		fatalf(err.Error())
+		return nil, err
 	}
 	if ex == nil {
-		return nil
+		skip = true
+		// struct{} type fields, must track for zid checking.
+		// so we can't return early here.
 	}
 
 	sf[0].Deprecated = deprecated
 	sf[0].OmitEmpty = omitempty
 	sf[0].ZebraId = zebraId
+	sf[0].Skip = skip
 
 	// parse field name
 	switch len(f.Names) {
@@ -472,9 +487,10 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 				OmitEmpty:  omitempty,
 				Deprecated: deprecated,
 				ZebraId:    zebraId,
+				Skip:       skip,
 			})
 		}
-		return sf
+		return sf, nil
 	}
 	sf[0].FieldElem = ex
 	if sf[0].FieldTag == "" {
@@ -489,16 +505,16 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 				b.Value = gen.Ext
 			} else {
 				warnln("couldn't cast to extension.")
-				return nil
+				return nil, nil
 			}
 		case *gen.BaseElem:
 			ex.Value = gen.Ext
 		default:
 			warnln("couldn't cast to extension.")
-			return nil
+			return nil, nil
 		}
 	}
-	return sf
+	return sf, nil
 }
 
 // extract embedded field name

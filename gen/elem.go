@@ -483,6 +483,7 @@ type StructField struct {
 	FieldElem  Elem   // the field type
 	OmitEmpty  bool   // if the tag `msg:",omitempty"` was found
 	Deprecated bool   // if the tag `deprecated:"true"` was found
+	Skip       bool   // if msg:"-" or field is type struct{}
 
 	// ZebraId defaults to -1, meaning not-tagged with a zebra id.
 	// if ZebraId >= 0, then the tag `zebra:"N"` was found, with ZebraId == N.
@@ -700,6 +701,8 @@ func (k Primitive) String() string {
 // all of the fields in a struct
 func writeStructFields(s []StructField, name string) {
 	for i := range s {
-		s[i].FieldElem.SetVarname(fmt.Sprintf("%s.%s", name, s[i].FieldName))
+		if !s[i].Skip {
+			s[i].FieldElem.SetVarname(fmt.Sprintf("%s.%s", name, s[i].FieldName))
+		}
 	}
 }

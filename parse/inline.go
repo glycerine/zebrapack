@@ -37,7 +37,9 @@ func (f *FileSet) findShim(id string, be *gen.BaseElem) {
 		switch el := el.(type) {
 		case *gen.Struct:
 			for i := range el.Fields {
-				f.nextShim(&el.Fields[i].FieldElem, id, be)
+				if !el.Fields[i].Skip {
+					f.nextShim(&el.Fields[i].FieldElem, id, be)
+				}
 			}
 		case *gen.Array:
 			f.nextShim(&el.Els, id, be)
@@ -84,7 +86,9 @@ func (f *FileSet) propInline() {
 		switch el := el.(type) {
 		case *gen.Struct:
 			for i := range el.Fields {
-				f.nextInline(&el.Fields[i].FieldElem, name)
+				if !el.Fields[i].Skip {
+					f.nextInline(&el.Fields[i].FieldElem, name)
+				}
 			}
 		case *gen.Array:
 			f.nextInline(&el.Els, name)
