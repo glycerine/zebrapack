@@ -87,7 +87,7 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 	if mode&^gen.Test == 0 {
 		return nil
 	}
-	fmt.Println(chalk.Magenta.Color("======== MessagePack Code Generator  ======="))
+	fmt.Println(chalk.Magenta.Color("======== ZebraPack Code Generator  ======="))
 	fmt.Printf(chalk.Magenta.Color(">>> Input: \"%s\"\n"), c.GoFile)
 	fs, err := parse.File(c)
 	if err != nil {
