@@ -93,12 +93,16 @@ func (s *sizeGen) gStruct(st *Struct) {
 		return
 	}
 
-	nfields := uint32(len(st.Fields))
+	nfields := uint32(len(st.Fields) - st.SkipCount)
 
 	if st.AsTuple {
 		data := msgp.AppendArrayHeader(nil, nfields)
 		s.addConstant(strconv.Itoa(len(data)))
 		for i := range st.Fields {
+			if st.Fields[i].Skip {
+				continue
+			}
+
 			if !s.p.ok() {
 				return
 			}
@@ -235,6 +239,10 @@ func fixedsizeExpr(e Elem) (string, bool) {
 	case *Struct:
 		var str string
 		for _, f := range e.Fields {
+			if f.Skip {
+				continue
+			}
+
 			if fs, ok := fixedsizeExpr(f.FieldElem); ok {
 				if str == "" {
 					str = fs
@@ -246,12 +254,14 @@ func fixedsizeExpr(e Elem) (string, bool) {
 			}
 		}
 		var hdrlen int
-		mhdr := msgp.AppendMapHeader(nil, uint32(len(e.Fields)))
+		mhdr := msgp.AppendMapHeader(nil, uint32(len(e.Fields)-e.SkipCount))
 		hdrlen += len(mhdr)
 		var strbody []byte
 		for _, f := range e.Fields {
-			strbody = msgp.AppendString(strbody[:0], f.FieldTag)
-			hdrlen += len(strbody)
+			if !f.Skip {
+				strbody = msgp.AppendString(strbody[:0], f.FieldTag)
+				hdrlen += len(strbody)
+			}
 		}
 		return fmt.Sprintf("%d + %s", hdrlen, str), true
 	}

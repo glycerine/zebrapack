@@ -435,6 +435,8 @@ type Struct struct {
 	AsTuple          bool          // write as an array instead of a map
 	hasOmitEmptyTags bool
 	KeyTyp           string
+
+	SkipCount int
 }
 
 func (s *Struct) ZeroLiteral(v string) string {
@@ -447,6 +449,9 @@ func (s *Struct) TypeName() string {
 	}
 	str := "struct{\n"
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		str += s.Fields[i].FieldName + " " + s.Fields[i].FieldElem.TypeName() + ";\n"
 	}
 	str += "}"
@@ -464,6 +469,10 @@ func (s *Struct) Copy() Elem {
 	g.Fields = make([]StructField, len(s.Fields))
 	copy(g.Fields, s.Fields)
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			// allow full copy here, don't skip.
+			//continue
+		}
 		g.Fields[i].FieldElem = s.Fields[i].FieldElem.Copy()
 	}
 	return &g
@@ -472,6 +481,9 @@ func (s *Struct) Copy() Elem {
 func (s *Struct) Complexity() int {
 	c := 1
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		c += s.Fields[i].FieldElem.Complexity()
 	}
 	return c

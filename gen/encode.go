@@ -77,11 +77,14 @@ func (e *encodeGen) gStruct(s *Struct) {
 }
 
 func (e *encodeGen) tuple(s *Struct) {
-	nfields := len(s.Fields)
+	nfields := len(s.Fields) - s.SkipCount
 	data := msgp.AppendArrayHeader(nil, uint32(nfields))
 	e.p.printf("\n// array header, size %d", nfields)
 	e.Fuse(data)
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		if !e.p.ok() {
 			return
 		}
@@ -101,7 +104,7 @@ func (e *encodeGen) appendraw(bts []byte) {
 }
 
 func (e *encodeGen) structmap(s *Struct) {
-	nfields := len(s.Fields)
+	nfields := len(s.Fields) - s.SkipCount
 	var data []byte
 	empty := "empty_" + randIdent()
 	inUse := "fieldsInUse_" + randIdent()

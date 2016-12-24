@@ -240,8 +240,11 @@ func imutMethodReceiver(p Elem) string {
 	switch e := p.(type) {
 	case *Struct:
 		// TODO(HACK): actually do real math here.
-		if len(e.Fields) <= 3 {
+		if len(e.Fields)-e.SkipCount <= 3 {
 			for i := range e.Fields {
+				if e.Fields[i].Skip {
+					continue
+				}
 				if be, ok := e.Fields[i].FieldElem.(*BaseElem); !ok || (be.Value == IDENT || be.Value == Bytes) {
 					goto nope
 				}

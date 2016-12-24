@@ -99,8 +99,12 @@ func (u *unmarshalGen) tuple(s *Struct) {
 	sz := randIdent()
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
-	u.p.arrayCheck(strconv.Itoa(len(s.Fields)), sz, "")
+	u.p.arrayCheck(strconv.Itoa(len(s.Fields)-s.SkipCount), sz, "")
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
+
 		if !u.p.ok() {
 			return
 		}
@@ -109,7 +113,7 @@ func (u *unmarshalGen) tuple(s *Struct) {
 }
 
 func (u *unmarshalGen) mapstruct(s *Struct) {
-	n := len(s.Fields)
+	n := len(s.Fields) - s.SkipCount
 	if n == 0 {
 		return
 	}
@@ -119,6 +123,9 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 
 	fieldOrder := fmt.Sprintf("\n var unmarshalMsgFieldOrder%s = []string{", nStr)
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		fieldOrder += fmt.Sprintf("%q,", s.Fields[i].FieldTag)
 	}
 	fieldOrder += "}\n"

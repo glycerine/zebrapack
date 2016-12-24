@@ -84,10 +84,13 @@ func (m *marshalGen) gStruct(s *Struct) {
 
 func (m *marshalGen) tuple(s *Struct) {
 	data := make([]byte, 0, 5)
-	data = msgp.AppendArrayHeader(data, uint32(len(s.Fields)))
-	m.p.printf("\n// array header, size %d", len(s.Fields))
+	data = msgp.AppendArrayHeader(data, uint32(len(s.Fields)-s.SkipCount))
+	m.p.printf("\n// array header, size %d", len(s.Fields)-s.SkipCount)
 	m.Fuse(data)
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		if !m.p.ok() {
 			return
 		}
@@ -97,15 +100,15 @@ func (m *marshalGen) tuple(s *Struct) {
 
 func (m *marshalGen) mapstruct(s *Struct) {
 	data := make([]byte, 0, 64)
-	nfields := len(s.Fields)
+	nfields := len(s.Fields) - s.SkipCount
 	if s.hasOmitEmptyTags {
 		m.p.printf("\n\n// honor the omitempty tags\n")
 		m.p.printf("var empty [%d]bool\n", nfields)
 		m.p.printf("fieldsInUse := %s.fieldsNotEmpty(empty[:])\n", s.vname)
 		m.p.printf("	o = msgp.AppendMapHeader(o, fieldsInUse)\n")
 	} else {
-		data = msgp.AppendMapHeader(data, uint32(len(s.Fields)))
-		m.p.printf("\n// map header, size %d", len(s.Fields))
+		data = msgp.AppendMapHeader(data, uint32(len(s.Fields)-s.SkipCount))
+		m.p.printf("\n// map header, size %d", len(s.Fields)-s.SkipCount)
 		m.Fuse(data)
 	}
 	for i := range s.Fields {

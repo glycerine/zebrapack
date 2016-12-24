@@ -62,6 +62,9 @@ func (e *fieldsEmpty) gStruct(s *Struct) {
 	e.p.printf("if len(isempty) == 0 { return %d }\n", nfields)
 	e.p.printf("var fieldsInUse uint32 = %d\n", nfields)
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		if s.Fields[i].OmitEmpty {
 			e.p.printf("isempty[%d] = ", i)
 			next(om, s.Fields[i].FieldElem)

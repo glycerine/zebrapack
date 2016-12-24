@@ -677,8 +677,14 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 		if err != nil {
 			return nil, err
 		}
+		skipN := 0
+		for i := range fields {
+			if fields[i].Skip {
+				skipN++
+			}
+		}
 		if len(fields) > 0 {
-			return &gen.Struct{Fields: fields}, nil
+			return &gen.Struct{Fields: fields, SkipCount: skipN}, nil
 		}
 		return nil, nil
 

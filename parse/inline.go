@@ -65,7 +65,9 @@ func (f *FileSet) nextShim(ref *gen.Elem, id string, be *gen.BaseElem) {
 		switch el := (*ref).(type) {
 		case *gen.Struct:
 			for i := range el.Fields {
-				f.nextShim(&el.Fields[i].FieldElem, id, be)
+				if !el.Fields[i].Skip {
+					f.nextShim(&el.Fields[i].FieldElem, id, be)
+				}
 			}
 		case *gen.Array:
 			f.nextShim(&el.Els, id, be)
@@ -137,7 +139,9 @@ func (f *FileSet) nextInline(ref *gen.Elem, root string) {
 		}
 	case *gen.Struct:
 		for i := range el.Fields {
-			f.nextInline(&el.Fields[i].FieldElem, root)
+			if !el.Fields[i].Skip {
+				f.nextInline(&el.Fields[i].FieldElem, root)
+			}
 		}
 	case *gen.Array:
 		f.nextInline(&el.Els, root)

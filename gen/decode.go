@@ -143,6 +143,9 @@ func (d *decodeGen) structAsTuple(s *Struct) {
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.arrayCheck(strconv.Itoa(nfields), sz, "")
 	for i := range s.Fields {
+		if s.Fields[i].Skip {
+			continue
+		}
 		if !d.p.ok() {
 			return
 		}
