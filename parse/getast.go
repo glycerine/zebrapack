@@ -449,7 +449,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 			}
 			if len(f.Names) > 1 {
 				// we can't have one zid for two fields.
-				err2 := fmt.Errorf("error: problem with the `zid` tag '%v' on '%s' and '%s': only one zid per field allowed. Move '%s' to its own line and give it its own zid tag.", zebra, f.Names[0].Name, f.Names[1].Name, f.Names[1].Name)
+				err2 := fmt.Errorf("error: problem with the `zid` tag '%v' on '%s' and '%s': only one zid per field allowed. Move each to its own line and give each its own zid tag.", zebra, f.Names[0].Name, f.Names[1].Name, f.Names[1].Name)
 				fatalf(err2.Error())
 				return nil, err2
 			}
