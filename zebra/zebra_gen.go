@@ -315,6 +315,11 @@ func (z *Schema) DecodeMsg(dc *msgp.Reader) (err error) {
 			if err != nil {
 				return
 			}
+		case "SourcePackage":
+			z.SourcePackage, err = dc.ReadString()
+			if err != nil {
+				return
+			}
 		case "ZebraSchemaId":
 			z.ZebraSchemaId, err = dc.ReadInt64()
 			if err != nil {
@@ -386,13 +391,22 @@ func (z *Schema) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Schema) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 3
+	// map header, size 4
 	// write "SourcePath"
-	err = en.Append(0x83, 0xaa, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68)
+	err = en.Append(0x84, 0xaa, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68)
 	if err != nil {
 		return err
 	}
 	err = en.WriteString(z.SourcePath)
+	if err != nil {
+		return
+	}
+	// write "SourcePackage"
+	err = en.Append(0xad, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65)
+	if err != nil {
+		return err
+	}
+	err = en.WriteString(z.SourcePackage)
 	if err != nil {
 		return
 	}
@@ -447,10 +461,13 @@ func (z *Schema) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *Schema) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 3
+	// map header, size 4
 	// string "SourcePath"
-	o = append(o, 0x83, 0xaa, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68)
+	o = append(o, 0x84, 0xaa, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68)
 	o = msgp.AppendString(o, z.SourcePath)
+	// string "SourcePackage"
+	o = append(o, 0xad, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x63, 0x6b, 0x61, 0x67, 0x65)
+	o = msgp.AppendString(o, z.SourcePackage)
 	// string "ZebraSchemaId"
 	o = append(o, 0xad, 0x5a, 0x65, 0x62, 0x72, 0x61, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x49, 0x64)
 	o = msgp.AppendInt64(o, z.ZebraSchemaId)
@@ -493,6 +510,11 @@ func (z *Schema) UnmarshalMsg(bts []byte) (o []byte, err error) {
 		switch msgp.UnsafeString(field) {
 		case "SourcePath":
 			z.SourcePath, bts, err = msgp.ReadStringBytes(bts)
+			if err != nil {
+				return
+			}
+		case "SourcePackage":
+			z.SourcePackage, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
 				return
 			}
@@ -568,7 +590,7 @@ func (z *Schema) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Schema) Msgsize() (s int) {
-	s = 1 + 11 + msgp.StringPrefixSize + len(z.SourcePath) + 14 + msgp.Int64Size + 8 + msgp.ArrayHeaderSize
+	s = 1 + 11 + msgp.StringPrefixSize + len(z.SourcePath) + 14 + msgp.StringPrefixSize + len(z.SourcePackage) + 14 + msgp.Int64Size + 8 + msgp.ArrayHeaderSize
 	for zhct := range z.Structs {
 		s += 1 + 11 + msgp.StringPrefixSize + len(z.Structs[zhct].StructName) + 7 + msgp.ArrayHeaderSize
 		for zcua := range z.Structs[zhct].Fields {

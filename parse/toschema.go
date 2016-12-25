@@ -51,6 +51,7 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 	}
 	sch := &zebra.Schema{
 		SourcePath:    path,
+		SourcePackage: fs.Package,
 		ZebraSchemaId: fs.ZebraSchemaId,
 		Structs:       structs,
 	}

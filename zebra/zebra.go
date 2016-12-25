@@ -51,6 +51,7 @@ const (
 // ZebraSchema is the top level container
 type Schema struct {
 	SourcePath    string // reflect.TypeOf().PkgPath()
+	SourcePackage string
 	ZebraSchemaId int64
 	Structs       []Struct
 }
