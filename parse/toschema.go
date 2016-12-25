@@ -32,6 +32,7 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 					Deprecated:     f.Deprecated,
 				}
 				if !fld.Skip {
+					fld.FieldFullType = f.FieldElem.GetZtype()
 					fld.FieldTypeStr = f.FieldElem.TypeName()
 				}
 				//fmt.Printf("\n in %v,  on field %#v ... fld='%#v'\n", tr.StructName, f, fld)
@@ -61,7 +62,7 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 
 }
 
-func getCatPrimiType(f *gen.StructField) (zc zebra.Zcat, zp zebra.Zprimitive) {
+func getCatPrimiType(f *gen.StructField) (zc zebra.Zkind, zp zebra.Zkind) {
 	switch e := f.FieldElem.(type) {
 	case *gen.Map:
 		zc = zebra.MapCat
@@ -75,7 +76,7 @@ func getCatPrimiType(f *gen.StructField) (zc zebra.Zcat, zp zebra.Zprimitive) {
 		zc = zebra.PtrCat
 	case *gen.BaseElem:
 		zc = zebra.BaseElemCat
-		zp = zebra.Zprimitive(e.Value)
+		zp = zebra.Zkind(e.Value)
 	case nil:
 		// struct{} or other skippable, default 0, 0 is fine.
 	default:

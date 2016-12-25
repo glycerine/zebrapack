@@ -4,8 +4,11 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"fmt"
+	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/glycerine/zebrapack/zebra"
 )
 
 const (
@@ -219,6 +222,9 @@ type Elem interface {
 	// or Truck{} for a struct Truck.
 	ZeroLiteral(v string) string
 
+	// GetZtype provides type info in a uniform way.
+	GetZtype() zebra.Ztype
+
 	hidden()
 }
 
@@ -268,6 +274,21 @@ func (a *Array) TypeName() string {
 	return a.common.alias
 }
 
+func (a *Array) GetZtype() (r zebra.Ztype) {
+
+	zt := a.Els.GetZtype()
+	r.Domain = zt.Name
+
+	// set Range to be the size of the array
+	r.Range.Str = a.Size
+	n, err := strconv.Atoi(a.Size)
+	if err != nil {
+		panic(err)
+	}
+	r.Range.Kind = zebra.Zkind(n)
+	return
+}
+
 func (a *Array) Copy() Elem {
 	b := *a
 	b.Els = a.Els.Copy()
@@ -285,6 +306,19 @@ type Map struct {
 
 	KeyTyp     string
 	KeyDeclTyp string
+}
+
+func (m *Map) GetZtype() (r zebra.Ztype) {
+
+	r.Name.Kind = zebra.MapCat
+	r.Name.Str = m.TypeName()
+
+	r.Domain.Str = m.KeyTyp
+	r.Domain.Kind = zebra.ZkindFromString(m.KeyTyp)
+
+	rng := m.Value.GetZtype()
+	r.Range = rng.Name
+	return
 }
 
 func (m *Map) ZeroLiteral(v string) string {
@@ -348,6 +382,15 @@ func (s *Slice) SetVarname(a string) {
 	s.Els.SetVarname(fmt.Sprintf("%s[%s]", varName, s.Index))
 }
 
+func (s *Slice) GetZtype() (r zebra.Ztype) {
+	r.Name.Str = s.TypeName()
+	r.Name.Kind = zebra.SliceCat
+
+	dom := s.Els.GetZtype()
+	r.Domain = dom.Name
+	return
+}
+
 func (s *Slice) TypeName() string {
 	if s.common.alias != "" {
 		return s.common.alias
@@ -369,6 +412,15 @@ func (s *Slice) Complexity() int {
 type Ptr struct {
 	common
 	Value Elem
+}
+
+func (s *Ptr) GetZtype() (r zebra.Ztype) {
+	r.Name.Str = s.TypeName()
+	r.Name.Kind = zebra.PtrCat
+
+	dom := s.Value.GetZtype()
+	r.Domain = dom.Name
+	return
 }
 
 func (s *Ptr) ZeroLiteral(v string) string {
@@ -440,6 +492,12 @@ type Struct struct {
 	KeyTyp           string
 
 	SkipCount int
+}
+
+func (s *Struct) GetZtype() (r zebra.Ztype) {
+	r.Name.Kind = zebra.StructCat
+	r.Name.Str = s.TypeName()
+	return
 }
 
 func (s *Struct) ZeroLiteral(v string) string {
@@ -516,6 +574,15 @@ type BaseElem struct {
 	Convert      bool      // should we do an explicit conversion?
 	mustinline   bool      // must inline; not printable
 	needsref     bool      // needs reference for shim
+}
+
+func (s *BaseElem) GetZtype() (r zebra.Ztype) {
+	r.Name.Kind = zebra.Zkind(s.Value)
+	r.Name.Str = r.Name.Kind.String()
+	//	if r.Name.Str != strings.ToLower(s.Value.String()) {
+	//		panic(fmt.Errorf("BaseElem.Value.String() == '%s' string does not match r.Name.Str = '%v'", s.Value.String(), r.Name.Str))
+	//	}
+	return
 }
 
 func (s *BaseElem) Printable() bool { return !s.mustinline }
