@@ -65,9 +65,9 @@ type Field struct {
 	// tag, and change its Go type to struct{}.
 	//
 	Zid       int64
-	Nam       string
+	FieldName string
 	TypStr    string
 	OmitEmpty bool
 	Skip      bool
-	Tag       map[string]string `msg:",omitempty"`
+	//	Tag       map[string]string `msg:",omitempty"`
 }

@@ -11,26 +11,24 @@ func TranslateToZebraSchema(fs *FileSet) (*zebra.Schema, error) {
 
 	structs := []zebra.Struct{}
 
-	for _, ele := range fs.Identities {
-
+	for k, ele := range fs.Identities {
+		fmt.Printf("\n on k = %v\n", k)
 		switch x := ele.(type) {
 		case *gen.Struct:
-			n := len(x.Fields)
 			tr := zebra.Struct{
-				StructName: "",
-				Fld:        make([]zebra.Field, n),
+				StructName: x.TypeName(),
 			}
 			for _, f := range x.Fields {
-				fmt.Printf("\n on field %#v\n", f)
 				fld := zebra.Field{
 					Zid:       f.ZebraId,
 					OmitEmpty: f.OmitEmpty,
 					Skip:      f.Skip,
+					FieldName: f.FieldTag,
 				}
 				if !fld.Skip {
-					fld.Nam = f.FieldElem.Varname()
 					fld.TypStr = f.FieldElem.TypeName()
 				}
+				fmt.Printf("\n in %v,  on field %#v ... fld='%#v'\n", tr.StructName, f, fld)
 				tr.Fld = append(tr.Fld, fld)
 			}
 			structs = append(structs, tr)
@@ -48,6 +46,8 @@ func TranslateToZebraSchema(fs *FileSet) (*zebra.Schema, error) {
 	sch := &zebra.Schema{
 		Structs: structs,
 	}
+	fmt.Printf("total number of structs: %v\n", len(structs))
+	fmt.Printf("total number of fields in first struct: %v\n", len(structs[0].Fld))
 	return sch, nil
 
 }
