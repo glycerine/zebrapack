@@ -24,8 +24,10 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -165,8 +167,20 @@ func saveMsgpackFile(parsedPath, path string, fs *parse.FileSet) error {
 		}
 		defer fjson.Close()
 
+		// and write out pretty json version too.
 		buf := bytes.NewBuffer(by)
-		_, err = msgp.CopyToJSON(fjson, buf)
+		var compactJson, pretty bytes.Buffer
+		_, err = msgp.CopyToJSON(&compactJson, buf)
+		if err != nil {
+			return err
+		}
+
+		err = json.Indent(&pretty, compactJson.Bytes(), "", "    ")
+		if err != nil {
+			return err
+		}
+		_, err = io.Copy(fjson, &pretty)
+		fmt.Fprintf(fjson, "\n")
 		return err
 	}
 	return nil
