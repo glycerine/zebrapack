@@ -40,7 +40,7 @@ doneWithStruct_:
 				dc.PushAlwaysNil()
 				nextMiss_ = 0
 			}
-			for nextMiss_ < maxFields_ && found_[nextMiss_] {
+			for nextMiss_ < maxFields_ && (found_[nextMiss_] || decodeMsgFieldSkip_[nextMiss_]) {
 				nextMiss_++
 			}
 			if nextMiss_ == maxFields_ {
@@ -97,7 +97,7 @@ doneWithStruct_:
 				bts = nbs.PushAlwaysNil(bts)
 				nextMiss_ = 0
 			}
-			for nextMiss_ < maxFields_ && found_[nextMiss_] {
+			for nextMiss_ < maxFields_ && (found_[nextMiss_] || unmarshalMsgFieldSkip_[nextMiss_]) {
 				nextMiss_++
 			}
 			if nextMiss_ == maxFields_ {

@@ -19,7 +19,7 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 				StructName: x.TypeName(),
 			}
 			for _, f := range x.Fields {
-				fmt.Printf("\n on f = %#v\n", f)
+				//fmt.Printf("\n on f = %#v\n", f)
 				fld := zebra.Field{
 					Zid:          f.ZebraId,
 					OmitEmpty:    f.OmitEmpty,

@@ -113,7 +113,7 @@ func (u *unmarshalGen) tuple(s *Struct) {
 }
 
 func (u *unmarshalGen) mapstruct(s *Struct) {
-	n := len(s.Fields) - s.SkipCount
+	n := len(s.Fields) // - s.SkipCount
 	if n == 0 {
 		return
 	}
@@ -122,16 +122,20 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 	tmpl, nStr := genUnmarshalMsgTemplate(k)
 
 	fieldOrder := fmt.Sprintf("\n var unmarshalMsgFieldOrder%s = []string{", nStr)
+	fieldSkip := fmt.Sprintf("\n var unmarshalMsgFieldSkip%s = []bool{", nStr)
 	for i := range s.Fields {
 		if s.Fields[i].Skip {
-			continue
+			fieldSkip += fmt.Sprintf("true,")
+		} else {
+			fieldSkip += fmt.Sprintf("false,")
 		}
 		fieldOrder += fmt.Sprintf("%q,", s.Fields[i].FieldTag)
 	}
 	fieldOrder += "}\n"
+	fieldSkip += "}\n"
 
 	varname := strings.Replace(s.TypeName(), "\n", ";", -1)
-	u.post.add(varname, "\n// fields of %s%s", varname, fieldOrder)
+	u.post.add(varname, "\n// fields of %s%s%s", varname, fieldOrder, fieldSkip)
 
 	u.p.printf("\n const maxFields%s = %d\n", nStr, n)
 

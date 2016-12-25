@@ -169,7 +169,8 @@ func (d *decodeGen) structAsTuple(s *Struct) {
 // be nested due to inlining.
 */
 func (d *decodeGen) structAsMap(s *Struct) {
-	n := len(s.Fields) - s.SkipCount
+	n := len(s.Fields) // - s.SkipCount
+	fmt.Printf("\n in structAsMap!... n = %v. SkipCount=%v\n", n, s.SkipCount)
 	if n == 0 {
 		return
 	}
@@ -179,15 +180,22 @@ func (d *decodeGen) structAsMap(s *Struct) {
 	tmpl, nStr := genDecodeMsgTemplate(k)
 
 	fieldOrder := fmt.Sprintf("\n var decodeMsgFieldOrder%s = []string{", nStr)
+	fieldSkip := fmt.Sprintf("\n var decodeMsgFieldSkip%s = []bool{", nStr)
 	for i := range s.Fields {
-		if !s.Fields[i].Skip {
-			fieldOrder += fmt.Sprintf("%q,", s.Fields[i].FieldTag)
+		if s.Fields[i].Skip {
+			fieldSkip += fmt.Sprintf("true,")
+		} else {
+			fieldSkip += fmt.Sprintf("false,")
 		}
+		fieldOrder += fmt.Sprintf("%q,", s.Fields[i].FieldTag)
 	}
 	fieldOrder += "}\n"
+	fieldSkip += "}\n"
 	varname := strings.Replace(s.TypeName(), "\n", ";", -1)
-	d.post.add(varname, "\n// fields of %s%s", varname, fieldOrder)
+	d.post.add(varname, "\n// fields of %s%s%s",
+		varname, fieldOrder, fieldSkip)
 
+	fmt.Printf("\n printing maxField%s to be %v\n", nStr, n)
 	d.p.printf("\n const maxFields%s = %d\n", nStr, n)
 
 	found := "found" + nStr
