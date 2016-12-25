@@ -36,7 +36,6 @@ import (
 	"github.com/glycerine/zebrapack/gen"
 	"github.com/glycerine/zebrapack/parse"
 	"github.com/glycerine/zebrapack/printer"
-	"github.com/ttacon/chalk"
 
 	"github.com/tinylib/msgp/msgp"
 )
@@ -49,7 +48,7 @@ func main() {
 	err := myflags.Parse(os.Args[1:])
 	err = c.ValidateConfig()
 	if err != nil {
-		fmt.Println(chalk.Red.Color(fmt.Sprintf("zebrapack command line flag error: '%s'\n", err)))
+		fmt.Printf("zebrapack command line flag error: '%s'\n", err)
 		os.Exit(1)
 	}
 
@@ -57,7 +56,7 @@ func main() {
 	if c.GoFile == "" {
 		c.GoFile = os.Getenv("GOFILE")
 		if c.GoFile == "" {
-			fmt.Println(chalk.Red.Color("No file to parse."))
+			fmt.Println("No file to parse.")
 			os.Exit(1)
 		}
 	}
@@ -74,12 +73,12 @@ func main() {
 	}
 
 	if mode&^gen.Test == 0 {
-		fmt.Println(chalk.Red.Color("No methods to generate; -io=false && -marshal=false"))
+		fmt.Println("No methods to generate; -io=false && -marshal=false")
 		os.Exit(1)
 	}
 
 	if err := Run(mode, c); err != nil {
-		fmt.Println(chalk.Red.Color(err.Error()))
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 }
@@ -92,15 +91,15 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 	if mode&^gen.Test == 0 {
 		return nil
 	}
-	fmt.Println(chalk.Magenta.Color("======== ZebraPack Code Generator  ======="))
-	fmt.Printf(chalk.Magenta.Color(">>> Input: \"%s\"\n"), c.GoFile)
+	fmt.Println("======== ZebraPack Code Generator  =======")
+	fmt.Printf(">>> Input: \"%s\"\n", c.GoFile)
 	fs, err := parse.File(c)
 	if err != nil {
 		return err
 	}
 
 	if len(fs.Identities) == 0 {
-		fmt.Println(chalk.Magenta.Color("No types requiring code generation were found!"))
+		fmt.Println("No types requiring code generation were found!")
 		return nil
 	} else {
 		if c.WriteSchema != "" { // saveSchemaAsMsgpackToFile

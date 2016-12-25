@@ -13,7 +13,6 @@ import (
 
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
-	"github.com/ttacon/chalk"
 )
 
 var StopOnError bool
@@ -290,8 +289,10 @@ func (fs *FileSet) getTypeSpecs(f *ast.File) {
 	// check all declarations...
 	for i := range f.Decls {
 
-		// for GenDecls...
-		if g, ok := f.Decls[i].(*ast.GenDecl); ok {
+		switch g := f.Decls[i].(type) {
+		case ast.Spec:
+			fmt.Printf("\n !!!!! \n got a Spec\n")
+		case *ast.GenDecl:
 
 			// and check the specs...
 			for _, s := range g.Specs {
@@ -712,31 +713,31 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 
 func infof(s string, v ...interface{}) {
 	pushstate(s)
-	fmt.Printf(chalk.Green.Color(strings.Join(logctx, ": ")), v...)
+	fmt.Printf(strings.Join(logctx, ": "), v...)
 	popstate()
 }
 
 func infoln(s string) {
 	pushstate(s)
-	fmt.Println(chalk.Green.Color(strings.Join(logctx, ": ")))
+	fmt.Println(strings.Join(logctx, ": "))
 	popstate()
 }
 
 func warnf(s string, v ...interface{}) {
 	pushstate(s)
-	fmt.Printf(chalk.Yellow.Color(strings.Join(logctx, ": ")), v...)
+	fmt.Printf(strings.Join(logctx, ": "), v...)
 	popstate()
 }
 
 func warnln(s string) {
 	pushstate(s)
-	fmt.Println(chalk.Yellow.Color(strings.Join(logctx, ": ")))
+	fmt.Println(strings.Join(logctx, ": "))
 	popstate()
 }
 
 func fatalf(s string, v ...interface{}) {
 	pushstate(s)
-	fmt.Printf(chalk.Red.Color(strings.Join(logctx, ": ")), v...)
+	fmt.Printf(strings.Join(logctx, ": "), v...)
 	popstate()
 }
 
