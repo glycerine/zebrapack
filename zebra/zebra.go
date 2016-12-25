@@ -35,7 +35,7 @@ const (
 
 // ZebraSchema is the top level container
 type Schema struct {
-	PkgPath string // reflect.TypeOf().PkgPath()
+	SourcePath string // reflect.TypeOf().PkgPath()
 
 	Structs []Struct
 }
@@ -43,7 +43,7 @@ type Schema struct {
 // Struct represents a single message or struct.
 type Struct struct {
 	StructName string  // name of struct
-	Fld        []Field // fields
+	Fields     []Field // fields
 }
 
 // Field represents fields within a struct.
@@ -64,10 +64,10 @@ type Field struct {
 	// just mark it as deprecated with the `deprecated:"true"`
 	// tag, and change its Go type to struct{}.
 	//
-	Zid       int64
-	FieldName string
-	TypStr    string
-	OmitEmpty bool
-	Skip      bool
+	Zid          int64
+	FieldName    string
+	FieldTypeStr string
+	OmitEmpty    bool
+	Skip         bool
 	//	Tag       map[string]string `msg:",omitempty"`
 }

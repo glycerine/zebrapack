@@ -23,6 +23,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"os"
@@ -101,7 +102,7 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 		return nil
 	} else {
 		if c.WriteSchema != "" { // saveSchemaAsMsgpackToFile
-			err := saveMsgpackFile(c.WriteSchema, fs)
+			err := saveMsgpackFile(c.GoFile, c.WriteSchema, fs)
 			if err != nil {
 				panic(err)
 			}
@@ -128,7 +129,7 @@ func newFilename(out, old, pkg string) string {
 	return strings.TrimSuffix(old, ".go") + "_gen.go"
 }
 
-func saveMsgpackFile(path string, fs *parse.FileSet) error {
+func saveMsgpackFile(parsedPath, path string, fs *parse.FileSet) error {
 	fmt.Printf("\n saveMsgpackFile saving to: '%v'", path)
 
 	var f *os.File
@@ -145,7 +146,7 @@ func saveMsgpackFile(path string, fs *parse.FileSet) error {
 	w := msgp.NewWriter(f)
 	defer w.Flush()
 
-	tr, err := parse.TranslateToZebraSchema(fs)
+	tr, err := parse.TranslateToZebraSchema(parsedPath, fs)
 	if err != nil {
 		return err
 	}
@@ -153,6 +154,20 @@ func saveMsgpackFile(path string, fs *parse.FileSet) error {
 	if err != nil {
 		return err
 	}
+	if path != "-" {
+		by, err := tr.MarshalMsg(nil)
+		if err != nil {
+			return err
+		}
+		fjson, err := os.Create(path + ".json")
+		if err != nil {
+			return err
+		}
+		defer fjson.Close()
 
+		buf := bytes.NewBuffer(by)
+		_, err = msgp.CopyToJSON(fjson, buf)
+		return err
+	}
 	return nil
 }
