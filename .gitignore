@@ -6,3 +6,8 @@ msgp/defgen_test.go
 msgp/nestedgen_test.go
 msgp/cover.out
 *~
+zebrapack
+testdata/my.z
+testdata/my.z.json
+testdata/my_gen.go
+testdata/my_gen_test.go

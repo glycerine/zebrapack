@@ -42,7 +42,7 @@ test: all
 	go test -v ./msgp
 	go test -v ./_generated
 	go test -v ./zebra
-
+	go build && ./zebrapack -write-schema testdata/my.z -file testdata/my.go && go test -v ./testdata
 
 bench: all
 	go test -bench . ./msgp
