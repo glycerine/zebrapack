@@ -163,7 +163,10 @@ var builtins = map[string]struct{}{
 }
 
 // common data/methods for every Elem
-type common struct{ vname, alias string }
+type common struct {
+	vname string
+	alias string
+}
 
 func (c *common) SetVarname(s string) { c.vname = s }
 func (c *common) Varname() string     { return c.vname }
