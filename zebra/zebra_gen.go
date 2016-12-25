@@ -211,8 +211,8 @@ func (z *Schema) DecodeMsg(dc *msgp.Reader) (err error) {
 			if err != nil {
 				return
 			}
-		case "ZebraSchemaId64":
-			z.ZebraSchemaId64, err = dc.ReadInt64()
+		case "ZebraSchemaId":
+			z.ZebraSchemaId, err = dc.ReadInt64()
 			if err != nil {
 				return
 			}
@@ -292,12 +292,12 @@ func (z *Schema) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
-	// write "ZebraSchemaId64"
-	err = en.Append(0xaf, 0x5a, 0x65, 0x62, 0x72, 0x61, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x49, 0x64, 0x36, 0x34)
+	// write "ZebraSchemaId"
+	err = en.Append(0xad, 0x5a, 0x65, 0x62, 0x72, 0x61, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x49, 0x64)
 	if err != nil {
 		return err
 	}
-	err = en.WriteInt64(z.ZebraSchemaId64)
+	err = en.WriteInt64(z.ZebraSchemaId)
 	if err != nil {
 		return
 	}
@@ -347,9 +347,9 @@ func (z *Schema) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "SourcePath"
 	o = append(o, 0x83, 0xaa, 0x53, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x68)
 	o = msgp.AppendString(o, z.SourcePath)
-	// string "ZebraSchemaId64"
-	o = append(o, 0xaf, 0x5a, 0x65, 0x62, 0x72, 0x61, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x49, 0x64, 0x36, 0x34)
-	o = msgp.AppendInt64(o, z.ZebraSchemaId64)
+	// string "ZebraSchemaId"
+	o = append(o, 0xad, 0x5a, 0x65, 0x62, 0x72, 0x61, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x49, 0x64)
+	o = msgp.AppendInt64(o, z.ZebraSchemaId)
 	// string "Structs"
 	o = append(o, 0xa7, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x73)
 	o = msgp.AppendArrayHeader(o, uint32(len(z.Structs)))
@@ -392,8 +392,8 @@ func (z *Schema) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			if err != nil {
 				return
 			}
-		case "ZebraSchemaId64":
-			z.ZebraSchemaId64, bts, err = msgp.ReadInt64Bytes(bts)
+		case "ZebraSchemaId":
+			z.ZebraSchemaId, bts, err = msgp.ReadInt64Bytes(bts)
 			if err != nil {
 				return
 			}
@@ -464,7 +464,7 @@ func (z *Schema) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Schema) Msgsize() (s int) {
-	s = 1 + 11 + msgp.StringPrefixSize + len(z.SourcePath) + 16 + msgp.Int64Size + 8 + msgp.ArrayHeaderSize
+	s = 1 + 11 + msgp.StringPrefixSize + len(z.SourcePath) + 14 + msgp.Int64Size + 8 + msgp.ArrayHeaderSize
 	for zbai := range z.Structs {
 		s += 1 + 11 + msgp.StringPrefixSize + len(z.Structs[zbai].StructName) + 7 + msgp.ArrayHeaderSize
 		for zcmr := range z.Structs[zbai].Fields {

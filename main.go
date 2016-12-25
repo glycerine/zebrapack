@@ -24,6 +24,8 @@ package main
 
 import (
 	"bytes"
+	cryptorand "crypto/rand"
+	"encoding/binary"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -50,6 +52,15 @@ func main() {
 	if err != nil {
 		fmt.Printf("zebrapack command line flag error: '%s'\n", err)
 		os.Exit(1)
+	}
+
+	if c.GenSchemaId {
+		var by [8]byte
+		cryptorand.Read(by[:])
+		n := binary.LittleEndian.Uint64(by[:])
+		n &= 0x0001ffffffffffff // restrict to 53 bits so R and js work
+		fmt.Printf("\n// This randomly generated zebraSchemaId64 uniquely identifies\n// your namespace. Paste it into your Go source.\n const zebraSchemaId64 = 0x%x\n\n", n)
+		os.Exit(0)
 	}
 
 	// GOFILE is set by go generate

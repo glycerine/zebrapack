@@ -13,6 +13,7 @@ type ZebraConfig struct {
 	Unexported bool
 
 	WriteSchema string
+	GenSchemaId bool
 }
 
 // call DefineFlags before myflags.Parse()
@@ -25,6 +26,7 @@ func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 	fs.BoolVar(&c.Unexported, "unexported", false, "also process unexported types")
 
 	fs.StringVar(&c.WriteSchema, "write-schema", "", "write schema header to this file; - for stdout")
+	fs.BoolVar(&c.GenSchemaId, "genid", false, "generate a fresh random zebraSchemaId64 value for your schema")
 }
 
 // call c.ValidateConfig() after myflags.Parse()

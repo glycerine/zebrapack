@@ -27,7 +27,7 @@ type FileSet struct {
 	Imports    []*ast.ImportSpec   // imports
 	Cfg        *cfg.ZebraConfig
 
-	ZebraSchemaId64 int64
+	ZebraSchemaId int64
 }
 
 // File parses a file at the relative path
@@ -783,7 +783,7 @@ func (fs *FileSet) getZebraSchemaId(f *ast.File) {
 								if err != nil {
 									panic(fmt.Errorf("could not conver to integer this zebraSchemaId64 value: '%v': %v", specid.Value, err))
 								}
-								fs.ZebraSchemaId64 = int64(n)
+								fs.ZebraSchemaId = int64(n)
 								return
 							}
 						}
