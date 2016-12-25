@@ -29,6 +29,7 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 					FieldTagName:   f.FieldTag,
 					FieldCategory:  zc,
 					FieldPrimitive: zp,
+					Deprecated:     f.Deprecated,
 				}
 				if !fld.Skip {
 					fld.FieldTypeStr = f.FieldElem.TypeName()

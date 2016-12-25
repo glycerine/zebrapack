@@ -92,10 +92,18 @@ type Field struct {
 	// the field if it has its zero-value.
 	OmitEmpty bool
 
-	// Skip means either deprecated or type struct{}
+	// Skip means either type struct{} or
+	// other unserializable type;
 	// or marked  as `msg:"-"`. In any case,
 	// if Skip is true: do not serialize
 	// this field when writing, and ignore it
 	// when reading.
 	Skip bool
+
+	// Deprecated means tagged with `deprecated:"true"`
+	// Compilers/libraries should discourage and warn
+	// users away from writing to such fields, while
+	// not making it impossible to either read or write
+	// the field.
+	Deprecated bool
 }

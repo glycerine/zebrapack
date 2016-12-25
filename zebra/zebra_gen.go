@@ -72,6 +72,11 @@ func (z *Field) DecodeMsg(dc *msgp.Reader) (err error) {
 			if err != nil {
 				return
 			}
+		case "Deprecated":
+			z.Deprecated, err = dc.ReadBool()
+			if err != nil {
+				return
+			}
 		default:
 			err = dc.Skip()
 			if err != nil {
@@ -84,9 +89,9 @@ func (z *Field) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 8
+	// map header, size 9
 	// write "Zid"
-	err = en.Append(0x88, 0xa3, 0x5a, 0x69, 0x64)
+	err = en.Append(0x89, 0xa3, 0x5a, 0x69, 0x64)
 	if err != nil {
 		return err
 	}
@@ -157,15 +162,24 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
+	// write "Deprecated"
+	err = en.Append(0xaa, 0x44, 0x65, 0x70, 0x72, 0x65, 0x63, 0x61, 0x74, 0x65, 0x64)
+	if err != nil {
+		return err
+	}
+	err = en.WriteBool(z.Deprecated)
+	if err != nil {
+		return
+	}
 	return
 }
 
 // MarshalMsg implements msgp.Marshaler
 func (z *Field) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 8
+	// map header, size 9
 	// string "Zid"
-	o = append(o, 0x88, 0xa3, 0x5a, 0x69, 0x64)
+	o = append(o, 0x89, 0xa3, 0x5a, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.Zid)
 	// string "FieldGoName"
 	o = append(o, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65)
@@ -188,6 +202,9 @@ func (z *Field) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "Skip"
 	o = append(o, 0xa4, 0x53, 0x6b, 0x69, 0x70)
 	o = msgp.AppendBool(o, z.Skip)
+	// string "Deprecated"
+	o = append(o, 0xaa, 0x44, 0x65, 0x70, 0x72, 0x65, 0x63, 0x61, 0x74, 0x65, 0x64)
+	o = msgp.AppendBool(o, z.Deprecated)
 	return
 }
 
@@ -255,6 +272,11 @@ func (z *Field) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			if err != nil {
 				return
 			}
+		case "Deprecated":
+			z.Deprecated, bts, err = msgp.ReadBoolBytes(bts)
+			if err != nil {
+				return
+			}
 		default:
 			bts, err = msgp.Skip(bts)
 			if err != nil {
@@ -268,7 +290,7 @@ func (z *Field) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Field) Msgsize() (s int) {
-	s = 1 + 4 + msgp.Int64Size + 12 + msgp.StringPrefixSize + len(z.FieldGoName) + 13 + msgp.StringPrefixSize + len(z.FieldTagName) + 13 + msgp.StringPrefixSize + len(z.FieldTypeStr) + 14 + msgp.Uint8Size + 15 + msgp.Uint8Size + 10 + msgp.BoolSize + 5 + msgp.BoolSize
+	s = 1 + 4 + msgp.Int64Size + 12 + msgp.StringPrefixSize + len(z.FieldGoName) + 13 + msgp.StringPrefixSize + len(z.FieldTagName) + 13 + msgp.StringPrefixSize + len(z.FieldTypeStr) + 14 + msgp.Uint8Size + 15 + msgp.Uint8Size + 10 + msgp.BoolSize + 5 + msgp.BoolSize + 11 + msgp.BoolSize
 	return
 }
 
