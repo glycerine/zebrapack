@@ -1,12 +1,6 @@
 package zebra
 
-import (
-	"github.com/glycerine/zebrapack/msgp"
-)
-
-type Raw msgp.Raw
-
-//go:generate zebrapack
+//go:generate msgp
 
 // Zprimitive describes the basic type category of the field
 // It should match gen/Primitive
@@ -40,20 +34,20 @@ const (
 )
 
 // ZebraSchema is the top level container
-type ZebraSchema struct {
+type Schema struct {
 	PkgPath string // reflect.TypeOf().PkgPath()
 
-	Structs []StructT
+	Structs []Struct
 }
 
 // Struct represents a single message or struct.
-type StructT struct {
-	StructName string   // name of struct
-	Fld        []FieldT // fields
+type Struct struct {
+	StructName string  // name of struct
+	Fld        []Field // fields
 }
 
 // Field represents fields within a struct.
-type FieldT struct {
+type Field struct {
 
 	// Zid locates update collisions and ease resolution.
 	//
@@ -70,9 +64,10 @@ type FieldT struct {
 	// just mark it as deprecated with the `deprecated:"true"`
 	// tag, and change its Go type to struct{}.
 	//
-	Zid    int64
-	Nam    string
-	Typ    Zprimitive
-	TypStr string            // for debugging
-	Tag    map[string]string `msg:",omitempty"`
+	Zid       int64
+	Nam       string
+	TypStr    string
+	OmitEmpty bool
+	Skip      bool
+	Tag       map[string]string `msg:",omitempty"`
 }

@@ -5,16 +5,7 @@ import (
 	"strings"
 )
 
-/*
-func (z *DemoType) DecodeMsg(dc *msgp.Reader) (err error) {
-	var field []byte
-	_ = field
-
-	// We treat empty fields as if they were Nil on the wire.
-	var decodeMsgFieldOrder_ = []string{"Name", "BirthDay"}
-
-	const maxFields_ = 2
-*/
+// We treat empty fields as if they were Nil on the wire.
 var templateDecodeMsg = `
 	// -- templateDecodeMsg starts here--
     var totalEncodedFields_ uint32
@@ -63,33 +54,6 @@ doneWithStruct_:
 		switch curField_ {
 		// -- templateDecodeMsg ends here --
 `
-
-/*
-		case "Name":
-			found_[0] = true
-			z.Name, err = dc.ReadString()
-			if err != nil {
-				return
-			}
-		case "BirthDay":
-			found_[1] = true
-			z.BirthDay, err = dc.ReadTime()
-			if err != nil {
-				return
-			}
-            default:
-                err = dc.Skip()
-                if err != nil {
-                   return
-                }
-		} // end switch curField_
-	} // end for
-	if nextMiss_ != -1 {
-		dc.PopAlwaysNil()
-	}
-	return
-}
-*/
 
 func genDecodeMsgTemplate(n int) (template, nStr string) {
 	nStr = fmt.Sprintf("%v%v", n, randIdent())

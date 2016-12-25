@@ -1,18 +1,18 @@
 package zebra
 
 // NOTE: THIS FILE WAS PRODUCED BY THE
-// ZEBRAPACK CODE GENERATION TOOL (github.com/glycerine/zebrapack)
+// MSGP CODE GENERATION TOOL (github.com/tinylib/msgp)
 // DO NOT EDIT
 
 import (
 	"bytes"
 	"testing"
 
-	"github.com/glycerine/zebrapack/msgp"
+	"github.com/tinylib/msgp/msgp"
 )
 
-func TestMarshalUnmarshalFieldT(t *testing.T) {
-	v := FieldT{}
+func TestMarshalUnmarshalField(t *testing.T) {
+	v := Field{}
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -34,8 +34,8 @@ func TestMarshalUnmarshalFieldT(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgFieldT(b *testing.B) {
-	v := FieldT{}
+func BenchmarkMarshalMsgField(b *testing.B) {
+	v := Field{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -43,8 +43,8 @@ func BenchmarkMarshalMsgFieldT(b *testing.B) {
 	}
 }
 
-func BenchmarkAppendMsgFieldT(b *testing.B) {
-	v := FieldT{}
+func BenchmarkAppendMsgField(b *testing.B) {
+	v := Field{}
 	bts := make([]byte, 0, v.Msgsize())
 	bts, _ = v.MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
@@ -55,8 +55,8 @@ func BenchmarkAppendMsgFieldT(b *testing.B) {
 	}
 }
 
-func BenchmarkUnmarshalFieldT(b *testing.B) {
-	v := FieldT{}
+func BenchmarkUnmarshalField(b *testing.B) {
+	v := Field{}
 	bts, _ := v.MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
@@ -69,8 +69,8 @@ func BenchmarkUnmarshalFieldT(b *testing.B) {
 	}
 }
 
-func TestEncodeDecodeFieldT(t *testing.T) {
-	v := FieldT{}
+func TestEncodeDecodeField(t *testing.T) {
+	v := Field{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -79,7 +79,7 @@ func TestEncodeDecodeFieldT(t *testing.T) {
 		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
 	}
 
-	vn := FieldT{}
+	vn := Field{}
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
@@ -93,8 +93,8 @@ func TestEncodeDecodeFieldT(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeFieldT(b *testing.B) {
-	v := FieldT{}
+func BenchmarkEncodeField(b *testing.B) {
+	v := Field{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -107,8 +107,8 @@ func BenchmarkEncodeFieldT(b *testing.B) {
 	en.Flush()
 }
 
-func BenchmarkDecodeFieldT(b *testing.B) {
-	v := FieldT{}
+func BenchmarkDecodeField(b *testing.B) {
+	v := Field{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -124,8 +124,8 @@ func BenchmarkDecodeFieldT(b *testing.B) {
 	}
 }
 
-func TestMarshalUnmarshalStructT(t *testing.T) {
-	v := StructT{}
+func TestMarshalUnmarshalSchema(t *testing.T) {
+	v := Schema{}
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -147,8 +147,8 @@ func TestMarshalUnmarshalStructT(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgStructT(b *testing.B) {
-	v := StructT{}
+func BenchmarkMarshalMsgSchema(b *testing.B) {
+	v := Schema{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -156,8 +156,8 @@ func BenchmarkMarshalMsgStructT(b *testing.B) {
 	}
 }
 
-func BenchmarkAppendMsgStructT(b *testing.B) {
-	v := StructT{}
+func BenchmarkAppendMsgSchema(b *testing.B) {
+	v := Schema{}
 	bts := make([]byte, 0, v.Msgsize())
 	bts, _ = v.MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
@@ -168,8 +168,8 @@ func BenchmarkAppendMsgStructT(b *testing.B) {
 	}
 }
 
-func BenchmarkUnmarshalStructT(b *testing.B) {
-	v := StructT{}
+func BenchmarkUnmarshalSchema(b *testing.B) {
+	v := Schema{}
 	bts, _ := v.MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
@@ -182,8 +182,8 @@ func BenchmarkUnmarshalStructT(b *testing.B) {
 	}
 }
 
-func TestEncodeDecodeStructT(t *testing.T) {
-	v := StructT{}
+func TestEncodeDecodeSchema(t *testing.T) {
+	v := Schema{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -192,7 +192,7 @@ func TestEncodeDecodeStructT(t *testing.T) {
 		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
 	}
 
-	vn := StructT{}
+	vn := Schema{}
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
@@ -206,8 +206,8 @@ func TestEncodeDecodeStructT(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeStructT(b *testing.B) {
-	v := StructT{}
+func BenchmarkEncodeSchema(b *testing.B) {
+	v := Schema{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -220,8 +220,8 @@ func BenchmarkEncodeStructT(b *testing.B) {
 	en.Flush()
 }
 
-func BenchmarkDecodeStructT(b *testing.B) {
-	v := StructT{}
+func BenchmarkDecodeSchema(b *testing.B) {
+	v := Schema{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -237,8 +237,8 @@ func BenchmarkDecodeStructT(b *testing.B) {
 	}
 }
 
-func TestMarshalUnmarshalZebraSchema(t *testing.T) {
-	v := ZebraSchema{}
+func TestMarshalUnmarshalStruct(t *testing.T) {
+	v := Struct{}
 	bts, err := v.MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
@@ -260,8 +260,8 @@ func TestMarshalUnmarshalZebraSchema(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgZebraSchema(b *testing.B) {
-	v := ZebraSchema{}
+func BenchmarkMarshalMsgStruct(b *testing.B) {
+	v := Struct{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -269,8 +269,8 @@ func BenchmarkMarshalMsgZebraSchema(b *testing.B) {
 	}
 }
 
-func BenchmarkAppendMsgZebraSchema(b *testing.B) {
-	v := ZebraSchema{}
+func BenchmarkAppendMsgStruct(b *testing.B) {
+	v := Struct{}
 	bts := make([]byte, 0, v.Msgsize())
 	bts, _ = v.MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
@@ -281,8 +281,8 @@ func BenchmarkAppendMsgZebraSchema(b *testing.B) {
 	}
 }
 
-func BenchmarkUnmarshalZebraSchema(b *testing.B) {
-	v := ZebraSchema{}
+func BenchmarkUnmarshalStruct(b *testing.B) {
+	v := Struct{}
 	bts, _ := v.MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
@@ -295,8 +295,8 @@ func BenchmarkUnmarshalZebraSchema(b *testing.B) {
 	}
 }
 
-func TestEncodeDecodeZebraSchema(t *testing.T) {
-	v := ZebraSchema{}
+func TestEncodeDecodeStruct(t *testing.T) {
+	v := Struct{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
@@ -305,7 +305,7 @@ func TestEncodeDecodeZebraSchema(t *testing.T) {
 		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
 	}
 
-	vn := ZebraSchema{}
+	vn := Struct{}
 	err := msgp.Decode(&buf, &vn)
 	if err != nil {
 		t.Error(err)
@@ -319,8 +319,8 @@ func TestEncodeDecodeZebraSchema(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeZebraSchema(b *testing.B) {
-	v := ZebraSchema{}
+func BenchmarkEncodeStruct(b *testing.B) {
+	v := Struct{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
@@ -333,8 +333,8 @@ func BenchmarkEncodeZebraSchema(b *testing.B) {
 	en.Flush()
 }
 
-func BenchmarkDecodeZebraSchema(b *testing.B) {
-	v := ZebraSchema{}
+func BenchmarkDecodeStruct(b *testing.B) {
+	v := Struct{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 	b.SetBytes(int64(buf.Len()))
