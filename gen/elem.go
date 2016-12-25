@@ -473,8 +473,8 @@ func (s *Struct) Copy() Elem {
 	copy(g.Fields, s.Fields)
 	for i := range s.Fields {
 		if s.Fields[i].Skip {
-			// allow full copy here, don't skip.
-			//continue
+			// FieldElem will be nil for skipped fields.
+			continue
 		}
 		g.Fields[i].FieldElem = s.Fields[i].FieldElem.Copy()
 	}
