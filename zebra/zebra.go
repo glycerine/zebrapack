@@ -69,6 +69,11 @@ type Field struct {
 	FieldTagName string
 	FieldTypeStr string
 	OmitEmpty    bool
-	Skip         bool
-	//	Tag       map[string]string `msg:",omitempty"`
+
+	// Skip means either deprecated or type struct{}
+	// or marked  as `msg:"-"`. In any case,
+	// if Skip is true: do not serialize
+	// this field when writing, and ignore it
+	// when reading.
+	Skip bool
 }
