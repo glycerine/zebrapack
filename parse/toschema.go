@@ -21,12 +21,15 @@ func TranslateToZebraSchema(fs *FileSet) (*zebra.Schema, error) {
 				Fld:        make([]zebra.Field, n),
 			}
 			for _, f := range x.Fields {
+				fmt.Printf("\n on field %#v\n", f)
 				fld := zebra.Field{
 					Zid:       f.ZebraId,
-					Nam:       f.FieldElem.Varname(),
-					TypStr:    f.FieldElem.TypeName(),
 					OmitEmpty: f.OmitEmpty,
 					Skip:      f.Skip,
+				}
+				if !fld.Skip {
+					fld.Nam = f.FieldElem.Varname()
+					fld.TypStr = f.FieldElem.TypeName()
 				}
 				tr.Fld = append(tr.Fld, fld)
 			}
