@@ -60,6 +60,25 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 }
 
 func getCatPrimiType(f *gen.StructField) (zc zebra.Zcat, zp zebra.Zprimitive) {
+	switch e := f.FieldElem.(type) {
+	case *gen.Map:
+		zc = zebra.MapCat
+	case *gen.Struct:
+		zc = zebra.StructCat
+	case *gen.Slice:
+		zc = zebra.SliceCat
+	case *gen.Array:
+		zc = zebra.ArrayCat
+	case *gen.Ptr:
+		zc = zebra.PtrCat
+	case *gen.BaseElem:
+		zc = zebra.BaseElemCat
+		zp = zebra.Zprimitive(e.Value)
+	case nil:
+		// struct{} or other skippable, default 0, 0 is fine.
+	default:
+		panic(fmt.Errorf("bad element type %T", e))
+	}
 
 	return
 }

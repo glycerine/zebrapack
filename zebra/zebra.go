@@ -9,15 +9,16 @@ type Zcat uint8
 const (
 	InvalidCat Zcat = iota
 	BaseElemCat
+	MapCat
 	StructCat
 	SliceCat
-	MapCat
+	ArrayCat
 	PtrCat
 )
 
 // Zprimitive describes the detailed type of the field
-// It should correspond to gen/Primitive when
-// Zcat is BaseElemCat.
+// Implementation note: this must correspond to
+// gen/Primitive when Zcat is BaseElemCat.
 type Zprimitive uint8
 
 const (
@@ -84,8 +85,8 @@ type Field struct {
 
 	// type info
 	FieldTypeStr   string
-	FieldCategory  Zcat
-	FieldPrimitive Zprimitive
+	FieldCategory  Zcat       // will be InvalidCat if Skip is true
+	FieldPrimitive Zprimitive // avail if FieldCategory == BaseElemCat
 
 	// if OmitEmpty then we don't serialize
 	// the field if it has its zero-value.
