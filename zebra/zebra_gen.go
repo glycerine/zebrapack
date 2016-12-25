@@ -34,6 +34,11 @@ func (z *Field) DecodeMsg(dc *msgp.Reader) (err error) {
 			if err != nil {
 				return
 			}
+		case "FieldTagName":
+			z.FieldTagName, err = dc.ReadString()
+			if err != nil {
+				return
+			}
 		case "FieldTypeStr":
 			z.FieldTypeStr, err = dc.ReadString()
 			if err != nil {
@@ -61,9 +66,9 @@ func (z *Field) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 5
+	// map header, size 6
 	// write "Zid"
-	err = en.Append(0x85, 0xa3, 0x5a, 0x69, 0x64)
+	err = en.Append(0x86, 0xa3, 0x5a, 0x69, 0x64)
 	if err != nil {
 		return err
 	}
@@ -77,6 +82,15 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 		return err
 	}
 	err = en.WriteString(z.FieldName)
+	if err != nil {
+		return
+	}
+	// write "FieldTagName"
+	err = en.Append(0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65)
+	if err != nil {
+		return err
+	}
+	err = en.WriteString(z.FieldTagName)
 	if err != nil {
 		return
 	}
@@ -113,13 +127,16 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *Field) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 5
+	// map header, size 6
 	// string "Zid"
-	o = append(o, 0x85, 0xa3, 0x5a, 0x69, 0x64)
+	o = append(o, 0x86, 0xa3, 0x5a, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.Zid)
 	// string "FieldName"
 	o = append(o, 0xa9, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4e, 0x61, 0x6d, 0x65)
 	o = msgp.AppendString(o, z.FieldName)
+	// string "FieldTagName"
+	o = append(o, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65)
+	o = msgp.AppendString(o, z.FieldTagName)
 	// string "FieldTypeStr"
 	o = append(o, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72)
 	o = msgp.AppendString(o, z.FieldTypeStr)
@@ -158,6 +175,11 @@ func (z *Field) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			if err != nil {
 				return
 			}
+		case "FieldTagName":
+			z.FieldTagName, bts, err = msgp.ReadStringBytes(bts)
+			if err != nil {
+				return
+			}
 		case "FieldTypeStr":
 			z.FieldTypeStr, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
@@ -186,7 +208,7 @@ func (z *Field) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Field) Msgsize() (s int) {
-	s = 1 + 4 + msgp.Int64Size + 10 + msgp.StringPrefixSize + len(z.FieldName) + 13 + msgp.StringPrefixSize + len(z.FieldTypeStr) + 10 + msgp.BoolSize + 5 + msgp.BoolSize
+	s = 1 + 4 + msgp.Int64Size + 10 + msgp.StringPrefixSize + len(z.FieldName) + 13 + msgp.StringPrefixSize + len(z.FieldTagName) + 13 + msgp.StringPrefixSize + len(z.FieldTypeStr) + 10 + msgp.BoolSize + 5 + msgp.BoolSize
 	return
 }
 

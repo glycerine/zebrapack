@@ -421,7 +421,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		// ignore "-" fields
 		if tags[0] == "-" {
 			skip = true
-			// can't return early, need to track deprecated zid.
+			// can't return early, need to track deprecated zids.
 			//return nil, nil
 		}
 		if len(tags[0]) > 0 {
@@ -453,7 +453,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 			}
 			if len(f.Names) > 1 {
 				// we can't have one zid for two fields.
-				err2 := fmt.Errorf("error: problem with the `zid` tag '%v' on '%s' and '%s': only one zid per field allowed. Move each to its own line and give each its own zid tag.", zebra, f.Names[0].Name, f.Names[1].Name, f.Names[1].Name)
+				err2 := fmt.Errorf("error: problem with the `zid` tag '%v' on '%s' and '%s': only one zid per field allowed. Move each to its own line and give each its own zid tag.", zebra, f.Names[0].Name, f.Names[1].Name)
 				fatalf(err2.Error())
 				return nil, err2
 			}

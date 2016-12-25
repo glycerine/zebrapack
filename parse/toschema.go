@@ -12,18 +12,20 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 	structs := []zebra.Struct{}
 
 	for _, ele := range fs.Identities {
-		//fmt.Printf("\n on k = %v\n", k)
+
 		switch x := ele.(type) {
 		case *gen.Struct:
 			tr := zebra.Struct{
 				StructName: x.TypeName(),
 			}
 			for _, f := range x.Fields {
+				fmt.Printf("\n on f = %#v\n", f)
 				fld := zebra.Field{
-					Zid:       f.ZebraId,
-					OmitEmpty: f.OmitEmpty,
-					Skip:      f.Skip,
-					FieldName: f.FieldTag,
+					Zid:          f.ZebraId,
+					OmitEmpty:    f.OmitEmpty,
+					Skip:         f.Skip,
+					FieldName:    f.FieldName,
+					FieldTagName: f.FieldTag,
 				}
 				if !fld.Skip {
 					fld.FieldTypeStr = f.FieldElem.TypeName()

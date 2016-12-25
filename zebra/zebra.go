@@ -66,6 +66,7 @@ type Field struct {
 	//
 	Zid          int64
 	FieldName    string
+	FieldTagName string
 	FieldTypeStr string
 	OmitEmpty    bool
 	Skip         bool
