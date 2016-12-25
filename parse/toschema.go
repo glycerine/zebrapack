@@ -44,8 +44,9 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 		}
 	}
 	sch := &zebra.Schema{
-		SourcePath: path,
-		Structs:    structs,
+		SourcePath:      path,
+		ZebraSchemaId64: fs.ZebraSchemaId64,
+		Structs:         structs,
 	}
 	//fmt.Printf("total number of structs: %v\n", len(structs))
 	//fmt.Printf("total number of fields in first struct: %v\n", len(structs[0].Fields))

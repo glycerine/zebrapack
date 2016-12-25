@@ -131,7 +131,7 @@ func newFilename(out, old, pkg string) string {
 }
 
 func saveMsgpackFile(parsedPath, path string, fs *parse.FileSet) error {
-	fmt.Printf("\n saveMsgpackFile saving to: '%v'", path)
+	//fmt.Printf("\n saveMsgpackFile saving to: '%v'", path)
 
 	var f *os.File
 	var err error

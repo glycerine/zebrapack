@@ -6,7 +6,6 @@ import (
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
 	"github.com/glycerine/zebrapack/parse"
-	"github.com/ttacon/chalk"
 	"golang.org/x/tools/imports"
 	"io"
 	"io/ioutil"
@@ -14,7 +13,7 @@ import (
 )
 
 func infof(s string, v ...interface{}) {
-	fmt.Printf(chalk.Magenta.Color(s), v...)
+	fmt.Printf(s, v...)
 }
 
 // PrintFile prints the methods for the provided list

@@ -26,6 +26,8 @@ type FileSet struct {
 	Directives []string            // raw preprocessor directives
 	Imports    []*ast.ImportSpec   // imports
 	Cfg        *cfg.ZebraConfig
+
+	ZebraSchemaId64 int64
 }
 
 // File parses a file at the relative path
@@ -66,6 +68,7 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		for _, fl := range one.Files {
 			pushstate(fl.Name.Name)
 			fs.Directives = append(fs.Directives, yieldComments(fl.Comments)...)
+			fs.getZebraSchemaId(fl)
 			if !c.Unexported {
 				ast.FileExports(fl)
 			}
@@ -79,6 +82,7 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		}
 		fs.Package = f.Name.Name
 		fs.Directives = yieldComments(f.Comments)
+		fs.getZebraSchemaId(f)
 		if !c.Unexported {
 			ast.FileExports(f)
 		}
@@ -290,15 +294,13 @@ func (fs *FileSet) getTypeSpecs(f *ast.File) {
 	for i := range f.Decls {
 
 		switch g := f.Decls[i].(type) {
-		case ast.Spec:
-			fmt.Printf("\n !!!!! \n got a Spec\n")
 		case *ast.GenDecl:
-
 			// and check the specs...
 			for _, s := range g.Specs {
 
 				// for ast.TypeSpecs....
-				if ts, ok := s.(*ast.TypeSpec); ok {
+				switch ts := s.(type) {
+				case *ast.TypeSpec:
 					switch ts.Type.(type) {
 
 					// this is the list of parse-able
@@ -311,6 +313,7 @@ func (fs *FileSet) getTypeSpecs(f *ast.File) {
 						fs.Specs[ts.Name.Name] = ts.Type
 
 					}
+
 				}
 			}
 		}
@@ -756,5 +759,38 @@ func popstate() {
 func panicOn(err error) {
 	if err != nil {
 		panic(err)
+	}
+}
+
+func (fs *FileSet) getZebraSchemaId(f *ast.File) {
+	//fmt.Printf("\n starting getZebraSchemaId\n")
+
+	for i := range f.Decls {
+		switch g := f.Decls[i].(type) {
+		case *ast.GenDecl:
+
+			for _, s := range g.Specs {
+				switch ts := s.(type) {
+				case *ast.ValueSpec:
+
+					if len(ts.Names) > 0 && len(ts.Values) > 0 {
+						if ts.Names[0].Name == "zebraSchemaId64" {
+							switch specid := ts.Values[0].(type) {
+							case *ast.BasicLit:
+
+								//fmt.Printf("\n !!!!! \n got a BasicLit %T/%#v\n", specid, specid)
+								n, err := strconv.ParseInt(specid.Value, 0, 64)
+								if err != nil {
+									panic(fmt.Errorf("could not conver to integer this zebraSchemaId64 value: '%v': %v", specid.Value, err))
+								}
+								fs.ZebraSchemaId64 = int64(n)
+								return
+							}
+						}
+						//fmt.Printf("\n !!!!! \n got a ValueSpec %T/%#v/names=%#v\n", ts, ts, ts.Names[0].Name)
+					}
+				}
+			}
+		}
 	}
 }
