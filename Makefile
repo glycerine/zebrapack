@@ -49,7 +49,7 @@ bench: all
 	go test -bench . ./_generated
 
 clean:
-	$(RM) $(GGEN) $(MGEN) zebra/zebra_gen*
+	$(RM) $(GGEN) $(MGEN) 
 
 wipe: clean
 	$(RM) $(BIN)

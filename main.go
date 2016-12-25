@@ -31,10 +31,11 @@ import (
 
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
-	"github.com/glycerine/zebrapack/msgp"
 	"github.com/glycerine/zebrapack/parse"
 	"github.com/glycerine/zebrapack/printer"
 	"github.com/ttacon/chalk"
+
+	"github.com/tinylib/msgp/msgp"
 )
 
 func main() {
@@ -99,12 +100,10 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 		fmt.Println(chalk.Magenta.Color("No types requiring code generation were found!"))
 		return nil
 	} else {
-		if true { // saveSchemaAsMsgpackToFile
-			for i, v := range fs.Identities {
-				err := saveMsgpackFile(i, v)
-				if err != nil {
-					panic(err)
-				}
+		if c.WriteSchema != "" { // saveSchemaAsMsgpackToFile
+			err := saveMsgpackFile(c.WriteSchema, fs)
+			if err != nil {
+				panic(err)
 			}
 		}
 	}
@@ -129,19 +128,31 @@ func newFilename(out, old, pkg string) string {
 	return strings.TrimSuffix(old, ".go") + "_gen.go"
 }
 
-func saveMsgpackFile(name string, elem gen.Elem) error {
-	fmt.Printf("\n saveMsgpackFile saving name: '%v', elem: '%#v'\n",
-		name, elem)
-	f, err := os.Create(name + ".zebraschema")
-	if err != nil {
-		return err
+func saveMsgpackFile(path string, fs *parse.FileSet) error {
+	fmt.Printf("\n saveMsgpackFile saving to: '%v'", path)
+
+	var f *os.File
+	var err error
+	if path == "-" {
+		f = os.Stdout
+	} else {
+		f, err = os.Create(path)
+		if err != nil {
+			return err
+		}
 	}
 	defer f.Close()
 	w := msgp.NewWriter(f)
 	defer w.Flush()
-	tr, err := gen.TranslateToZebraSchema(elem)
+
+	tr, err := parse.TranslateToZebraSchema(fs)
 	if err != nil {
 		return err
 	}
-	return tr.EncodeMsg(w)
+	err = tr.EncodeMsg(w)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

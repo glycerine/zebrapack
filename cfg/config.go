@@ -11,6 +11,8 @@ type ZebraConfig struct {
 	Marshal    bool
 	Tests      bool
 	Unexported bool
+
+	WriteSchema string
 }
 
 // call DefineFlags before myflags.Parse()
@@ -21,6 +23,8 @@ func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 	fs.BoolVar(&c.Marshal, "marshal", true, "create Marshal and Unmarshal methods")
 	fs.BoolVar(&c.Tests, "tests", true, "create tests and benchmarks")
 	fs.BoolVar(&c.Unexported, "unexported", false, "also process unexported types")
+
+	fs.StringVar(&c.WriteSchema, "write-schema", "", "write schema header to this file; - for stdout")
 }
 
 // call c.ValidateConfig() after myflags.Parse()
