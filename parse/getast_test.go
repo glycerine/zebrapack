@@ -69,8 +69,9 @@ func Test001DuplicateOrMissingGapZidFieldsNotAllowed(t *testing.T) {
 		var o [500]byte
 		cv.So(testCode(s, o[:]), cv.ShouldBeNil)
 		so := string(o[:])
-		cv.So(so, cv.ShouldContainSubstring, "Alfonzo")
-		cv.So(so, cv.ShouldContainSubstring, "alpha")
+		//fmt.Printf("so=%v\n", so)
+		cv.So(so, cv.ShouldContainSubstring, `"FieldGoName": "Alfonzo"`)
+		cv.So(so, cv.ShouldContainSubstring, `"FieldTagName": "alpha"`)
 	})
 }
 

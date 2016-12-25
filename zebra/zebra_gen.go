@@ -29,8 +29,8 @@ func (z *Field) DecodeMsg(dc *msgp.Reader) (err error) {
 			if err != nil {
 				return
 			}
-		case "FieldName":
-			z.FieldName, err = dc.ReadString()
+		case "FieldGoName":
+			z.FieldGoName, err = dc.ReadString()
 			if err != nil {
 				return
 			}
@@ -76,12 +76,12 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		return
 	}
-	// write "FieldName"
-	err = en.Append(0xa9, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4e, 0x61, 0x6d, 0x65)
+	// write "FieldGoName"
+	err = en.Append(0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65)
 	if err != nil {
 		return err
 	}
-	err = en.WriteString(z.FieldName)
+	err = en.WriteString(z.FieldGoName)
 	if err != nil {
 		return
 	}
@@ -131,9 +131,9 @@ func (z *Field) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "Zid"
 	o = append(o, 0x86, 0xa3, 0x5a, 0x69, 0x64)
 	o = msgp.AppendInt64(o, z.Zid)
-	// string "FieldName"
-	o = append(o, 0xa9, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x4e, 0x61, 0x6d, 0x65)
-	o = msgp.AppendString(o, z.FieldName)
+	// string "FieldGoName"
+	o = append(o, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65)
+	o = msgp.AppendString(o, z.FieldGoName)
 	// string "FieldTagName"
 	o = append(o, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65)
 	o = msgp.AppendString(o, z.FieldTagName)
@@ -170,8 +170,8 @@ func (z *Field) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			if err != nil {
 				return
 			}
-		case "FieldName":
-			z.FieldName, bts, err = msgp.ReadStringBytes(bts)
+		case "FieldGoName":
+			z.FieldGoName, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
 				return
 			}
@@ -208,7 +208,7 @@ func (z *Field) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Field) Msgsize() (s int) {
-	s = 1 + 4 + msgp.Int64Size + 10 + msgp.StringPrefixSize + len(z.FieldName) + 13 + msgp.StringPrefixSize + len(z.FieldTagName) + 13 + msgp.StringPrefixSize + len(z.FieldTypeStr) + 10 + msgp.BoolSize + 5 + msgp.BoolSize
+	s = 1 + 4 + msgp.Int64Size + 12 + msgp.StringPrefixSize + len(z.FieldGoName) + 13 + msgp.StringPrefixSize + len(z.FieldTagName) + 13 + msgp.StringPrefixSize + len(z.FieldTypeStr) + 10 + msgp.BoolSize + 5 + msgp.BoolSize
 	return
 }
 

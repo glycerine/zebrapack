@@ -65,7 +65,7 @@ type Field struct {
 	// tag, and change its Go type to struct{}.
 	//
 	Zid          int64
-	FieldName    string
+	FieldGoName  string
 	FieldTagName string
 	FieldTypeStr string
 	OmitEmpty    bool

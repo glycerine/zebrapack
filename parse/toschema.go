@@ -24,7 +24,7 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 					Zid:          f.ZebraId,
 					OmitEmpty:    f.OmitEmpty,
 					Skip:         f.Skip,
-					FieldName:    f.FieldName,
+					FieldGoName:  f.FieldName,
 					FieldTagName: f.FieldTag,
 				}
 				if !fld.Skip {
