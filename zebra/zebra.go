@@ -2,8 +2,22 @@ package zebra
 
 //go:generate msgp
 
-// Zprimitive describes the basic type category of the field
-// It should match gen/Primitive
+// Zcat describes the basic type category of the field.
+// Implementation note: it should correspond to gen/Elem.
+type Zcat uint8
+
+const (
+	InvalidCat Zcat = iota
+	BaseElemCat
+	StructCat
+	SliceCat
+	MapCat
+	PtrCat
+)
+
+// Zprimitive describes the detailed type of the field
+// It should correspond to gen/Primitive when
+// Zcat is BaseElemCat.
 type Zprimitive uint8
 
 const (
@@ -67,8 +81,15 @@ type Field struct {
 	Zid          int64
 	FieldGoName  string
 	FieldTagName string
-	FieldTypeStr string
-	OmitEmpty    bool
+
+	// type info
+	FieldTypeStr   string
+	FieldCategory  Zcat
+	FieldPrimitive Zprimitive
+
+	// if OmitEmpty then we don't serialize
+	// the field if it has its zero-value.
+	OmitEmpty bool
 
 	// Skip means either deprecated or type struct{}
 	// or marked  as `msg:"-"`. In any case,

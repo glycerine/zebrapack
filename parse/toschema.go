@@ -19,13 +19,16 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 				StructName: x.TypeName(),
 			}
 			for _, f := range x.Fields {
+				zc, zp := getCatPrimiType(&f)
 				//fmt.Printf("\n on f = %#v\n", f)
 				fld := zebra.Field{
-					Zid:          f.ZebraId,
-					OmitEmpty:    f.OmitEmpty,
-					Skip:         f.Skip,
-					FieldGoName:  f.FieldName,
-					FieldTagName: f.FieldTag,
+					Zid:            f.ZebraId,
+					OmitEmpty:      f.OmitEmpty,
+					Skip:           f.Skip,
+					FieldGoName:    f.FieldName,
+					FieldTagName:   f.FieldTag,
+					FieldCategory:  zc,
+					FieldPrimitive: zp,
 				}
 				if !fld.Skip {
 					fld.FieldTypeStr = f.FieldElem.TypeName()
@@ -54,4 +57,9 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 	//fmt.Printf("total number of fields in first struct: %v\n", len(structs[0].Fields))
 	return sch, nil
 
+}
+
+func getCatPrimiType(f *gen.StructField) (zc zebra.Zcat, zp zebra.Zprimitive) {
+
+	return
 }
