@@ -170,7 +170,7 @@ func (d *decodeGen) structAsTuple(s *Struct) {
 */
 func (d *decodeGen) structAsMap(s *Struct) {
 	n := len(s.Fields) // - s.SkipCount
-	fmt.Printf("\n in structAsMap!... n = %v. SkipCount=%v\n", n, s.SkipCount)
+	//fmt.Printf("\n in structAsMap!... n = %v. SkipCount=%v\n", n, s.SkipCount)
 	if n == 0 {
 		return
 	}
@@ -195,7 +195,7 @@ func (d *decodeGen) structAsMap(s *Struct) {
 	d.post.add(varname, "\n// fields of %s%s%s",
 		varname, fieldOrder, fieldSkip)
 
-	fmt.Printf("\n printing maxField%s to be %v\n", nStr, n)
+	//fmt.Printf("\n printing maxField%s to be %v\n", nStr, n)
 	d.p.printf("\n const maxFields%s = %d\n", nStr, n)
 
 	found := "found" + nStr
