@@ -1,6 +1,6 @@
 package main
 
-const zebraSchemaId64 = 0x6eb25cc0f9a3e8e6
+const zebraSchemaId64 = 0x6eb25cc0f9a3e
 
 func main() {}
 
