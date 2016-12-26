@@ -14,8 +14,9 @@
 // the generator to execute without any command-line flags. However, the
 // following options are supported, if you need them (See zebrapack -h):
 //
-// $ zebrapack -h
-// Usage of zebrapack:
+//   $ zebrapack -h
+//
+//   Usage of zebrapack:
 //
 //   -fast
 //     	generate ZebraPack serializers instead of msgpack2.
