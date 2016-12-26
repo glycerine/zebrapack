@@ -44,6 +44,8 @@ test: all
 	go test -v ./zebra
 	go build && ./zebrapack -write-schema testdata/my.z -file testdata/my.go && go test -v ./testdata
 	./zebrapack -fast -file testdata/my.go && go test -v ./testdata
+	./zebrapack -schema-to-go testdata/my.z > /tmp/remy.go && echo "func main() {}" >> /tmp/remy.go && go run /tmp/remy.go && rm /tmp/remy.go
+
 
 bench: all
 	go test -bench . ./msgp
