@@ -53,7 +53,7 @@ in the form of a zebra.StructT structure. Then
 the data follows as a map whose keys are now integers
 instead of strings:
          
-original(msgpack2) ->        header(msgpack2)      +    each instance(msgpack2)
+original(msgpack2) ->        schema(msgpack2)      +    each instance(msgpack2)
 --------                     --------------             -------------
 a := A{                      zebra.StructT{             map{
   "Name":  "Atlanta",          0: {"Name", String},       0: "Atlanta",
@@ -436,7 +436,7 @@ command line flags
     	also process unexported types
 
   -write-schema string
-		write schema header to this file; - for stdout
+		write schema to this file; - for stdout
 
 ~~~
 
