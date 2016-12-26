@@ -15,7 +15,7 @@
 // following options are supported, if you need them:
 //
 //   -fast
-//     	write out ZebraPack format. For speed and type safety, instead of writing field names in structs, write the numeric zid into (an otherwise) msgpack2 serialization. See also -write-schema to generate an external schema description to read/write in other languages.
+//     	generate ZebraPack serializers. For speed and type safety, instead of writing field names in structs, write the numeric zid into (an otherwise) msgpack2 serialization. See also -write-schema to generate an external schema description to read/write in other languages.
 //
 //   -fast-strings
 //     	for speed when reading a string in a message that won't be reused, this flag means we'll use unsafe to cast the string header and avoid allocation.
