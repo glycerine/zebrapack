@@ -106,7 +106,7 @@ func (m *marshalGen) tuple(s *Struct) {
 func (m *marshalGen) mapstruct(s *Struct) {
 	data := make([]byte, 0, 64)
 	fast := m.cfg.UseZid
-	//nfields := len(s.Fields) - s.SkipCount
+	nfields := len(s.Fields) - s.SkipCount
 	// if fast, then always omit-empty.
 	if fast || s.hasOmitEmptyTags {
 		m.p.printf("\n\n// honor the omitempty tags\n")
@@ -114,8 +114,8 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		m.p.printf("fieldsInUse := %s.fieldsNotEmpty(empty[:])\n", s.vname)
 		m.p.printf("	o = msgp.AppendMapHeader(o, fieldsInUse)\n")
 	} else {
-		data = msgp.AppendMapHeader(data, uint32(len(s.Fields)-s.SkipCount))
-		m.p.printf("\n// map header, size %d", len(s.Fields)-s.SkipCount)
+		data = msgp.AppendMapHeader(data, uint32(nfields))
+		m.p.printf("\n// map header, size %d", nfields)
 		m.Fuse(data)
 	}
 	for i := range s.Fields {
