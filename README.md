@@ -5,6 +5,8 @@ ZebraPack is a data definition language and serialization format. It removes gra
 
 The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
+Note that we continue to offer straight msgpack2 serialization and deserialization, and we add support for the `omitempty` tag for efficiency. To get msgpack2 instead of zebrapack, just leave off the `-fast` flag to `zebrapack`. In other words, by default we codegen for msgpack2. To engage the zebrapack serializtion you would simply add the `-fast` (and optionally `-fast-strings`) flags to the `zebrapack` run.
+
 At this time it is feature complete, and in beta while we get experience with it. See the section below on background and motivation ideas that we are implementing here.
 
 ### `msgp:",omitempty"` tags on struct fields
