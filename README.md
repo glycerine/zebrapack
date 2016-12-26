@@ -1,9 +1,11 @@
 ZebraPack: a data description language and serialization format. This one is all black and white. No gray areas.
 ==========
 
-ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding. It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support. If you language has a library that reads msgpack, then it would be a days work to adapt the library to read zebrapack: the schema are in msgpack, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
+ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding.
 
-Why start with [msgpack2](http://msgpack.org)?  Quite simple: msgpack2 is simple, fast, and extremely portable. It has an implementation in every language you've heard of.
+It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support. If you language has a library that reads msgpack2, then it would be a days work to adapt the library to read zebrapack: the schema are in msgpack2, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
+
+Why start with [msgpack2](http://msgpack.org)?  Quite simple: msgpack2 is simple, fast, and extremely portable. It has an implementation in every language you've heard of, and some you haven't. It has a well defined and short spec.
 
 The ZebraPack format is actually binary compatible with msgpack2: it just adopts a new convention about how to encode the field names of structs. Structs are encoded in msgpack using maps, as usual. Hence all data is still encoded precisely in the msgpack2 format. The only difference in ZebraPack is this convention: maps that represent structs are now keyed by integers. Rather than have string keys -- the convention for most msgpack2 language bindings -- in ZebraPack we use integers as keys for those maps that are representing structs. These integers are associated with a field name and type in a (seperable) schema. The schema is also defined and encoded in msgpack2.
 
