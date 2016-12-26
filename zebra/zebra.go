@@ -53,7 +53,6 @@ const (
 type KS struct {
 	Kind Zkind
 	Str  string
-	Next *KS
 }
 
 // Ztype describes any type, be it a BaseElem,
@@ -62,12 +61,12 @@ type Ztype struct {
 	Name KS
 
 	// key for maps. elem for ptr, slice, array.
-	// Invalid when Name.Kind is < 23 (for a primitive).
-	Domain *KS
+	// null when Name.Kind is < 23 (for a primitive).
+	Domain *Ztype
 
-	// value for maps. otherwise typically zero (Invalid).
+	// value for maps. otherwise typically null.
 	// For an array, holds the fixed size.
-	Range *KS
+	Range *Ztype
 }
 
 // ZebraSchema is the top level container
