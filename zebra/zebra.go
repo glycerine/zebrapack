@@ -106,11 +106,25 @@ type Field struct {
 	FieldGoName  string
 	FieldTagName string
 
+	// =======================
 	// type info
-	FieldTypeStr   string
-	FieldCategory  Zkind  // will be InvalidCat if Skip is true
-	FieldPrimitive Zkind  // avail if FieldCategory == BaseElemCat
-	FieldFullType  *Ztype `msg:",omitempty"`
+	// =======================
+
+	// human readable/Go type description
+	FieldTypeStr string `msg:",omitempty"`
+
+	// will be InvalidCat if Skip is true
+	FieldCategory Zkind `msg:",omitempty"`
+
+	// avail if FieldCategory == BaseElemCat
+	FieldPrimitive Zkind `msg:",omitempty"`
+
+	// the machine-parse-able type tree
+	FieldFullType *Ztype `msg:",omitempty"`
+
+	// =======================
+	// field tag details:
+	// =======================
 
 	// if OmitEmpty then we don't serialize
 	// the field if it has its zero-value.
