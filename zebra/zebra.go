@@ -1,7 +1,7 @@
 /*
 package zebra specifies the ZebraPack serialization format.
 To bootstrap, the ZebraPack schema is itself stored
-in msgpack2 format.
+in msgpack2 (with optional JSON) format.
 */
 package zebra
 
