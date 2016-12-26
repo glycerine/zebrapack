@@ -128,8 +128,9 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		}
 
 		if fast {
-
-			m.p.printf("\n// string %q", s.Fields[i].FieldTag)
+			data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)
+			m.p.printf("\n// zid %v for %q", s.Fields[i].ZebraId,
+				s.Fields[i].FieldTag)
 		} else {
 			switch s.KeyTyp {
 			case "Int64":
@@ -139,8 +140,8 @@ func (m *marshalGen) mapstruct(s *Struct) {
 			}
 
 			m.p.printf("\n// string %q", s.Fields[i].FieldTag)
-			m.Fuse(data)
 		}
+		m.Fuse(data)
 		next(m, s.Fields[i].FieldElem)
 
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {

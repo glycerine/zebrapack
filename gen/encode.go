@@ -140,12 +140,14 @@ func (e *encodeGen) structmap(s *Struct) {
 			e.p.printf("\n if !%s[%d] {", empty, i)
 		}
 		if fast {
-
+			data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)
+			e.p.printf("\n// zid %v for %q", s.Fields[i].ZebraId,
+				s.Fields[i].FieldTag)
 		} else {
 			data = msgp.AppendString(nil, s.Fields[i].FieldTag)
 			e.p.printf("\n// write %q", s.Fields[i].FieldTag)
-			e.Fuse(data)
 		}
+		e.Fuse(data)
 		next(e, s.Fields[i].FieldElem)
 
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {

@@ -149,6 +149,8 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 		}
 		if fast {
 			u.p.printf("\ncase \"%v\":", s.Fields[i].ZebraId)
+			u.p.printf("\n// zid %v for %q", s.Fields[i].ZebraId,
+				s.Fields[i].FieldTag)
 			u.p.printf("\n%s[%d]=true;", found, i)
 		} else {
 			u.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
