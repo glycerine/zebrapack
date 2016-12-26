@@ -325,7 +325,7 @@ func (s *Struct) WriteToGo(w io.Writer) (err error) {
 	fmt.Fprintf(w, "\ntype %s struct {\n", s.StructName)
 	for _, f := range s.Fields {
 		needMsg := false
-		zid := fmt.Sprintf(`zid:"%v" `, f.Zid)
+		zid := fmt.Sprintf(`zid:"%v"`, f.Zid)
 		msg := "msg:\""
 		if f.FieldTagName != f.FieldGoName {
 			msg += f.FieldTagName
@@ -336,9 +336,14 @@ func (s *Struct) WriteToGo(w io.Writer) (err error) {
 			needMsg = true
 		}
 		if needMsg {
-			zid = zid + "`" + msg + "\"`"
+			zid = "`" + zid + " " + msg + "\"`"
+		} else {
+			zid = "`" + zid
 		}
-		fmt.Fprintf(w, "%s %s %s\n", f.FieldGoName, f.FieldTypeStr, zid)
+		if f.Deprecated {
+			zid += ` deprecated:"true"`
+		}
+		fmt.Fprintf(w, "    %s %s %s`\n", f.FieldGoName, f.FieldTypeStr, zid)
 	}
 	fmt.Fprintf(w, "}\n\n")
 	return nil

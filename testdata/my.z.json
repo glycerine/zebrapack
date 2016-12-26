@@ -4,85 +4,6 @@
     "ZebraSchemaId": 1947397430155838,
     "Structs": [
         {
-            "StructName": "S2",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "A",
-                    "FieldTagName": "alpha",
-                    "Skip": true
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "B",
-                    "FieldTagName": "beta",
-                    "FieldTypeStr": "string",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 2,
-                    "FieldFullType": {
-                        "Kind": 2,
-                        "Str": "string"
-                    }
-                },
-                {
-                    "Zid": 2,
-                    "FieldGoName": "R",
-                    "FieldTagName": "ralph",
-                    "FieldTypeStr": "map[string]uint8",
-                    "FieldCategory": 24,
-                    "FieldFullType": {
-                        "Kind": 24,
-                        "Str": "Map",
-                        "Domain": {
-                            "Kind": 2,
-                            "Str": "string"
-                        },
-                        "Range": {
-                            "Kind": 8,
-                            "Str": "uint8"
-                        }
-                    }
-                },
-                {
-                    "Zid": 3,
-                    "FieldGoName": "P",
-                    "FieldTagName": "P",
-                    "FieldTypeStr": "uint16",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 9,
-                    "FieldFullType": {
-                        "Kind": 9,
-                        "Str": "uint16"
-                    },
-                    "Deprecated": true
-                },
-                {
-                    "Zid": 4,
-                    "FieldGoName": "Q",
-                    "FieldTagName": "Q",
-                    "FieldTypeStr": "uint32",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 10,
-                    "FieldFullType": {
-                        "Kind": 10,
-                        "Str": "uint32"
-                    }
-                },
-                {
-                    "Zid": 5,
-                    "FieldGoName": "T",
-                    "FieldTagName": "T",
-                    "FieldTypeStr": "int64",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 17,
-                    "FieldFullType": {
-                        "Kind": 17,
-                        "Str": "int64"
-                    }
-                }
-            ]
-        },
-        {
             "StructName": "Big",
             "Fields": [
                 {
@@ -249,6 +170,85 @@
                     "FieldFullType": {
                         "Kind": 18,
                         "Str": "bool"
+                    }
+                }
+            ]
+        },
+        {
+            "StructName": "S2",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "A",
+                    "FieldTagName": "alpha",
+                    "Skip": true
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "B",
+                    "FieldTagName": "beta",
+                    "FieldTypeStr": "string",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 2,
+                    "FieldFullType": {
+                        "Kind": 2,
+                        "Str": "string"
+                    }
+                },
+                {
+                    "Zid": 2,
+                    "FieldGoName": "R",
+                    "FieldTagName": "ralph",
+                    "FieldTypeStr": "map[string]uint8",
+                    "FieldCategory": 24,
+                    "FieldFullType": {
+                        "Kind": 24,
+                        "Str": "Map",
+                        "Domain": {
+                            "Kind": 2,
+                            "Str": "string"
+                        },
+                        "Range": {
+                            "Kind": 8,
+                            "Str": "uint8"
+                        }
+                    }
+                },
+                {
+                    "Zid": 3,
+                    "FieldGoName": "P",
+                    "FieldTagName": "P",
+                    "FieldTypeStr": "uint16",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 9,
+                    "FieldFullType": {
+                        "Kind": 9,
+                        "Str": "uint16"
+                    },
+                    "Deprecated": true
+                },
+                {
+                    "Zid": 4,
+                    "FieldGoName": "Q",
+                    "FieldTagName": "Q",
+                    "FieldTypeStr": "uint32",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 10,
+                    "FieldFullType": {
+                        "Kind": 10,
+                        "Str": "uint32"
+                    }
+                },
+                {
+                    "Zid": 5,
+                    "FieldGoName": "T",
+                    "FieldTagName": "T",
+                    "FieldTypeStr": "int64",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 17,
+                    "FieldFullType": {
+                        "Kind": 17,
+                        "Str": "int64"
                     }
                 }
             ]
