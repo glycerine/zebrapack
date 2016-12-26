@@ -51,11 +51,26 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 			return nil, fmt.Errorf("unhandled type %T", x)
 		}
 	}
+	imports := []string{}
+	for _, imp := range fs.Imports {
+		n := ""
+		if imp.Name != nil {
+			n = imp.Name.Name // local package name (including "."); or nil
+		}
+		p := imp.Path.Value // import path
+		if len(n) > 0 {
+			imports = append(imports, fmt.Sprintf("%s %s", n, p))
+		} else {
+			imports = append(imports, p)
+		}
+	}
+
 	sch := &zebra.Schema{
 		SourcePath:    path,
 		SourcePackage: fs.Package,
 		ZebraSchemaId: fs.ZebraSchemaId,
 		Structs:       structs,
+		Imports:       imports,
 	}
 	//fmt.Printf("total number of structs: %v\n", len(structs))
 	//fmt.Printf("total number of fields in first struct: %v\n", len(structs[0].Fields))
