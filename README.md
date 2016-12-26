@@ -3,6 +3,10 @@ ZebraPack: a data description language and serialization format. This one is all
 
 ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding. It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support. If you language has a library that reads msgpack, then it would be a days work to adapt the library to read zebrapack: the schema are in msgpack, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
 
+Why start with [msgpack2](http://msgpack.org)?  Quite simple: msgpack2 is simple, fast, and extremely portable. It has an implementation in every language you've heard of.
+
+The ZebraPack format is actually binary compatible with msgpack2: it just adopts a new convention about how to encode the field names of structs. Structs are encoded in msgpack using maps, as usual. Hence all data is still encoded precisely in the msgpack2 format. The only difference is that the map keys are now integers rather than the strings that is the convention for msgpack2 language bindings.
+
 The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
 Note that we continue to offer straight msgpack2 serialization and deserialization, and we add support for the `omitempty` tag for efficiency. To get msgpack2 instead of zebrapack, just leave off the `-fast` flag to `zebrapack`. In other words, by default we codegen for msgpack2. To engage the zebrapack serialization you would simply add the `-fast` (and optionally `-fast-strings`) flags to the `zebrapack` run.  The defaults may change in the future.
