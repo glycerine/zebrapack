@@ -21,101 +21,101 @@ func (z *Field) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields0zaei = 10
+	const maxFields0zmlq = 10
 
 	// -- templateDecodeMsg starts here--
-	var totalEncodedFields0zaei uint32
-	totalEncodedFields0zaei, err = dc.ReadMapHeader()
+	var totalEncodedFields0zmlq uint32
+	totalEncodedFields0zmlq, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft0zaei := totalEncodedFields0zaei
-	missingFieldsLeft0zaei := maxFields0zaei - totalEncodedFields0zaei
+	encodedFieldsLeft0zmlq := totalEncodedFields0zmlq
+	missingFieldsLeft0zmlq := maxFields0zmlq - totalEncodedFields0zmlq
 
-	var nextMiss0zaei int32 = -1
-	var found0zaei [maxFields0zaei]bool
-	var curField0zaei string
+	var nextMiss0zmlq int32 = -1
+	var found0zmlq [maxFields0zmlq]bool
+	var curField0zmlq string
 
-doneWithStruct0zaei:
+doneWithStruct0zmlq:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft0zaei > 0 || missingFieldsLeft0zaei > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft0zaei, missingFieldsLeft0zaei, msgp.ShowFound(found0zaei[:]), decodeMsgFieldOrder0zaei)
-		if encodedFieldsLeft0zaei > 0 {
-			encodedFieldsLeft0zaei--
+	for encodedFieldsLeft0zmlq > 0 || missingFieldsLeft0zmlq > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft0zmlq, missingFieldsLeft0zmlq, msgp.ShowFound(found0zmlq[:]), decodeMsgFieldOrder0zmlq)
+		if encodedFieldsLeft0zmlq > 0 {
+			encodedFieldsLeft0zmlq--
 			field, err = dc.ReadMapKeyPtr()
 			if err != nil {
 				return
 			}
-			curField0zaei = msgp.UnsafeString(field)
+			curField0zmlq = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss0zaei < 0 {
+			if nextMiss0zmlq < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss0zaei = 0
+				nextMiss0zmlq = 0
 			}
-			for nextMiss0zaei < maxFields0zaei && (found0zaei[nextMiss0zaei] || decodeMsgFieldSkip0zaei[nextMiss0zaei]) {
-				nextMiss0zaei++
+			for nextMiss0zmlq < maxFields0zmlq && (found0zmlq[nextMiss0zmlq] || decodeMsgFieldSkip0zmlq[nextMiss0zmlq]) {
+				nextMiss0zmlq++
 			}
-			if nextMiss0zaei == maxFields0zaei {
+			if nextMiss0zmlq == maxFields0zmlq {
 				// filled all the empty fields!
-				break doneWithStruct0zaei
+				break doneWithStruct0zmlq
 			}
-			missingFieldsLeft0zaei--
-			curField0zaei = decodeMsgFieldOrder0zaei[nextMiss0zaei]
+			missingFieldsLeft0zmlq--
+			curField0zmlq = decodeMsgFieldOrder0zmlq[nextMiss0zmlq]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField0zaei)
-		switch curField0zaei {
+		//fmt.Printf("switching on curField: '%v'\n", curField0zmlq)
+		switch curField0zmlq {
 		// -- templateDecodeMsg ends here --
 
 		case "Zid":
-			found0zaei[0] = true
+			found0zmlq[0] = true
 			z.Zid, err = dc.ReadInt64()
 			if err != nil {
 				panic(err)
 			}
 		case "FieldGoName":
-			found0zaei[1] = true
+			found0zmlq[1] = true
 			z.FieldGoName, err = dc.ReadString()
 			if err != nil {
 				panic(err)
 			}
 		case "FieldTagName":
-			found0zaei[2] = true
+			found0zmlq[2] = true
 			z.FieldTagName, err = dc.ReadString()
 			if err != nil {
 				panic(err)
 			}
 		case "FieldTypeStr":
-			found0zaei[3] = true
+			found0zmlq[3] = true
 			z.FieldTypeStr, err = dc.ReadString()
 			if err != nil {
 				panic(err)
 			}
 		case "FieldCategory":
-			found0zaei[4] = true
+			found0zmlq[4] = true
 			{
-				var zyrp uint64
-				zyrp, err = dc.ReadUint64()
-				z.FieldCategory = Zkind(zyrp)
+				var zeiz uint64
+				zeiz, err = dc.ReadUint64()
+				z.FieldCategory = Zkind(zeiz)
 			}
 			if err != nil {
 				panic(err)
 			}
 		case "FieldPrimitive":
-			found0zaei[5] = true
+			found0zmlq[5] = true
 			{
-				var zsog uint64
-				zsog, err = dc.ReadUint64()
-				z.FieldPrimitive = Zkind(zsog)
+				var zvbn uint64
+				zvbn, err = dc.ReadUint64()
+				z.FieldPrimitive = Zkind(zvbn)
 			}
 			if err != nil {
 				panic(err)
 			}
 		case "FieldFullType":
-			found0zaei[6] = true
+			found0zmlq[6] = true
 			if dc.IsNil() {
 				err = dc.ReadNil()
 				if err != nil {
@@ -142,19 +142,19 @@ doneWithStruct0zaei:
 				}
 			}
 		case "OmitEmpty":
-			found0zaei[7] = true
+			found0zmlq[7] = true
 			z.OmitEmpty, err = dc.ReadBool()
 			if err != nil {
 				panic(err)
 			}
 		case "Skip":
-			found0zaei[8] = true
+			found0zmlq[8] = true
 			z.Skip, err = dc.ReadBool()
 			if err != nil {
 				panic(err)
 			}
 		case "Deprecated":
-			found0zaei[9] = true
+			found0zmlq[9] = true
 			z.Deprecated, err = dc.ReadBool()
 			if err != nil {
 				panic(err)
@@ -166,7 +166,7 @@ doneWithStruct0zaei:
 			}
 		}
 	}
-	if nextMiss0zaei != -1 {
+	if nextMiss0zmlq != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -178,9 +178,9 @@ doneWithStruct0zaei:
 }
 
 // fields of Field
-var decodeMsgFieldOrder0zaei = []string{"Zid", "FieldGoName", "FieldTagName", "FieldTypeStr", "FieldCategory", "FieldPrimitive", "FieldFullType", "OmitEmpty", "Skip", "Deprecated"}
+var decodeMsgFieldOrder0zmlq = []string{"Zid", "FieldGoName", "FieldTagName", "FieldTypeStr", "FieldCategory", "FieldPrimitive", "FieldFullType", "OmitEmpty", "Skip", "Deprecated"}
 
-var decodeMsgFieldSkip0zaei = []bool{false, false, false, false, false, false, false, false, false, false}
+var decodeMsgFieldSkip0zmlq = []bool{false, false, false, false, false, false, false, false, false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *Field) fieldsNotEmpty(isempty []bool) uint32 {
@@ -188,6 +188,10 @@ func (z *Field) fieldsNotEmpty(isempty []bool) uint32 {
 		return 10
 	}
 	var fieldsInUse uint32 = 10
+	isempty[6] = (z.FieldFullType == nil) // pointer, omitempty
+	if isempty[6] {
+		fieldsInUse--
+	}
 	isempty[7] = (!z.OmitEmpty) // bool, omitempty
 	if isempty[7] {
 		fieldsInUse--
@@ -208,11 +212,11 @@ func (z *Field) fieldsNotEmpty(isempty []bool) uint32 {
 func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 
 	// honor the omitempty tags
-	var empty_zwlj [10]bool
-	fieldsInUse_zomz := z.fieldsNotEmpty(empty_zwlj[:])
+	var empty_zgcv [10]bool
+	fieldsInUse_zzai := z.fieldsNotEmpty(empty_zgcv[:])
 
 	// map header
-	err = en.WriteMapHeader(fieldsInUse_zomz)
+	err = en.WriteMapHeader(fieldsInUse_zzai)
 	if err != nil {
 		return err
 	}
@@ -271,23 +275,26 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		panic(err)
 	}
-	// write "FieldFullType"
-	err = en.Append(0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65)
-	if err != nil {
-		return err
-	}
-	if z.FieldFullType == nil {
-		err = en.WriteNil()
+	if !empty_zgcv[6] {
+		// write "FieldFullType"
+		err = en.Append(0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65)
 		if err != nil {
-			return
+			return err
 		}
-	} else {
-		err = z.FieldFullType.EncodeMsg(en)
-		if err != nil {
-			panic(err)
+		if z.FieldFullType == nil {
+			err = en.WriteNil()
+			if err != nil {
+				return
+			}
+		} else {
+			err = z.FieldFullType.EncodeMsg(en)
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
-	if !empty_zwlj[7] {
+
+	if !empty_zgcv[7] {
 		// write "OmitEmpty"
 		err = en.Append(0xa9, 0x4f, 0x6d, 0x69, 0x74, 0x45, 0x6d, 0x70, 0x74, 0x79)
 		if err != nil {
@@ -299,7 +306,7 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zwlj[8] {
+	if !empty_zgcv[8] {
 		// write "Skip"
 		err = en.Append(0xa4, 0x53, 0x6b, 0x69, 0x70)
 		if err != nil {
@@ -311,7 +318,7 @@ func (z *Field) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zwlj[9] {
+	if !empty_zgcv[9] {
 		// write "Deprecated"
 		err = en.Append(0xaa, 0x44, 0x65, 0x70, 0x72, 0x65, 0x63, 0x61, 0x74, 0x65, 0x64)
 		if err != nil {
@@ -353,16 +360,19 @@ func (z *Field) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "FieldPrimitive"
 	o = append(o, 0xae, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74, 0x69, 0x76, 0x65)
 	o = msgp.AppendUint64(o, uint64(z.FieldPrimitive))
-	// string "FieldFullType"
-	o = append(o, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65)
-	if z.FieldFullType == nil {
-		o = msgp.AppendNil(o)
-	} else {
-		o, err = z.FieldFullType.MarshalMsg(o)
-		if err != nil {
-			panic(err)
+	if !empty[6] {
+		// string "FieldFullType"
+		o = append(o, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65)
+		if z.FieldFullType == nil {
+			o = msgp.AppendNil(o)
+		} else {
+			o, err = z.FieldFullType.MarshalMsg(o)
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
+
 	if !empty[7] {
 		// string "OmitEmpty"
 		o = append(o, 0xa9, 0x4f, 0x6d, 0x69, 0x74, 0x45, 0x6d, 0x70, 0x74, 0x79)
@@ -399,110 +409,110 @@ func (z *Field) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []by
 
 	var field []byte
 	_ = field
-	const maxFields1zrgz = 10
+	const maxFields1zvja = 10
 
 	// -- templateUnmarshalMsg starts here--
-	var totalEncodedFields1zrgz uint32
+	var totalEncodedFields1zvja uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields1zrgz, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields1zvja, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			panic(err)
 			return
 		}
 	}
-	encodedFieldsLeft1zrgz := totalEncodedFields1zrgz
-	missingFieldsLeft1zrgz := maxFields1zrgz - totalEncodedFields1zrgz
+	encodedFieldsLeft1zvja := totalEncodedFields1zvja
+	missingFieldsLeft1zvja := maxFields1zvja - totalEncodedFields1zvja
 
-	var nextMiss1zrgz int32 = -1
-	var found1zrgz [maxFields1zrgz]bool
-	var curField1zrgz string
+	var nextMiss1zvja int32 = -1
+	var found1zvja [maxFields1zvja]bool
+	var curField1zvja string
 
-doneWithStruct1zrgz:
+doneWithStruct1zvja:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft1zrgz > 0 || missingFieldsLeft1zrgz > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft1zrgz, missingFieldsLeft1zrgz, msgp.ShowFound(found1zrgz[:]), unmarshalMsgFieldOrder1zrgz)
-		if encodedFieldsLeft1zrgz > 0 {
-			encodedFieldsLeft1zrgz--
+	for encodedFieldsLeft1zvja > 0 || missingFieldsLeft1zvja > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft1zvja, missingFieldsLeft1zvja, msgp.ShowFound(found1zvja[:]), unmarshalMsgFieldOrder1zvja)
+		if encodedFieldsLeft1zvja > 0 {
+			encodedFieldsLeft1zvja--
 			field, bts, err = nbs.ReadMapKeyZC(bts)
 			if err != nil {
 				panic(err)
 				return
 			}
-			curField1zrgz = msgp.UnsafeString(field)
+			curField1zvja = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss1zrgz < 0 {
+			if nextMiss1zvja < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss1zrgz = 0
+				nextMiss1zvja = 0
 			}
-			for nextMiss1zrgz < maxFields1zrgz && (found1zrgz[nextMiss1zrgz] || unmarshalMsgFieldSkip1zrgz[nextMiss1zrgz]) {
-				nextMiss1zrgz++
+			for nextMiss1zvja < maxFields1zvja && (found1zvja[nextMiss1zvja] || unmarshalMsgFieldSkip1zvja[nextMiss1zvja]) {
+				nextMiss1zvja++
 			}
-			if nextMiss1zrgz == maxFields1zrgz {
+			if nextMiss1zvja == maxFields1zvja {
 				// filled all the empty fields!
-				break doneWithStruct1zrgz
+				break doneWithStruct1zvja
 			}
-			missingFieldsLeft1zrgz--
-			curField1zrgz = unmarshalMsgFieldOrder1zrgz[nextMiss1zrgz]
+			missingFieldsLeft1zvja--
+			curField1zvja = unmarshalMsgFieldOrder1zvja[nextMiss1zvja]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField1zrgz)
-		switch curField1zrgz {
+		//fmt.Printf("switching on curField: '%v'\n", curField1zvja)
+		switch curField1zvja {
 		// -- templateUnmarshalMsg ends here --
 
 		case "Zid":
-			found1zrgz[0] = true
+			found1zvja[0] = true
 			z.Zid, bts, err = nbs.ReadInt64Bytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "FieldGoName":
-			found1zrgz[1] = true
+			found1zvja[1] = true
 			z.FieldGoName, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "FieldTagName":
-			found1zrgz[2] = true
+			found1zvja[2] = true
 			z.FieldTagName, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "FieldTypeStr":
-			found1zrgz[3] = true
+			found1zvja[3] = true
 			z.FieldTypeStr, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "FieldCategory":
-			found1zrgz[4] = true
+			found1zvja[4] = true
 			{
-				var znch uint64
-				znch, bts, err = nbs.ReadUint64Bytes(bts)
+				var zezq uint64
+				zezq, bts, err = nbs.ReadUint64Bytes(bts)
 
 				if err != nil {
 					panic(err)
 				}
-				z.FieldCategory = Zkind(znch)
+				z.FieldCategory = Zkind(zezq)
 			}
 		case "FieldPrimitive":
-			found1zrgz[5] = true
+			found1zvja[5] = true
 			{
-				var zspy uint64
-				zspy, bts, err = nbs.ReadUint64Bytes(bts)
+				var zpwa uint64
+				zpwa, bts, err = nbs.ReadUint64Bytes(bts)
 
 				if err != nil {
 					panic(err)
 				}
-				z.FieldPrimitive = Zkind(zspy)
+				z.FieldPrimitive = Zkind(zpwa)
 			}
 		case "FieldFullType":
-			found1zrgz[6] = true
+			found1zvja[6] = true
 			if nbs.AlwaysNil {
 				if z.FieldFullType != nil {
 					z.FieldFullType.UnmarshalMsg(msgp.OnlyNilSlice)
@@ -530,21 +540,21 @@ doneWithStruct1zrgz:
 				}
 			}
 		case "OmitEmpty":
-			found1zrgz[7] = true
+			found1zvja[7] = true
 			z.OmitEmpty, bts, err = nbs.ReadBoolBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "Skip":
-			found1zrgz[8] = true
+			found1zvja[8] = true
 			z.Skip, bts, err = nbs.ReadBoolBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "Deprecated":
-			found1zrgz[9] = true
+			found1zvja[9] = true
 			z.Deprecated, bts, err = nbs.ReadBoolBytes(bts)
 
 			if err != nil {
@@ -557,7 +567,7 @@ doneWithStruct1zrgz:
 			}
 		}
 	}
-	if nextMiss1zrgz != -1 {
+	if nextMiss1zvja != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -569,9 +579,9 @@ doneWithStruct1zrgz:
 }
 
 // fields of Field
-var unmarshalMsgFieldOrder1zrgz = []string{"Zid", "FieldGoName", "FieldTagName", "FieldTypeStr", "FieldCategory", "FieldPrimitive", "FieldFullType", "OmitEmpty", "Skip", "Deprecated"}
+var unmarshalMsgFieldOrder1zvja = []string{"Zid", "FieldGoName", "FieldTagName", "FieldTypeStr", "FieldCategory", "FieldPrimitive", "FieldFullType", "OmitEmpty", "Skip", "Deprecated"}
 
-var unmarshalMsgFieldSkip1zrgz = []bool{false, false, false, false, false, false, false, false, false, false}
+var unmarshalMsgFieldSkip1zvja = []bool{false, false, false, false, false, false, false, false, false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Field) Msgsize() (s int) {
@@ -600,67 +610,67 @@ func (z *KS) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields2ztch = 2
+	const maxFields2znmq = 2
 
 	// -- templateDecodeMsg starts here--
-	var totalEncodedFields2ztch uint32
-	totalEncodedFields2ztch, err = dc.ReadMapHeader()
+	var totalEncodedFields2znmq uint32
+	totalEncodedFields2znmq, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft2ztch := totalEncodedFields2ztch
-	missingFieldsLeft2ztch := maxFields2ztch - totalEncodedFields2ztch
+	encodedFieldsLeft2znmq := totalEncodedFields2znmq
+	missingFieldsLeft2znmq := maxFields2znmq - totalEncodedFields2znmq
 
-	var nextMiss2ztch int32 = -1
-	var found2ztch [maxFields2ztch]bool
-	var curField2ztch string
+	var nextMiss2znmq int32 = -1
+	var found2znmq [maxFields2znmq]bool
+	var curField2znmq string
 
-doneWithStruct2ztch:
+doneWithStruct2znmq:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft2ztch > 0 || missingFieldsLeft2ztch > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft2ztch, missingFieldsLeft2ztch, msgp.ShowFound(found2ztch[:]), decodeMsgFieldOrder2ztch)
-		if encodedFieldsLeft2ztch > 0 {
-			encodedFieldsLeft2ztch--
+	for encodedFieldsLeft2znmq > 0 || missingFieldsLeft2znmq > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft2znmq, missingFieldsLeft2znmq, msgp.ShowFound(found2znmq[:]), decodeMsgFieldOrder2znmq)
+		if encodedFieldsLeft2znmq > 0 {
+			encodedFieldsLeft2znmq--
 			field, err = dc.ReadMapKeyPtr()
 			if err != nil {
 				return
 			}
-			curField2ztch = msgp.UnsafeString(field)
+			curField2znmq = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss2ztch < 0 {
+			if nextMiss2znmq < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss2ztch = 0
+				nextMiss2znmq = 0
 			}
-			for nextMiss2ztch < maxFields2ztch && (found2ztch[nextMiss2ztch] || decodeMsgFieldSkip2ztch[nextMiss2ztch]) {
-				nextMiss2ztch++
+			for nextMiss2znmq < maxFields2znmq && (found2znmq[nextMiss2znmq] || decodeMsgFieldSkip2znmq[nextMiss2znmq]) {
+				nextMiss2znmq++
 			}
-			if nextMiss2ztch == maxFields2ztch {
+			if nextMiss2znmq == maxFields2znmq {
 				// filled all the empty fields!
-				break doneWithStruct2ztch
+				break doneWithStruct2znmq
 			}
-			missingFieldsLeft2ztch--
-			curField2ztch = decodeMsgFieldOrder2ztch[nextMiss2ztch]
+			missingFieldsLeft2znmq--
+			curField2znmq = decodeMsgFieldOrder2znmq[nextMiss2znmq]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField2ztch)
-		switch curField2ztch {
+		//fmt.Printf("switching on curField: '%v'\n", curField2znmq)
+		switch curField2znmq {
 		// -- templateDecodeMsg ends here --
 
 		case "Kind":
-			found2ztch[0] = true
+			found2znmq[0] = true
 			{
-				var zwip uint64
-				zwip, err = dc.ReadUint64()
-				z.Kind = Zkind(zwip)
+				var znyu uint64
+				znyu, err = dc.ReadUint64()
+				z.Kind = Zkind(znyu)
 			}
 			if err != nil {
 				panic(err)
 			}
 		case "Str":
-			found2ztch[1] = true
+			found2znmq[1] = true
 			z.Str, err = dc.ReadString()
 			if err != nil {
 				panic(err)
@@ -672,7 +682,7 @@ doneWithStruct2ztch:
 			}
 		}
 	}
-	if nextMiss2ztch != -1 {
+	if nextMiss2znmq != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -684,9 +694,9 @@ doneWithStruct2ztch:
 }
 
 // fields of KS
-var decodeMsgFieldOrder2ztch = []string{"Kind", "Str"}
+var decodeMsgFieldOrder2znmq = []string{"Kind", "Str"}
 
-var decodeMsgFieldSkip2ztch = []bool{false, false}
+var decodeMsgFieldSkip2znmq = []bool{false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z KS) fieldsNotEmpty(isempty []bool) uint32 {
@@ -745,71 +755,71 @@ func (z *KS) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []byte,
 
 	var field []byte
 	_ = field
-	const maxFields3zzcv = 2
+	const maxFields3zflm = 2
 
 	// -- templateUnmarshalMsg starts here--
-	var totalEncodedFields3zzcv uint32
+	var totalEncodedFields3zflm uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields3zzcv, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields3zflm, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			panic(err)
 			return
 		}
 	}
-	encodedFieldsLeft3zzcv := totalEncodedFields3zzcv
-	missingFieldsLeft3zzcv := maxFields3zzcv - totalEncodedFields3zzcv
+	encodedFieldsLeft3zflm := totalEncodedFields3zflm
+	missingFieldsLeft3zflm := maxFields3zflm - totalEncodedFields3zflm
 
-	var nextMiss3zzcv int32 = -1
-	var found3zzcv [maxFields3zzcv]bool
-	var curField3zzcv string
+	var nextMiss3zflm int32 = -1
+	var found3zflm [maxFields3zflm]bool
+	var curField3zflm string
 
-doneWithStruct3zzcv:
+doneWithStruct3zflm:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft3zzcv > 0 || missingFieldsLeft3zzcv > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft3zzcv, missingFieldsLeft3zzcv, msgp.ShowFound(found3zzcv[:]), unmarshalMsgFieldOrder3zzcv)
-		if encodedFieldsLeft3zzcv > 0 {
-			encodedFieldsLeft3zzcv--
+	for encodedFieldsLeft3zflm > 0 || missingFieldsLeft3zflm > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft3zflm, missingFieldsLeft3zflm, msgp.ShowFound(found3zflm[:]), unmarshalMsgFieldOrder3zflm)
+		if encodedFieldsLeft3zflm > 0 {
+			encodedFieldsLeft3zflm--
 			field, bts, err = nbs.ReadMapKeyZC(bts)
 			if err != nil {
 				panic(err)
 				return
 			}
-			curField3zzcv = msgp.UnsafeString(field)
+			curField3zflm = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss3zzcv < 0 {
+			if nextMiss3zflm < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss3zzcv = 0
+				nextMiss3zflm = 0
 			}
-			for nextMiss3zzcv < maxFields3zzcv && (found3zzcv[nextMiss3zzcv] || unmarshalMsgFieldSkip3zzcv[nextMiss3zzcv]) {
-				nextMiss3zzcv++
+			for nextMiss3zflm < maxFields3zflm && (found3zflm[nextMiss3zflm] || unmarshalMsgFieldSkip3zflm[nextMiss3zflm]) {
+				nextMiss3zflm++
 			}
-			if nextMiss3zzcv == maxFields3zzcv {
+			if nextMiss3zflm == maxFields3zflm {
 				// filled all the empty fields!
-				break doneWithStruct3zzcv
+				break doneWithStruct3zflm
 			}
-			missingFieldsLeft3zzcv--
-			curField3zzcv = unmarshalMsgFieldOrder3zzcv[nextMiss3zzcv]
+			missingFieldsLeft3zflm--
+			curField3zflm = unmarshalMsgFieldOrder3zflm[nextMiss3zflm]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField3zzcv)
-		switch curField3zzcv {
+		//fmt.Printf("switching on curField: '%v'\n", curField3zflm)
+		switch curField3zflm {
 		// -- templateUnmarshalMsg ends here --
 
 		case "Kind":
-			found3zzcv[0] = true
+			found3zflm[0] = true
 			{
-				var zesu uint64
-				zesu, bts, err = nbs.ReadUint64Bytes(bts)
+				var zqzu uint64
+				zqzu, bts, err = nbs.ReadUint64Bytes(bts)
 
 				if err != nil {
 					panic(err)
 				}
-				z.Kind = Zkind(zesu)
+				z.Kind = Zkind(zqzu)
 			}
 		case "Str":
-			found3zzcv[1] = true
+			found3zflm[1] = true
 			z.Str, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
@@ -822,7 +832,7 @@ doneWithStruct3zzcv:
 			}
 		}
 	}
-	if nextMiss3zzcv != -1 {
+	if nextMiss3zflm != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -834,9 +844,9 @@ doneWithStruct3zzcv:
 }
 
 // fields of KS
-var unmarshalMsgFieldOrder3zzcv = []string{"Kind", "Str"}
+var unmarshalMsgFieldOrder3zflm = []string{"Kind", "Str"}
 
-var unmarshalMsgFieldSkip3zzcv = []bool{false, false}
+var unmarshalMsgFieldSkip3zflm = []bool{false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z KS) Msgsize() (s int) {
@@ -859,155 +869,155 @@ func (z *Schema) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields4zhbr = 4
+	const maxFields4zrbx = 4
 
 	// -- templateDecodeMsg starts here--
-	var totalEncodedFields4zhbr uint32
-	totalEncodedFields4zhbr, err = dc.ReadMapHeader()
+	var totalEncodedFields4zrbx uint32
+	totalEncodedFields4zrbx, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft4zhbr := totalEncodedFields4zhbr
-	missingFieldsLeft4zhbr := maxFields4zhbr - totalEncodedFields4zhbr
+	encodedFieldsLeft4zrbx := totalEncodedFields4zrbx
+	missingFieldsLeft4zrbx := maxFields4zrbx - totalEncodedFields4zrbx
 
-	var nextMiss4zhbr int32 = -1
-	var found4zhbr [maxFields4zhbr]bool
-	var curField4zhbr string
+	var nextMiss4zrbx int32 = -1
+	var found4zrbx [maxFields4zrbx]bool
+	var curField4zrbx string
 
-doneWithStruct4zhbr:
+doneWithStruct4zrbx:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft4zhbr > 0 || missingFieldsLeft4zhbr > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft4zhbr, missingFieldsLeft4zhbr, msgp.ShowFound(found4zhbr[:]), decodeMsgFieldOrder4zhbr)
-		if encodedFieldsLeft4zhbr > 0 {
-			encodedFieldsLeft4zhbr--
+	for encodedFieldsLeft4zrbx > 0 || missingFieldsLeft4zrbx > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft4zrbx, missingFieldsLeft4zrbx, msgp.ShowFound(found4zrbx[:]), decodeMsgFieldOrder4zrbx)
+		if encodedFieldsLeft4zrbx > 0 {
+			encodedFieldsLeft4zrbx--
 			field, err = dc.ReadMapKeyPtr()
 			if err != nil {
 				return
 			}
-			curField4zhbr = msgp.UnsafeString(field)
+			curField4zrbx = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss4zhbr < 0 {
+			if nextMiss4zrbx < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss4zhbr = 0
+				nextMiss4zrbx = 0
 			}
-			for nextMiss4zhbr < maxFields4zhbr && (found4zhbr[nextMiss4zhbr] || decodeMsgFieldSkip4zhbr[nextMiss4zhbr]) {
-				nextMiss4zhbr++
+			for nextMiss4zrbx < maxFields4zrbx && (found4zrbx[nextMiss4zrbx] || decodeMsgFieldSkip4zrbx[nextMiss4zrbx]) {
+				nextMiss4zrbx++
 			}
-			if nextMiss4zhbr == maxFields4zhbr {
+			if nextMiss4zrbx == maxFields4zrbx {
 				// filled all the empty fields!
-				break doneWithStruct4zhbr
+				break doneWithStruct4zrbx
 			}
-			missingFieldsLeft4zhbr--
-			curField4zhbr = decodeMsgFieldOrder4zhbr[nextMiss4zhbr]
+			missingFieldsLeft4zrbx--
+			curField4zrbx = decodeMsgFieldOrder4zrbx[nextMiss4zrbx]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField4zhbr)
-		switch curField4zhbr {
+		//fmt.Printf("switching on curField: '%v'\n", curField4zrbx)
+		switch curField4zrbx {
 		// -- templateDecodeMsg ends here --
 
 		case "SourcePath":
-			found4zhbr[0] = true
+			found4zrbx[0] = true
 			z.SourcePath, err = dc.ReadString()
 			if err != nil {
 				panic(err)
 			}
 		case "SourcePackage":
-			found4zhbr[1] = true
+			found4zrbx[1] = true
 			z.SourcePackage, err = dc.ReadString()
 			if err != nil {
 				panic(err)
 			}
 		case "ZebraSchemaId":
-			found4zhbr[2] = true
+			found4zrbx[2] = true
 			z.ZebraSchemaId, err = dc.ReadInt64()
 			if err != nil {
 				panic(err)
 			}
 		case "Structs":
-			found4zhbr[3] = true
-			var znnw uint32
-			znnw, err = dc.ReadArrayHeader()
+			found4zrbx[3] = true
+			var zkmv uint32
+			zkmv, err = dc.ReadArrayHeader()
 			if err != nil {
 				panic(err)
 			}
-			if cap(z.Structs) >= int(znnw) {
-				z.Structs = (z.Structs)[:znnw]
+			if cap(z.Structs) >= int(zkmv) {
+				z.Structs = (z.Structs)[:zkmv]
 			} else {
-				z.Structs = make([]Struct, znnw)
+				z.Structs = make([]Struct, zkmv)
 			}
-			for zdnp := range z.Structs {
-				const maxFields5zuqf = 2
+			for zuoh := range z.Structs {
+				const maxFields5zuxt = 2
 
 				// -- templateDecodeMsg starts here--
-				var totalEncodedFields5zuqf uint32
-				totalEncodedFields5zuqf, err = dc.ReadMapHeader()
+				var totalEncodedFields5zuxt uint32
+				totalEncodedFields5zuxt, err = dc.ReadMapHeader()
 				if err != nil {
 					return
 				}
-				encodedFieldsLeft5zuqf := totalEncodedFields5zuqf
-				missingFieldsLeft5zuqf := maxFields5zuqf - totalEncodedFields5zuqf
+				encodedFieldsLeft5zuxt := totalEncodedFields5zuxt
+				missingFieldsLeft5zuxt := maxFields5zuxt - totalEncodedFields5zuxt
 
-				var nextMiss5zuqf int32 = -1
-				var found5zuqf [maxFields5zuqf]bool
-				var curField5zuqf string
+				var nextMiss5zuxt int32 = -1
+				var found5zuxt [maxFields5zuxt]bool
+				var curField5zuxt string
 
-			doneWithStruct5zuqf:
+			doneWithStruct5zuxt:
 				// First fill all the encoded fields, then
 				// treat the remaining, missing fields, as Nil.
-				for encodedFieldsLeft5zuqf > 0 || missingFieldsLeft5zuqf > 0 {
-					//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft5zuqf, missingFieldsLeft5zuqf, msgp.ShowFound(found5zuqf[:]), decodeMsgFieldOrder5zuqf)
-					if encodedFieldsLeft5zuqf > 0 {
-						encodedFieldsLeft5zuqf--
+				for encodedFieldsLeft5zuxt > 0 || missingFieldsLeft5zuxt > 0 {
+					//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft5zuxt, missingFieldsLeft5zuxt, msgp.ShowFound(found5zuxt[:]), decodeMsgFieldOrder5zuxt)
+					if encodedFieldsLeft5zuxt > 0 {
+						encodedFieldsLeft5zuxt--
 						field, err = dc.ReadMapKeyPtr()
 						if err != nil {
 							return
 						}
-						curField5zuqf = msgp.UnsafeString(field)
+						curField5zuxt = msgp.UnsafeString(field)
 					} else {
 						//missing fields need handling
-						if nextMiss5zuqf < 0 {
+						if nextMiss5zuxt < 0 {
 							// tell the reader to only give us Nils
 							// until further notice.
 							dc.PushAlwaysNil()
-							nextMiss5zuqf = 0
+							nextMiss5zuxt = 0
 						}
-						for nextMiss5zuqf < maxFields5zuqf && (found5zuqf[nextMiss5zuqf] || decodeMsgFieldSkip5zuqf[nextMiss5zuqf]) {
-							nextMiss5zuqf++
+						for nextMiss5zuxt < maxFields5zuxt && (found5zuxt[nextMiss5zuxt] || decodeMsgFieldSkip5zuxt[nextMiss5zuxt]) {
+							nextMiss5zuxt++
 						}
-						if nextMiss5zuqf == maxFields5zuqf {
+						if nextMiss5zuxt == maxFields5zuxt {
 							// filled all the empty fields!
-							break doneWithStruct5zuqf
+							break doneWithStruct5zuxt
 						}
-						missingFieldsLeft5zuqf--
-						curField5zuqf = decodeMsgFieldOrder5zuqf[nextMiss5zuqf]
+						missingFieldsLeft5zuxt--
+						curField5zuxt = decodeMsgFieldOrder5zuxt[nextMiss5zuxt]
 					}
-					//fmt.Printf("switching on curField: '%v'\n", curField5zuqf)
-					switch curField5zuqf {
+					//fmt.Printf("switching on curField: '%v'\n", curField5zuxt)
+					switch curField5zuxt {
 					// -- templateDecodeMsg ends here --
 
 					case "StructName":
-						found5zuqf[0] = true
-						z.Structs[zdnp].StructName, err = dc.ReadString()
+						found5zuxt[0] = true
+						z.Structs[zuoh].StructName, err = dc.ReadString()
 						if err != nil {
 							panic(err)
 						}
 					case "Fields":
-						found5zuqf[1] = true
-						var zxxl uint32
-						zxxl, err = dc.ReadArrayHeader()
+						found5zuxt[1] = true
+						var zzrs uint32
+						zzrs, err = dc.ReadArrayHeader()
 						if err != nil {
 							panic(err)
 						}
-						if cap(z.Structs[zdnp].Fields) >= int(zxxl) {
-							z.Structs[zdnp].Fields = (z.Structs[zdnp].Fields)[:zxxl]
+						if cap(z.Structs[zuoh].Fields) >= int(zzrs) {
+							z.Structs[zuoh].Fields = (z.Structs[zuoh].Fields)[:zzrs]
 						} else {
-							z.Structs[zdnp].Fields = make([]Field, zxxl)
+							z.Structs[zuoh].Fields = make([]Field, zzrs)
 						}
-						for zefr := range z.Structs[zdnp].Fields {
-							err = z.Structs[zdnp].Fields[zefr].DecodeMsg(dc)
+						for zyff := range z.Structs[zuoh].Fields {
+							err = z.Structs[zuoh].Fields[zyff].DecodeMsg(dc)
 							if err != nil {
 								panic(err)
 							}
@@ -1019,7 +1029,7 @@ doneWithStruct4zhbr:
 						}
 					}
 				}
-				if nextMiss5zuqf != -1 {
+				if nextMiss5zuxt != -1 {
 					dc.PopAlwaysNil()
 				}
 
@@ -1031,7 +1041,7 @@ doneWithStruct4zhbr:
 			}
 		}
 	}
-	if nextMiss4zhbr != -1 {
+	if nextMiss4zrbx != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -1043,14 +1053,14 @@ doneWithStruct4zhbr:
 }
 
 // fields of Schema
-var decodeMsgFieldOrder4zhbr = []string{"SourcePath", "SourcePackage", "ZebraSchemaId", "Structs"}
+var decodeMsgFieldOrder4zrbx = []string{"SourcePath", "SourcePackage", "ZebraSchemaId", "Structs"}
 
-var decodeMsgFieldSkip4zhbr = []bool{false, false, false, false}
+var decodeMsgFieldSkip4zrbx = []bool{false, false, false, false}
 
 // fields of Struct
-var decodeMsgFieldOrder5zuqf = []string{"StructName", "Fields"}
+var decodeMsgFieldOrder5zuxt = []string{"StructName", "Fields"}
 
-var decodeMsgFieldSkip5zuqf = []bool{false, false}
+var decodeMsgFieldSkip5zuxt = []bool{false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *Schema) fieldsNotEmpty(isempty []bool) uint32 {
@@ -1096,14 +1106,14 @@ func (z *Schema) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		panic(err)
 	}
-	for zdnp := range z.Structs {
+	for zuoh := range z.Structs {
 		// map header, size 2
 		// write "StructName"
 		err = en.Append(0x82, 0xaa, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x4e, 0x61, 0x6d, 0x65)
 		if err != nil {
 			return err
 		}
-		err = en.WriteString(z.Structs[zdnp].StructName)
+		err = en.WriteString(z.Structs[zuoh].StructName)
 		if err != nil {
 			panic(err)
 		}
@@ -1112,12 +1122,12 @@ func (z *Schema) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return err
 		}
-		err = en.WriteArrayHeader(uint32(len(z.Structs[zdnp].Fields)))
+		err = en.WriteArrayHeader(uint32(len(z.Structs[zuoh].Fields)))
 		if err != nil {
 			panic(err)
 		}
-		for zefr := range z.Structs[zdnp].Fields {
-			err = z.Structs[zdnp].Fields[zefr].EncodeMsg(en)
+		for zyff := range z.Structs[zuoh].Fields {
+			err = z.Structs[zuoh].Fields[zyff].EncodeMsg(en)
 			if err != nil {
 				panic(err)
 			}
@@ -1142,16 +1152,16 @@ func (z *Schema) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "Structs"
 	o = append(o, 0xa7, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x73)
 	o = msgp.AppendArrayHeader(o, uint32(len(z.Structs)))
-	for zdnp := range z.Structs {
+	for zuoh := range z.Structs {
 		// map header, size 2
 		// string "StructName"
 		o = append(o, 0x82, 0xaa, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x4e, 0x61, 0x6d, 0x65)
-		o = msgp.AppendString(o, z.Structs[zdnp].StructName)
+		o = msgp.AppendString(o, z.Structs[zuoh].StructName)
 		// string "Fields"
 		o = append(o, 0xa6, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73)
-		o = msgp.AppendArrayHeader(o, uint32(len(z.Structs[zdnp].Fields)))
-		for zefr := range z.Structs[zdnp].Fields {
-			o, err = z.Structs[zdnp].Fields[zefr].MarshalMsg(o)
+		o = msgp.AppendArrayHeader(o, uint32(len(z.Structs[zuoh].Fields)))
+		for zyff := range z.Structs[zuoh].Fields {
+			o, err = z.Structs[zuoh].Fields[zyff].MarshalMsg(o)
 			if err != nil {
 				panic(err)
 			}
@@ -1175,173 +1185,173 @@ func (z *Schema) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []b
 
 	var field []byte
 	_ = field
-	const maxFields6zxmb = 4
+	const maxFields6zevt = 4
 
 	// -- templateUnmarshalMsg starts here--
-	var totalEncodedFields6zxmb uint32
+	var totalEncodedFields6zevt uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields6zxmb, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields6zevt, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			panic(err)
 			return
 		}
 	}
-	encodedFieldsLeft6zxmb := totalEncodedFields6zxmb
-	missingFieldsLeft6zxmb := maxFields6zxmb - totalEncodedFields6zxmb
+	encodedFieldsLeft6zevt := totalEncodedFields6zevt
+	missingFieldsLeft6zevt := maxFields6zevt - totalEncodedFields6zevt
 
-	var nextMiss6zxmb int32 = -1
-	var found6zxmb [maxFields6zxmb]bool
-	var curField6zxmb string
+	var nextMiss6zevt int32 = -1
+	var found6zevt [maxFields6zevt]bool
+	var curField6zevt string
 
-doneWithStruct6zxmb:
+doneWithStruct6zevt:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft6zxmb > 0 || missingFieldsLeft6zxmb > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft6zxmb, missingFieldsLeft6zxmb, msgp.ShowFound(found6zxmb[:]), unmarshalMsgFieldOrder6zxmb)
-		if encodedFieldsLeft6zxmb > 0 {
-			encodedFieldsLeft6zxmb--
+	for encodedFieldsLeft6zevt > 0 || missingFieldsLeft6zevt > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft6zevt, missingFieldsLeft6zevt, msgp.ShowFound(found6zevt[:]), unmarshalMsgFieldOrder6zevt)
+		if encodedFieldsLeft6zevt > 0 {
+			encodedFieldsLeft6zevt--
 			field, bts, err = nbs.ReadMapKeyZC(bts)
 			if err != nil {
 				panic(err)
 				return
 			}
-			curField6zxmb = msgp.UnsafeString(field)
+			curField6zevt = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss6zxmb < 0 {
+			if nextMiss6zevt < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss6zxmb = 0
+				nextMiss6zevt = 0
 			}
-			for nextMiss6zxmb < maxFields6zxmb && (found6zxmb[nextMiss6zxmb] || unmarshalMsgFieldSkip6zxmb[nextMiss6zxmb]) {
-				nextMiss6zxmb++
+			for nextMiss6zevt < maxFields6zevt && (found6zevt[nextMiss6zevt] || unmarshalMsgFieldSkip6zevt[nextMiss6zevt]) {
+				nextMiss6zevt++
 			}
-			if nextMiss6zxmb == maxFields6zxmb {
+			if nextMiss6zevt == maxFields6zevt {
 				// filled all the empty fields!
-				break doneWithStruct6zxmb
+				break doneWithStruct6zevt
 			}
-			missingFieldsLeft6zxmb--
-			curField6zxmb = unmarshalMsgFieldOrder6zxmb[nextMiss6zxmb]
+			missingFieldsLeft6zevt--
+			curField6zevt = unmarshalMsgFieldOrder6zevt[nextMiss6zevt]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField6zxmb)
-		switch curField6zxmb {
+		//fmt.Printf("switching on curField: '%v'\n", curField6zevt)
+		switch curField6zevt {
 		// -- templateUnmarshalMsg ends here --
 
 		case "SourcePath":
-			found6zxmb[0] = true
+			found6zevt[0] = true
 			z.SourcePath, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "SourcePackage":
-			found6zxmb[1] = true
+			found6zevt[1] = true
 			z.SourcePackage, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "ZebraSchemaId":
-			found6zxmb[2] = true
+			found6zevt[2] = true
 			z.ZebraSchemaId, bts, err = nbs.ReadInt64Bytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "Structs":
-			found6zxmb[3] = true
+			found6zevt[3] = true
 			if nbs.AlwaysNil {
 				(z.Structs) = (z.Structs)[:0]
 			} else {
 
-				var zhwb uint32
-				zhwb, bts, err = nbs.ReadArrayHeaderBytes(bts)
+				var zuhi uint32
+				zuhi, bts, err = nbs.ReadArrayHeaderBytes(bts)
 				if err != nil {
 					panic(err)
 				}
-				if cap(z.Structs) >= int(zhwb) {
-					z.Structs = (z.Structs)[:zhwb]
+				if cap(z.Structs) >= int(zuhi) {
+					z.Structs = (z.Structs)[:zuhi]
 				} else {
-					z.Structs = make([]Struct, zhwb)
+					z.Structs = make([]Struct, zuhi)
 				}
-				for zdnp := range z.Structs {
-					const maxFields7zgpo = 2
+				for zuoh := range z.Structs {
+					const maxFields7zndl = 2
 
 					// -- templateUnmarshalMsg starts here--
-					var totalEncodedFields7zgpo uint32
+					var totalEncodedFields7zndl uint32
 					if !nbs.AlwaysNil {
-						totalEncodedFields7zgpo, bts, err = nbs.ReadMapHeaderBytes(bts)
+						totalEncodedFields7zndl, bts, err = nbs.ReadMapHeaderBytes(bts)
 						if err != nil {
 							panic(err)
 							return
 						}
 					}
-					encodedFieldsLeft7zgpo := totalEncodedFields7zgpo
-					missingFieldsLeft7zgpo := maxFields7zgpo - totalEncodedFields7zgpo
+					encodedFieldsLeft7zndl := totalEncodedFields7zndl
+					missingFieldsLeft7zndl := maxFields7zndl - totalEncodedFields7zndl
 
-					var nextMiss7zgpo int32 = -1
-					var found7zgpo [maxFields7zgpo]bool
-					var curField7zgpo string
+					var nextMiss7zndl int32 = -1
+					var found7zndl [maxFields7zndl]bool
+					var curField7zndl string
 
-				doneWithStruct7zgpo:
+				doneWithStruct7zndl:
 					// First fill all the encoded fields, then
 					// treat the remaining, missing fields, as Nil.
-					for encodedFieldsLeft7zgpo > 0 || missingFieldsLeft7zgpo > 0 {
-						//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft7zgpo, missingFieldsLeft7zgpo, msgp.ShowFound(found7zgpo[:]), unmarshalMsgFieldOrder7zgpo)
-						if encodedFieldsLeft7zgpo > 0 {
-							encodedFieldsLeft7zgpo--
+					for encodedFieldsLeft7zndl > 0 || missingFieldsLeft7zndl > 0 {
+						//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft7zndl, missingFieldsLeft7zndl, msgp.ShowFound(found7zndl[:]), unmarshalMsgFieldOrder7zndl)
+						if encodedFieldsLeft7zndl > 0 {
+							encodedFieldsLeft7zndl--
 							field, bts, err = nbs.ReadMapKeyZC(bts)
 							if err != nil {
 								panic(err)
 								return
 							}
-							curField7zgpo = msgp.UnsafeString(field)
+							curField7zndl = msgp.UnsafeString(field)
 						} else {
 							//missing fields need handling
-							if nextMiss7zgpo < 0 {
+							if nextMiss7zndl < 0 {
 								// set bts to contain just mnil (0xc0)
 								bts = nbs.PushAlwaysNil(bts)
-								nextMiss7zgpo = 0
+								nextMiss7zndl = 0
 							}
-							for nextMiss7zgpo < maxFields7zgpo && (found7zgpo[nextMiss7zgpo] || unmarshalMsgFieldSkip7zgpo[nextMiss7zgpo]) {
-								nextMiss7zgpo++
+							for nextMiss7zndl < maxFields7zndl && (found7zndl[nextMiss7zndl] || unmarshalMsgFieldSkip7zndl[nextMiss7zndl]) {
+								nextMiss7zndl++
 							}
-							if nextMiss7zgpo == maxFields7zgpo {
+							if nextMiss7zndl == maxFields7zndl {
 								// filled all the empty fields!
-								break doneWithStruct7zgpo
+								break doneWithStruct7zndl
 							}
-							missingFieldsLeft7zgpo--
-							curField7zgpo = unmarshalMsgFieldOrder7zgpo[nextMiss7zgpo]
+							missingFieldsLeft7zndl--
+							curField7zndl = unmarshalMsgFieldOrder7zndl[nextMiss7zndl]
 						}
-						//fmt.Printf("switching on curField: '%v'\n", curField7zgpo)
-						switch curField7zgpo {
+						//fmt.Printf("switching on curField: '%v'\n", curField7zndl)
+						switch curField7zndl {
 						// -- templateUnmarshalMsg ends here --
 
 						case "StructName":
-							found7zgpo[0] = true
-							z.Structs[zdnp].StructName, bts, err = nbs.ReadStringBytes(bts)
+							found7zndl[0] = true
+							z.Structs[zuoh].StructName, bts, err = nbs.ReadStringBytes(bts)
 
 							if err != nil {
 								panic(err)
 							}
 						case "Fields":
-							found7zgpo[1] = true
+							found7zndl[1] = true
 							if nbs.AlwaysNil {
-								(z.Structs[zdnp].Fields) = (z.Structs[zdnp].Fields)[:0]
+								(z.Structs[zuoh].Fields) = (z.Structs[zuoh].Fields)[:0]
 							} else {
 
-								var zpmd uint32
-								zpmd, bts, err = nbs.ReadArrayHeaderBytes(bts)
+								var zoog uint32
+								zoog, bts, err = nbs.ReadArrayHeaderBytes(bts)
 								if err != nil {
 									panic(err)
 								}
-								if cap(z.Structs[zdnp].Fields) >= int(zpmd) {
-									z.Structs[zdnp].Fields = (z.Structs[zdnp].Fields)[:zpmd]
+								if cap(z.Structs[zuoh].Fields) >= int(zoog) {
+									z.Structs[zuoh].Fields = (z.Structs[zuoh].Fields)[:zoog]
 								} else {
-									z.Structs[zdnp].Fields = make([]Field, zpmd)
+									z.Structs[zuoh].Fields = make([]Field, zoog)
 								}
-								for zefr := range z.Structs[zdnp].Fields {
-									bts, err = z.Structs[zdnp].Fields[zefr].UnmarshalMsg(bts)
+								for zyff := range z.Structs[zuoh].Fields {
+									bts, err = z.Structs[zuoh].Fields[zyff].UnmarshalMsg(bts)
 									if err != nil {
 										panic(err)
 									}
@@ -1357,7 +1367,7 @@ doneWithStruct6zxmb:
 							}
 						}
 					}
-					if nextMiss7zgpo != -1 {
+					if nextMiss7zndl != -1 {
 						bts = nbs.PopAlwaysNil()
 					}
 
@@ -1370,7 +1380,7 @@ doneWithStruct6zxmb:
 			}
 		}
 	}
-	if nextMiss6zxmb != -1 {
+	if nextMiss6zevt != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -1382,22 +1392,22 @@ doneWithStruct6zxmb:
 }
 
 // fields of Schema
-var unmarshalMsgFieldOrder6zxmb = []string{"SourcePath", "SourcePackage", "ZebraSchemaId", "Structs"}
+var unmarshalMsgFieldOrder6zevt = []string{"SourcePath", "SourcePackage", "ZebraSchemaId", "Structs"}
 
-var unmarshalMsgFieldSkip6zxmb = []bool{false, false, false, false}
+var unmarshalMsgFieldSkip6zevt = []bool{false, false, false, false}
 
 // fields of Struct
-var unmarshalMsgFieldOrder7zgpo = []string{"StructName", "Fields"}
+var unmarshalMsgFieldOrder7zndl = []string{"StructName", "Fields"}
 
-var unmarshalMsgFieldSkip7zgpo = []bool{false, false}
+var unmarshalMsgFieldSkip7zndl = []bool{false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Schema) Msgsize() (s int) {
 	s = 1 + 11 + msgp.StringPrefixSize + len(z.SourcePath) + 14 + msgp.StringPrefixSize + len(z.SourcePackage) + 14 + msgp.Int64Size + 8 + msgp.ArrayHeaderSize
-	for zdnp := range z.Structs {
-		s += 1 + 11 + msgp.StringPrefixSize + len(z.Structs[zdnp].StructName) + 7 + msgp.ArrayHeaderSize
-		for zefr := range z.Structs[zdnp].Fields {
-			s += z.Structs[zdnp].Fields[zefr].Msgsize()
+	for zuoh := range z.Structs {
+		s += 1 + 11 + msgp.StringPrefixSize + len(z.Structs[zuoh].StructName) + 7 + msgp.ArrayHeaderSize
+		for zyff := range z.Structs[zuoh].Fields {
+			s += z.Structs[zuoh].Fields[zyff].Msgsize()
 		}
 	}
 	return
@@ -1418,75 +1428,75 @@ func (z *Struct) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields8zfxk = 2
+	const maxFields8zbji = 2
 
 	// -- templateDecodeMsg starts here--
-	var totalEncodedFields8zfxk uint32
-	totalEncodedFields8zfxk, err = dc.ReadMapHeader()
+	var totalEncodedFields8zbji uint32
+	totalEncodedFields8zbji, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft8zfxk := totalEncodedFields8zfxk
-	missingFieldsLeft8zfxk := maxFields8zfxk - totalEncodedFields8zfxk
+	encodedFieldsLeft8zbji := totalEncodedFields8zbji
+	missingFieldsLeft8zbji := maxFields8zbji - totalEncodedFields8zbji
 
-	var nextMiss8zfxk int32 = -1
-	var found8zfxk [maxFields8zfxk]bool
-	var curField8zfxk string
+	var nextMiss8zbji int32 = -1
+	var found8zbji [maxFields8zbji]bool
+	var curField8zbji string
 
-doneWithStruct8zfxk:
+doneWithStruct8zbji:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft8zfxk > 0 || missingFieldsLeft8zfxk > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft8zfxk, missingFieldsLeft8zfxk, msgp.ShowFound(found8zfxk[:]), decodeMsgFieldOrder8zfxk)
-		if encodedFieldsLeft8zfxk > 0 {
-			encodedFieldsLeft8zfxk--
+	for encodedFieldsLeft8zbji > 0 || missingFieldsLeft8zbji > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft8zbji, missingFieldsLeft8zbji, msgp.ShowFound(found8zbji[:]), decodeMsgFieldOrder8zbji)
+		if encodedFieldsLeft8zbji > 0 {
+			encodedFieldsLeft8zbji--
 			field, err = dc.ReadMapKeyPtr()
 			if err != nil {
 				return
 			}
-			curField8zfxk = msgp.UnsafeString(field)
+			curField8zbji = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss8zfxk < 0 {
+			if nextMiss8zbji < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss8zfxk = 0
+				nextMiss8zbji = 0
 			}
-			for nextMiss8zfxk < maxFields8zfxk && (found8zfxk[nextMiss8zfxk] || decodeMsgFieldSkip8zfxk[nextMiss8zfxk]) {
-				nextMiss8zfxk++
+			for nextMiss8zbji < maxFields8zbji && (found8zbji[nextMiss8zbji] || decodeMsgFieldSkip8zbji[nextMiss8zbji]) {
+				nextMiss8zbji++
 			}
-			if nextMiss8zfxk == maxFields8zfxk {
+			if nextMiss8zbji == maxFields8zbji {
 				// filled all the empty fields!
-				break doneWithStruct8zfxk
+				break doneWithStruct8zbji
 			}
-			missingFieldsLeft8zfxk--
-			curField8zfxk = decodeMsgFieldOrder8zfxk[nextMiss8zfxk]
+			missingFieldsLeft8zbji--
+			curField8zbji = decodeMsgFieldOrder8zbji[nextMiss8zbji]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField8zfxk)
-		switch curField8zfxk {
+		//fmt.Printf("switching on curField: '%v'\n", curField8zbji)
+		switch curField8zbji {
 		// -- templateDecodeMsg ends here --
 
 		case "StructName":
-			found8zfxk[0] = true
+			found8zbji[0] = true
 			z.StructName, err = dc.ReadString()
 			if err != nil {
 				panic(err)
 			}
 		case "Fields":
-			found8zfxk[1] = true
-			var zckk uint32
-			zckk, err = dc.ReadArrayHeader()
+			found8zbji[1] = true
+			var zsim uint32
+			zsim, err = dc.ReadArrayHeader()
 			if err != nil {
 				panic(err)
 			}
-			if cap(z.Fields) >= int(zckk) {
-				z.Fields = (z.Fields)[:zckk]
+			if cap(z.Fields) >= int(zsim) {
+				z.Fields = (z.Fields)[:zsim]
 			} else {
-				z.Fields = make([]Field, zckk)
+				z.Fields = make([]Field, zsim)
 			}
-			for zdkm := range z.Fields {
-				err = z.Fields[zdkm].DecodeMsg(dc)
+			for zqkl := range z.Fields {
+				err = z.Fields[zqkl].DecodeMsg(dc)
 				if err != nil {
 					panic(err)
 				}
@@ -1498,7 +1508,7 @@ doneWithStruct8zfxk:
 			}
 		}
 	}
-	if nextMiss8zfxk != -1 {
+	if nextMiss8zbji != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -1510,9 +1520,9 @@ doneWithStruct8zfxk:
 }
 
 // fields of Struct
-var decodeMsgFieldOrder8zfxk = []string{"StructName", "Fields"}
+var decodeMsgFieldOrder8zbji = []string{"StructName", "Fields"}
 
-var decodeMsgFieldSkip8zfxk = []bool{false, false}
+var decodeMsgFieldSkip8zbji = []bool{false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *Struct) fieldsNotEmpty(isempty []bool) uint32 {
@@ -1540,8 +1550,8 @@ func (z *Struct) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		panic(err)
 	}
-	for zdkm := range z.Fields {
-		err = z.Fields[zdkm].EncodeMsg(en)
+	for zqkl := range z.Fields {
+		err = z.Fields[zqkl].EncodeMsg(en)
 		if err != nil {
 			panic(err)
 		}
@@ -1559,8 +1569,8 @@ func (z *Struct) MarshalMsg(b []byte) (o []byte, err error) {
 	// string "Fields"
 	o = append(o, 0xa6, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73)
 	o = msgp.AppendArrayHeader(o, uint32(len(z.Fields)))
-	for zdkm := range z.Fields {
-		o, err = z.Fields[zdkm].MarshalMsg(o)
+	for zqkl := range z.Fields {
+		o, err = z.Fields[zqkl].MarshalMsg(o)
 		if err != nil {
 			panic(err)
 		}
@@ -1583,83 +1593,83 @@ func (z *Struct) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []b
 
 	var field []byte
 	_ = field
-	const maxFields9zaus = 2
+	const maxFields9zrsa = 2
 
 	// -- templateUnmarshalMsg starts here--
-	var totalEncodedFields9zaus uint32
+	var totalEncodedFields9zrsa uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields9zaus, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields9zrsa, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			panic(err)
 			return
 		}
 	}
-	encodedFieldsLeft9zaus := totalEncodedFields9zaus
-	missingFieldsLeft9zaus := maxFields9zaus - totalEncodedFields9zaus
+	encodedFieldsLeft9zrsa := totalEncodedFields9zrsa
+	missingFieldsLeft9zrsa := maxFields9zrsa - totalEncodedFields9zrsa
 
-	var nextMiss9zaus int32 = -1
-	var found9zaus [maxFields9zaus]bool
-	var curField9zaus string
+	var nextMiss9zrsa int32 = -1
+	var found9zrsa [maxFields9zrsa]bool
+	var curField9zrsa string
 
-doneWithStruct9zaus:
+doneWithStruct9zrsa:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft9zaus > 0 || missingFieldsLeft9zaus > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft9zaus, missingFieldsLeft9zaus, msgp.ShowFound(found9zaus[:]), unmarshalMsgFieldOrder9zaus)
-		if encodedFieldsLeft9zaus > 0 {
-			encodedFieldsLeft9zaus--
+	for encodedFieldsLeft9zrsa > 0 || missingFieldsLeft9zrsa > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft9zrsa, missingFieldsLeft9zrsa, msgp.ShowFound(found9zrsa[:]), unmarshalMsgFieldOrder9zrsa)
+		if encodedFieldsLeft9zrsa > 0 {
+			encodedFieldsLeft9zrsa--
 			field, bts, err = nbs.ReadMapKeyZC(bts)
 			if err != nil {
 				panic(err)
 				return
 			}
-			curField9zaus = msgp.UnsafeString(field)
+			curField9zrsa = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss9zaus < 0 {
+			if nextMiss9zrsa < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss9zaus = 0
+				nextMiss9zrsa = 0
 			}
-			for nextMiss9zaus < maxFields9zaus && (found9zaus[nextMiss9zaus] || unmarshalMsgFieldSkip9zaus[nextMiss9zaus]) {
-				nextMiss9zaus++
+			for nextMiss9zrsa < maxFields9zrsa && (found9zrsa[nextMiss9zrsa] || unmarshalMsgFieldSkip9zrsa[nextMiss9zrsa]) {
+				nextMiss9zrsa++
 			}
-			if nextMiss9zaus == maxFields9zaus {
+			if nextMiss9zrsa == maxFields9zrsa {
 				// filled all the empty fields!
-				break doneWithStruct9zaus
+				break doneWithStruct9zrsa
 			}
-			missingFieldsLeft9zaus--
-			curField9zaus = unmarshalMsgFieldOrder9zaus[nextMiss9zaus]
+			missingFieldsLeft9zrsa--
+			curField9zrsa = unmarshalMsgFieldOrder9zrsa[nextMiss9zrsa]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField9zaus)
-		switch curField9zaus {
+		//fmt.Printf("switching on curField: '%v'\n", curField9zrsa)
+		switch curField9zrsa {
 		// -- templateUnmarshalMsg ends here --
 
 		case "StructName":
-			found9zaus[0] = true
+			found9zrsa[0] = true
 			z.StructName, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
 				panic(err)
 			}
 		case "Fields":
-			found9zaus[1] = true
+			found9zrsa[1] = true
 			if nbs.AlwaysNil {
 				(z.Fields) = (z.Fields)[:0]
 			} else {
 
-				var zdqa uint32
-				zdqa, bts, err = nbs.ReadArrayHeaderBytes(bts)
+				var zcvp uint32
+				zcvp, bts, err = nbs.ReadArrayHeaderBytes(bts)
 				if err != nil {
 					panic(err)
 				}
-				if cap(z.Fields) >= int(zdqa) {
-					z.Fields = (z.Fields)[:zdqa]
+				if cap(z.Fields) >= int(zcvp) {
+					z.Fields = (z.Fields)[:zcvp]
 				} else {
-					z.Fields = make([]Field, zdqa)
+					z.Fields = make([]Field, zcvp)
 				}
-				for zdkm := range z.Fields {
-					bts, err = z.Fields[zdkm].UnmarshalMsg(bts)
+				for zqkl := range z.Fields {
+					bts, err = z.Fields[zqkl].UnmarshalMsg(bts)
 					if err != nil {
 						panic(err)
 					}
@@ -1675,7 +1685,7 @@ doneWithStruct9zaus:
 			}
 		}
 	}
-	if nextMiss9zaus != -1 {
+	if nextMiss9zrsa != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -1687,15 +1697,15 @@ doneWithStruct9zaus:
 }
 
 // fields of Struct
-var unmarshalMsgFieldOrder9zaus = []string{"StructName", "Fields"}
+var unmarshalMsgFieldOrder9zrsa = []string{"StructName", "Fields"}
 
-var unmarshalMsgFieldSkip9zaus = []bool{false, false}
+var unmarshalMsgFieldSkip9zrsa = []bool{false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Struct) Msgsize() (s int) {
 	s = 1 + 11 + msgp.StringPrefixSize + len(z.StructName) + 7 + msgp.ArrayHeaderSize
-	for zdkm := range z.Fields {
-		s += z.Fields[zdkm].Msgsize()
+	for zqkl := range z.Fields {
+		s += z.Fields[zqkl].Msgsize()
 	}
 	return
 }
@@ -1714,9 +1724,9 @@ func (z *Zkind) DecodeMsg(dc *msgp.Reader) (err error) {
 	}
 
 	{
-		var zqyt uint64
-		zqyt, err = dc.ReadUint64()
-		(*z) = Zkind(zqyt)
+		var zazf uint64
+		zazf, err = dc.ReadUint64()
+		(*z) = Zkind(zazf)
 	}
 	if err != nil {
 		panic(err)
@@ -1758,13 +1768,13 @@ func (z *Zkind) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []by
 	}
 
 	{
-		var ziig uint64
-		ziig, bts, err = nbs.ReadUint64Bytes(bts)
+		var zgtw uint64
+		zgtw, bts, err = nbs.ReadUint64Bytes(bts)
 
 		if err != nil {
 			panic(err)
 		}
-		(*z) = Zkind(ziig)
+		(*z) = Zkind(zgtw)
 	}
 	if sawTopNil {
 		bts = nbs.PopAlwaysNil()
@@ -1794,118 +1804,118 @@ func (z *Ztype) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields10zvjc = 3
+	const maxFields10zgre = 3
 
 	// -- templateDecodeMsg starts here--
-	var totalEncodedFields10zvjc uint32
-	totalEncodedFields10zvjc, err = dc.ReadMapHeader()
+	var totalEncodedFields10zgre uint32
+	totalEncodedFields10zgre, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft10zvjc := totalEncodedFields10zvjc
-	missingFieldsLeft10zvjc := maxFields10zvjc - totalEncodedFields10zvjc
+	encodedFieldsLeft10zgre := totalEncodedFields10zgre
+	missingFieldsLeft10zgre := maxFields10zgre - totalEncodedFields10zgre
 
-	var nextMiss10zvjc int32 = -1
-	var found10zvjc [maxFields10zvjc]bool
-	var curField10zvjc string
+	var nextMiss10zgre int32 = -1
+	var found10zgre [maxFields10zgre]bool
+	var curField10zgre string
 
-doneWithStruct10zvjc:
+doneWithStruct10zgre:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft10zvjc > 0 || missingFieldsLeft10zvjc > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft10zvjc, missingFieldsLeft10zvjc, msgp.ShowFound(found10zvjc[:]), decodeMsgFieldOrder10zvjc)
-		if encodedFieldsLeft10zvjc > 0 {
-			encodedFieldsLeft10zvjc--
+	for encodedFieldsLeft10zgre > 0 || missingFieldsLeft10zgre > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft10zgre, missingFieldsLeft10zgre, msgp.ShowFound(found10zgre[:]), decodeMsgFieldOrder10zgre)
+		if encodedFieldsLeft10zgre > 0 {
+			encodedFieldsLeft10zgre--
 			field, err = dc.ReadMapKeyPtr()
 			if err != nil {
 				return
 			}
-			curField10zvjc = msgp.UnsafeString(field)
+			curField10zgre = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss10zvjc < 0 {
+			if nextMiss10zgre < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss10zvjc = 0
+				nextMiss10zgre = 0
 			}
-			for nextMiss10zvjc < maxFields10zvjc && (found10zvjc[nextMiss10zvjc] || decodeMsgFieldSkip10zvjc[nextMiss10zvjc]) {
-				nextMiss10zvjc++
+			for nextMiss10zgre < maxFields10zgre && (found10zgre[nextMiss10zgre] || decodeMsgFieldSkip10zgre[nextMiss10zgre]) {
+				nextMiss10zgre++
 			}
-			if nextMiss10zvjc == maxFields10zvjc {
+			if nextMiss10zgre == maxFields10zgre {
 				// filled all the empty fields!
-				break doneWithStruct10zvjc
+				break doneWithStruct10zgre
 			}
-			missingFieldsLeft10zvjc--
-			curField10zvjc = decodeMsgFieldOrder10zvjc[nextMiss10zvjc]
+			missingFieldsLeft10zgre--
+			curField10zgre = decodeMsgFieldOrder10zgre[nextMiss10zgre]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField10zvjc)
-		switch curField10zvjc {
+		//fmt.Printf("switching on curField: '%v'\n", curField10zgre)
+		switch curField10zgre {
 		// -- templateDecodeMsg ends here --
 
 		case "Name":
-			found10zvjc[0] = true
-			const maxFields11zvxd = 2
+			found10zgre[0] = true
+			const maxFields11zlos = 2
 
 			// -- templateDecodeMsg starts here--
-			var totalEncodedFields11zvxd uint32
-			totalEncodedFields11zvxd, err = dc.ReadMapHeader()
+			var totalEncodedFields11zlos uint32
+			totalEncodedFields11zlos, err = dc.ReadMapHeader()
 			if err != nil {
 				return
 			}
-			encodedFieldsLeft11zvxd := totalEncodedFields11zvxd
-			missingFieldsLeft11zvxd := maxFields11zvxd - totalEncodedFields11zvxd
+			encodedFieldsLeft11zlos := totalEncodedFields11zlos
+			missingFieldsLeft11zlos := maxFields11zlos - totalEncodedFields11zlos
 
-			var nextMiss11zvxd int32 = -1
-			var found11zvxd [maxFields11zvxd]bool
-			var curField11zvxd string
+			var nextMiss11zlos int32 = -1
+			var found11zlos [maxFields11zlos]bool
+			var curField11zlos string
 
-		doneWithStruct11zvxd:
+		doneWithStruct11zlos:
 			// First fill all the encoded fields, then
 			// treat the remaining, missing fields, as Nil.
-			for encodedFieldsLeft11zvxd > 0 || missingFieldsLeft11zvxd > 0 {
-				//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft11zvxd, missingFieldsLeft11zvxd, msgp.ShowFound(found11zvxd[:]), decodeMsgFieldOrder11zvxd)
-				if encodedFieldsLeft11zvxd > 0 {
-					encodedFieldsLeft11zvxd--
+			for encodedFieldsLeft11zlos > 0 || missingFieldsLeft11zlos > 0 {
+				//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft11zlos, missingFieldsLeft11zlos, msgp.ShowFound(found11zlos[:]), decodeMsgFieldOrder11zlos)
+				if encodedFieldsLeft11zlos > 0 {
+					encodedFieldsLeft11zlos--
 					field, err = dc.ReadMapKeyPtr()
 					if err != nil {
 						return
 					}
-					curField11zvxd = msgp.UnsafeString(field)
+					curField11zlos = msgp.UnsafeString(field)
 				} else {
 					//missing fields need handling
-					if nextMiss11zvxd < 0 {
+					if nextMiss11zlos < 0 {
 						// tell the reader to only give us Nils
 						// until further notice.
 						dc.PushAlwaysNil()
-						nextMiss11zvxd = 0
+						nextMiss11zlos = 0
 					}
-					for nextMiss11zvxd < maxFields11zvxd && (found11zvxd[nextMiss11zvxd] || decodeMsgFieldSkip11zvxd[nextMiss11zvxd]) {
-						nextMiss11zvxd++
+					for nextMiss11zlos < maxFields11zlos && (found11zlos[nextMiss11zlos] || decodeMsgFieldSkip11zlos[nextMiss11zlos]) {
+						nextMiss11zlos++
 					}
-					if nextMiss11zvxd == maxFields11zvxd {
+					if nextMiss11zlos == maxFields11zlos {
 						// filled all the empty fields!
-						break doneWithStruct11zvxd
+						break doneWithStruct11zlos
 					}
-					missingFieldsLeft11zvxd--
-					curField11zvxd = decodeMsgFieldOrder11zvxd[nextMiss11zvxd]
+					missingFieldsLeft11zlos--
+					curField11zlos = decodeMsgFieldOrder11zlos[nextMiss11zlos]
 				}
-				//fmt.Printf("switching on curField: '%v'\n", curField11zvxd)
-				switch curField11zvxd {
+				//fmt.Printf("switching on curField: '%v'\n", curField11zlos)
+				switch curField11zlos {
 				// -- templateDecodeMsg ends here --
 
 				case "Kind":
-					found11zvxd[0] = true
+					found11zlos[0] = true
 					{
-						var ziga uint64
-						ziga, err = dc.ReadUint64()
-						z.Name.Kind = Zkind(ziga)
+						var zjjj uint64
+						zjjj, err = dc.ReadUint64()
+						z.Name.Kind = Zkind(zjjj)
 					}
 					if err != nil {
 						panic(err)
 					}
 				case "Str":
-					found11zvxd[1] = true
+					found11zlos[1] = true
 					z.Name.Str, err = dc.ReadString()
 					if err != nil {
 						panic(err)
@@ -1917,12 +1927,12 @@ doneWithStruct10zvjc:
 					}
 				}
 			}
-			if nextMiss11zvxd != -1 {
+			if nextMiss11zlos != -1 {
 				dc.PopAlwaysNil()
 			}
 
 		case "Domain":
-			found10zvjc[1] = true
+			found10zgre[1] = true
 			if dc.IsNil() {
 				err = dc.ReadNil()
 				if err != nil {
@@ -1949,7 +1959,7 @@ doneWithStruct10zvjc:
 				}
 			}
 		case "Range":
-			found10zvjc[2] = true
+			found10zgre[2] = true
 			if dc.IsNil() {
 				err = dc.ReadNil()
 				if err != nil {
@@ -1982,7 +1992,7 @@ doneWithStruct10zvjc:
 			}
 		}
 	}
-	if nextMiss10zvjc != -1 {
+	if nextMiss10zgre != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -1994,14 +2004,14 @@ doneWithStruct10zvjc:
 }
 
 // fields of Ztype
-var decodeMsgFieldOrder10zvjc = []string{"Name", "Domain", "Range"}
+var decodeMsgFieldOrder10zgre = []string{"Name", "Domain", "Range"}
 
-var decodeMsgFieldSkip10zvjc = []bool{false, false, false}
+var decodeMsgFieldSkip10zgre = []bool{false, false, false}
 
 // fields of KS
-var decodeMsgFieldOrder11zvxd = []string{"Kind", "Str"}
+var decodeMsgFieldOrder11zlos = []string{"Kind", "Str"}
 
-var decodeMsgFieldSkip11zvxd = []bool{false, false}
+var decodeMsgFieldSkip11zlos = []bool{false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *Ztype) fieldsNotEmpty(isempty []bool) uint32 {
@@ -2025,11 +2035,11 @@ func (z *Ztype) fieldsNotEmpty(isempty []bool) uint32 {
 func (z *Ztype) EncodeMsg(en *msgp.Writer) (err error) {
 
 	// honor the omitempty tags
-	var empty_zadv [3]bool
-	fieldsInUse_zxyk := z.fieldsNotEmpty(empty_zadv[:])
+	var empty_zjkx [3]bool
+	fieldsInUse_zqhi := z.fieldsNotEmpty(empty_zjkx[:])
 
 	// map header
-	err = en.WriteMapHeader(fieldsInUse_zxyk)
+	err = en.WriteMapHeader(fieldsInUse_zqhi)
 	if err != nil {
 		return err
 	}
@@ -2054,7 +2064,7 @@ func (z *Ztype) EncodeMsg(en *msgp.Writer) (err error) {
 	if err != nil {
 		panic(err)
 	}
-	if !empty_zadv[1] {
+	if !empty_zjkx[1] {
 		// write "Domain"
 		err = en.Append(0xa6, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e)
 		if err != nil {
@@ -2073,7 +2083,7 @@ func (z *Ztype) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zadv[2] {
+	if !empty_zjkx[2] {
 		// write "Range"
 		err = en.Append(0xa5, 0x52, 0x61, 0x6e, 0x67, 0x65)
 		if err != nil {
@@ -2156,125 +2166,125 @@ func (z *Ztype) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []by
 
 	var field []byte
 	_ = field
-	const maxFields12zlnc = 3
+	const maxFields12zrwo = 3
 
 	// -- templateUnmarshalMsg starts here--
-	var totalEncodedFields12zlnc uint32
+	var totalEncodedFields12zrwo uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields12zlnc, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields12zrwo, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			panic(err)
 			return
 		}
 	}
-	encodedFieldsLeft12zlnc := totalEncodedFields12zlnc
-	missingFieldsLeft12zlnc := maxFields12zlnc - totalEncodedFields12zlnc
+	encodedFieldsLeft12zrwo := totalEncodedFields12zrwo
+	missingFieldsLeft12zrwo := maxFields12zrwo - totalEncodedFields12zrwo
 
-	var nextMiss12zlnc int32 = -1
-	var found12zlnc [maxFields12zlnc]bool
-	var curField12zlnc string
+	var nextMiss12zrwo int32 = -1
+	var found12zrwo [maxFields12zrwo]bool
+	var curField12zrwo string
 
-doneWithStruct12zlnc:
+doneWithStruct12zrwo:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft12zlnc > 0 || missingFieldsLeft12zlnc > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft12zlnc, missingFieldsLeft12zlnc, msgp.ShowFound(found12zlnc[:]), unmarshalMsgFieldOrder12zlnc)
-		if encodedFieldsLeft12zlnc > 0 {
-			encodedFieldsLeft12zlnc--
+	for encodedFieldsLeft12zrwo > 0 || missingFieldsLeft12zrwo > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft12zrwo, missingFieldsLeft12zrwo, msgp.ShowFound(found12zrwo[:]), unmarshalMsgFieldOrder12zrwo)
+		if encodedFieldsLeft12zrwo > 0 {
+			encodedFieldsLeft12zrwo--
 			field, bts, err = nbs.ReadMapKeyZC(bts)
 			if err != nil {
 				panic(err)
 				return
 			}
-			curField12zlnc = msgp.UnsafeString(field)
+			curField12zrwo = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
-			if nextMiss12zlnc < 0 {
+			if nextMiss12zrwo < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss12zlnc = 0
+				nextMiss12zrwo = 0
 			}
-			for nextMiss12zlnc < maxFields12zlnc && (found12zlnc[nextMiss12zlnc] || unmarshalMsgFieldSkip12zlnc[nextMiss12zlnc]) {
-				nextMiss12zlnc++
+			for nextMiss12zrwo < maxFields12zrwo && (found12zrwo[nextMiss12zrwo] || unmarshalMsgFieldSkip12zrwo[nextMiss12zrwo]) {
+				nextMiss12zrwo++
 			}
-			if nextMiss12zlnc == maxFields12zlnc {
+			if nextMiss12zrwo == maxFields12zrwo {
 				// filled all the empty fields!
-				break doneWithStruct12zlnc
+				break doneWithStruct12zrwo
 			}
-			missingFieldsLeft12zlnc--
-			curField12zlnc = unmarshalMsgFieldOrder12zlnc[nextMiss12zlnc]
+			missingFieldsLeft12zrwo--
+			curField12zrwo = unmarshalMsgFieldOrder12zrwo[nextMiss12zrwo]
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField12zlnc)
-		switch curField12zlnc {
+		//fmt.Printf("switching on curField: '%v'\n", curField12zrwo)
+		switch curField12zrwo {
 		// -- templateUnmarshalMsg ends here --
 
 		case "Name":
-			found12zlnc[0] = true
-			const maxFields13zlxb = 2
+			found12zrwo[0] = true
+			const maxFields13znut = 2
 
 			// -- templateUnmarshalMsg starts here--
-			var totalEncodedFields13zlxb uint32
+			var totalEncodedFields13znut uint32
 			if !nbs.AlwaysNil {
-				totalEncodedFields13zlxb, bts, err = nbs.ReadMapHeaderBytes(bts)
+				totalEncodedFields13znut, bts, err = nbs.ReadMapHeaderBytes(bts)
 				if err != nil {
 					panic(err)
 					return
 				}
 			}
-			encodedFieldsLeft13zlxb := totalEncodedFields13zlxb
-			missingFieldsLeft13zlxb := maxFields13zlxb - totalEncodedFields13zlxb
+			encodedFieldsLeft13znut := totalEncodedFields13znut
+			missingFieldsLeft13znut := maxFields13znut - totalEncodedFields13znut
 
-			var nextMiss13zlxb int32 = -1
-			var found13zlxb [maxFields13zlxb]bool
-			var curField13zlxb string
+			var nextMiss13znut int32 = -1
+			var found13znut [maxFields13znut]bool
+			var curField13znut string
 
-		doneWithStruct13zlxb:
+		doneWithStruct13znut:
 			// First fill all the encoded fields, then
 			// treat the remaining, missing fields, as Nil.
-			for encodedFieldsLeft13zlxb > 0 || missingFieldsLeft13zlxb > 0 {
-				//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft13zlxb, missingFieldsLeft13zlxb, msgp.ShowFound(found13zlxb[:]), unmarshalMsgFieldOrder13zlxb)
-				if encodedFieldsLeft13zlxb > 0 {
-					encodedFieldsLeft13zlxb--
+			for encodedFieldsLeft13znut > 0 || missingFieldsLeft13znut > 0 {
+				//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft13znut, missingFieldsLeft13znut, msgp.ShowFound(found13znut[:]), unmarshalMsgFieldOrder13znut)
+				if encodedFieldsLeft13znut > 0 {
+					encodedFieldsLeft13znut--
 					field, bts, err = nbs.ReadMapKeyZC(bts)
 					if err != nil {
 						panic(err)
 						return
 					}
-					curField13zlxb = msgp.UnsafeString(field)
+					curField13znut = msgp.UnsafeString(field)
 				} else {
 					//missing fields need handling
-					if nextMiss13zlxb < 0 {
+					if nextMiss13znut < 0 {
 						// set bts to contain just mnil (0xc0)
 						bts = nbs.PushAlwaysNil(bts)
-						nextMiss13zlxb = 0
+						nextMiss13znut = 0
 					}
-					for nextMiss13zlxb < maxFields13zlxb && (found13zlxb[nextMiss13zlxb] || unmarshalMsgFieldSkip13zlxb[nextMiss13zlxb]) {
-						nextMiss13zlxb++
+					for nextMiss13znut < maxFields13znut && (found13znut[nextMiss13znut] || unmarshalMsgFieldSkip13znut[nextMiss13znut]) {
+						nextMiss13znut++
 					}
-					if nextMiss13zlxb == maxFields13zlxb {
+					if nextMiss13znut == maxFields13znut {
 						// filled all the empty fields!
-						break doneWithStruct13zlxb
+						break doneWithStruct13znut
 					}
-					missingFieldsLeft13zlxb--
-					curField13zlxb = unmarshalMsgFieldOrder13zlxb[nextMiss13zlxb]
+					missingFieldsLeft13znut--
+					curField13znut = unmarshalMsgFieldOrder13znut[nextMiss13znut]
 				}
-				//fmt.Printf("switching on curField: '%v'\n", curField13zlxb)
-				switch curField13zlxb {
+				//fmt.Printf("switching on curField: '%v'\n", curField13znut)
+				switch curField13znut {
 				// -- templateUnmarshalMsg ends here --
 
 				case "Kind":
-					found13zlxb[0] = true
+					found13znut[0] = true
 					{
-						var zqcy uint64
-						zqcy, bts, err = nbs.ReadUint64Bytes(bts)
+						var znww uint64
+						znww, bts, err = nbs.ReadUint64Bytes(bts)
 
 						if err != nil {
 							panic(err)
 						}
-						z.Name.Kind = Zkind(zqcy)
+						z.Name.Kind = Zkind(znww)
 					}
 				case "Str":
-					found13zlxb[1] = true
+					found13znut[1] = true
 					z.Name.Str, bts, err = nbs.ReadStringBytes(bts)
 
 					if err != nil {
@@ -2287,12 +2297,12 @@ doneWithStruct12zlnc:
 					}
 				}
 			}
-			if nextMiss13zlxb != -1 {
+			if nextMiss13znut != -1 {
 				bts = nbs.PopAlwaysNil()
 			}
 
 		case "Domain":
-			found12zlnc[1] = true
+			found12zrwo[1] = true
 			if nbs.AlwaysNil {
 				if z.Domain != nil {
 					z.Domain.UnmarshalMsg(msgp.OnlyNilSlice)
@@ -2320,7 +2330,7 @@ doneWithStruct12zlnc:
 				}
 			}
 		case "Range":
-			found12zlnc[2] = true
+			found12zrwo[2] = true
 			if nbs.AlwaysNil {
 				if z.Range != nil {
 					z.Range.UnmarshalMsg(msgp.OnlyNilSlice)
@@ -2354,7 +2364,7 @@ doneWithStruct12zlnc:
 			}
 		}
 	}
-	if nextMiss12zlnc != -1 {
+	if nextMiss12zrwo != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -2366,14 +2376,14 @@ doneWithStruct12zlnc:
 }
 
 // fields of Ztype
-var unmarshalMsgFieldOrder12zlnc = []string{"Name", "Domain", "Range"}
+var unmarshalMsgFieldOrder12zrwo = []string{"Name", "Domain", "Range"}
 
-var unmarshalMsgFieldSkip12zlnc = []bool{false, false, false}
+var unmarshalMsgFieldSkip12zrwo = []bool{false, false, false}
 
 // fields of KS
-var unmarshalMsgFieldOrder13zlxb = []string{"Kind", "Str"}
+var unmarshalMsgFieldOrder13znut = []string{"Kind", "Str"}
 
-var unmarshalMsgFieldSkip13zlxb = []bool{false, false}
+var unmarshalMsgFieldSkip13znut = []bool{false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Ztype) Msgsize() (s int) {

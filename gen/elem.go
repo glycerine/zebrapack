@@ -280,16 +280,16 @@ func (a *Array) GetZtype() (r zebra.Ztype) {
 	r.Name.Str = r.Name.Kind.String()
 
 	zt := a.Els.GetZtype()
-	r.Domain = &zt
+	r.Range = &zt
 
-	// set Range to be the size of the array
-	r.Range = &zebra.Ztype{}
-	r.Range.Name.Str = a.Size
+	// set Domain to be the size of the array
+	r.Domain = &zebra.Ztype{}
+	r.Domain.Name.Str = a.Size
 	n, err := strconv.Atoi(a.Size)
 	if err != nil {
 		panic(err)
 	}
-	r.Range.Name.Kind = zebra.Zkind(n)
+	r.Domain.Name.Kind = zebra.Zkind(n)
 	return
 }
 

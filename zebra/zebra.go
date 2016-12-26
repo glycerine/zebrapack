@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-//go:generate msgp
+//go:generate zebrapack
 
 // Zkind describes the detailed type of the field
 // implentation note: must correspond to gen/Primitive
@@ -60,12 +60,13 @@ type KS struct {
 type Ztype struct {
 	Name KS
 
-	// key for maps. elem for ptr, slice, array.
+	// key for maps. elem for ptr, slice.
+	// For arrays, holds the fixed size.
 	// null when Name.Kind is < 23 (for a primitive).
 	Domain *Ztype `msg:",omitempty"`
 
-	// value for maps. otherwise typically null.
-	// For an array, holds the fixed size.
+	// value for maps.  For arrays, holds element type.
+	// Otherwise typically null.
 	Range *Ztype `msg:",omitempty"`
 }
 
@@ -107,9 +108,9 @@ type Field struct {
 
 	// type info
 	FieldTypeStr   string
-	FieldCategory  Zkind // will be InvalidCat if Skip is true
-	FieldPrimitive Zkind // avail if FieldCategory == BaseElemCat
-	FieldFullType  *Ztype
+	FieldCategory  Zkind  // will be InvalidCat if Skip is true
+	FieldPrimitive Zkind  // avail if FieldCategory == BaseElemCat
+	FieldFullType  *Ztype `msg:",omitempty"`
 
 	// if OmitEmpty then we don't serialize
 	// the field if it has its zero-value.
