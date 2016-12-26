@@ -177,7 +177,7 @@ not allowed.
 
 # benchmarking
 
-Based on the implementation now available in https://github.com/glycerine/zebrapack, we measure read and write speed with the `-fast -fast-strings` optimizations on. Benchmarks adapted from https://github.com/glycerine/go_serialization_benchmarks of this struct:
+Based on the implementation now available in https://github.com/glycerine/zebrapack, we measure read and write speed with the `-fast -fast-strings` optimizations on. Benchmarks from https://github.com/glycerine/go_serialization_benchmarks of this struct:
 
 ```
 type A struct {
