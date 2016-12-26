@@ -5,7 +5,7 @@ ZebraPack is a data definition language and serialization format. It removes gra
 
 The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
-At this time it is feature complete, and in beta while we get experience with it. See https://github.com/glycerine/zebra for the spec/ideas that we are implementing here.
+At this time it is feature complete, and in beta while we get experience with it. See the section below on background and motivation ideas that we are implementing here.
 
 ### `msgp:",omitempty"` tags on struct fields
 
@@ -407,10 +407,10 @@ This is a code generation tool and serialization library for [MessagePack](http:
 In a source file, include the following directive:
 
 ```go
-//go:generate msgp
+//go:generate zebrapack
 ```
 
-The `msgp` command will generate serialization methods for all exported type declarations in the file.
+The `zebrapack` command will generate serialization methods for all exported type declarations in the file.
 
 You can [read more about the code generation options here](http://github.com/tinylib/msgp/wiki/Using-the-Code-Generator).
 
