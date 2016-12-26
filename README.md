@@ -76,7 +76,7 @@ The central idea of ZebraPack: start with msgpack2, but when encoding a struct (
 
 By adding a small schema description (essentially a lookup table with int->string mappings and a type identifier) at the front of the serialization stream/file, we get known schema types up-front, plus compression and the ability to evolve our data without crashes. If you've ever had your msgpack crash your server because you tried to change the type of a field but keep the same name, then you know how fragile msgpack can be.
 
-The second easy idea: use the Go language struct definition syntax as our serialization schema. Since https://github.com/tinylib/msgp already easily parses Go files, we can use this to our advantage. While we are focused on a serialization format for Go, other language's that can read msgpack2 could be easily modified to read the schema and translation file, since they themselves will be stored in msgpack2 format at the front of the file (extension code number 9).
+The second easy idea: use the Go language struct definition syntax as our serialization schema. Since https://github.com/tinylib/msgp already easily parses Go files, we can use this to our advantage. While we are focused on a serialization format for Go, other language's that can read msgpack2 can readily parse the schema. The schema is stored in msgpack2 (and optionally json) rather than zebrapack for ease of bootstrapping.
 
 # background
 
