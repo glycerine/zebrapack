@@ -9,12 +9,12 @@ Note that we continue to offer straight msgpack2 serialization and deserializati
 
 At this time it is feature complete, and in beta while we get experience with it. See the section below on background and motivation ideas that we are implementing here.
 
-### `msgp:",omitempty"` tags on struct fields
+### `msg:",omitempty"` tags on struct fields
 
 In the following example,
 ```
 type Hedgehog struct {
-   Furriness string `msgp:",omitempty"`
+   Furriness string `msg:",omitempty"`
 }
 ```
 If Furriness is the empty string, the field will not be serialized, thus saving the space of the field name on the wire.
