@@ -14,6 +14,7 @@ type ZebraConfig struct {
 
 	WriteSchema string
 	GenSchemaId bool
+	UseZid      bool
 }
 
 // call DefineFlags before myflags.Parse()
@@ -27,6 +28,7 @@ func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 
 	fs.StringVar(&c.WriteSchema, "write-schema", "", "write schema header to this file; - for stdout")
 	fs.BoolVar(&c.GenSchemaId, "genid", false, "generate a fresh random zebraSchemaId64 value for your schema")
+	fs.BoolVar(&c.UseZid, "fast", false, "for speed and type safety, instead of writing field names in structs, write the numeric zid into the msgpack. See also -write-schema to generate an external schema description to read/write in other languages.")
 }
 
 // call c.ValidateConfig() after myflags.Parse()
