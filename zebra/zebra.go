@@ -1,3 +1,6 @@
+/*
+package zebra specifies the ZebraPack serialization format.
+*/
 package zebra
 
 import (
