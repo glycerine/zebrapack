@@ -1,22 +1,49 @@
-// msgp is a code generation tool for
+// zebrapack is a code generation tool for
 // creating methods to serialize and de-serialize
-// Go data structures to and from MessagePack.
+// Go data structures to and from ZebraPack (a
+// schema-based serialization format derived
+// from MessagePack2).
 //
 // This package is targeted at the `go generate` tool.
 // To use it, include the following directive in a
 // go source file with types requiring source generation:
 //
-//     //go:generate msgp
+//     //go:generate zebrapack -fast
 //
 // The go generate tool should set the proper environment variables for
 // the generator to execute without any command-line flags. However, the
 // following options are supported, if you need them:
 //
-//  -o = output file name (default is {input}_gen.go)
-//  -file = input file name (or directory; default is $GOFILE, which is set by the `go generate` command)
-//  -io = satisfy the `msgp.Decodable` and `msgp.Encodable` interfaces (default is true)
-//  -marshal = satisfy the `msgp.Marshaler` and `msgp.Unmarshaler` interfaces (default is true)
-//  -tests = generate tests and benchmarks (default is true)
+//   -fast
+//     	write out ZebraPack format. For speed and type safety, instead of writing field names in structs, write the numeric zid into (an otherwise) msgpack2 serialization. See also -write-schema to generate an external schema description to read/write in other languages.
+//
+//   -fast-strings
+//     	for speed when reading a string in a message that won't be reused, this flag means we'll use unsafe to cast the string header and avoid allocation.
+//
+//   -file string
+//     	input file name (or directory; default is $GOFILE,
+//      which is set by the `go generate` command)
+//
+//   -genid
+//     	generate a fresh random zebraSchemaId64 value for your schema
+//
+//   -io
+//     	create Encode and Decode methods (default true)
+//
+//   -marshal
+//     	create Marshal and Unmarshal methods (default true)
+//
+//   -o string
+//     	output file (default is {input}_gen.go)
+//
+//   -tests
+//     	create tests and benchmarks (default true)
+//
+//   -unexported
+//     	also process unexported types
+//
+//   -write-schema string
+//     	write schema header to this file; - for stdout
 //
 // For more information, please read README.md, and the wiki at github.com/glycerine/zebrapack
 //
