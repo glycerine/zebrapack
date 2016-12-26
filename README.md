@@ -9,7 +9,7 @@ The ZebraPack format is actually binary compatible with msgpack2: it just adopts
 
 The resulting binary encoding is very similar in style to protobufs/Thrift/Capn'Proto. However it is much more friendly to other (dynamic) languages. Also it is screaming fast (see benchmarks below).
 
-Once we have a schema, we can be very strongly typed, and be very efficient. We borrow the idea of field deprecation from FlatBuffers. For conflicting update detection, we use CapnProto's field numbering discipline. We add support for the `omitempty` tag. In fact, in ZebraPack, all fields are `omitempty`. If they are empty they won't be serialized on the wire. Like FlatBuffers and Protobufs, this enables one to define a very large schema of possibilities, and then only transmit a very small (efficient) portion of that schema over the wire.
+Once we have a schema, we can be very strongly typed, and be very efficient. We borrow the idea of field deprecation from FlatBuffers. For conflicting update detection, we use CapnProto's field numbering discipline. We add support for the `omitempty` tag. In fact, in ZebraPack, all fields are `omitempty`. If they are empty they won't be serialized on the wire. Like FlatBuffers and Protobufs, this enables one to define a very large schema of possibilities, and then only transmit a very small (efficient) portion that is currently relevant over the wire.
 
 Full credit: the code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
