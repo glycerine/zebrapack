@@ -123,6 +123,6 @@ If the output compiles, then there's a pretty good chance things are fine. (Plus
 
 ### Performance
 
-If you like benchmarks, see [here](http://bravenewgeek.com/so-you-wanna-go-fast/) and [here](https://github.com/alecthomas/go_serialization_benchmarks).
+If you like benchmarks, see [here](http://bravenewgeek.com/so-you-wanna-go-fast/) and [here](https://github.com/glycerine/zebra); [here for the benchmark source code](https://github.com/glycerine/go_serialization_benchmarks).
 
 As one might expect, the generated methods that deal with `[]byte` are faster for small objects, but the `io.Reader/Writer` methods are generally more memory-efficient (and, at some point, faster) for large (> 2KB) objects.
