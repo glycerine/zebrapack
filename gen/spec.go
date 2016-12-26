@@ -121,10 +121,10 @@ func NewPrinter(m Method, out io.Writer, tests io.Writer, cfg *cfg.ZebraConfig) 
 		gens = append(gens, fieldsempty(out))
 	}
 	if m.isset(Encode) {
-		gens = append(gens, encode(out))
+		gens = append(gens, encode(out, cfg))
 	}
 	if m.isset(Marshal) {
-		gens = append(gens, marshal(out))
+		gens = append(gens, marshal(out, cfg))
 	}
 	if m.isset(Unmarshal) {
 		gens = append(gens, unmarshal(out, cfg))

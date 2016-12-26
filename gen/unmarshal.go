@@ -119,7 +119,8 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 	}
 	u.needsField()
 	k := genSerial()
-	tmpl, nStr := genUnmarshalMsgTemplate(k)
+	fast := u.cfg.UseZid
+	tmpl, nStr := genUnmarshalMsgTemplate(k, fast)
 
 	fieldOrder := fmt.Sprintf("\n var unmarshalMsgFieldOrder%s = []string{", nStr)
 	fieldSkip := fmt.Sprintf("\n var unmarshalMsgFieldSkip%s = []bool{", nStr)
@@ -146,8 +147,13 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 		if s.Fields[i].Skip {
 			continue
 		}
-		u.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
-		u.p.printf("\n%s[%d]=true;", found, i)
+		if fast {
+			u.p.printf("\ncase \"%v\":", s.Fields[i].ZebraId)
+			u.p.printf("\n%s[%d]=true;", found, i)
+		} else {
+			u.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
+			u.p.printf("\n%s[%d]=true;", found, i)
+		}
 		u.depth++
 		next(u, s.Fields[i].FieldElem)
 		u.depth--

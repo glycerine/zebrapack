@@ -2,13 +2,16 @@ package gen
 
 import (
 	"fmt"
-	"github.com/glycerine/zebrapack/msgp"
 	"io"
+
+	"github.com/glycerine/zebrapack/cfg"
+	"github.com/glycerine/zebrapack/msgp"
 )
 
-func marshal(w io.Writer) *marshalGen {
+func marshal(w io.Writer, cfg *cfg.ZebraConfig) *marshalGen {
 	return &marshalGen{
-		p: printer{w: w},
+		p:   printer{w: w},
+		cfg: cfg,
 	}
 }
 
@@ -16,6 +19,7 @@ type marshalGen struct {
 	passes
 	p    printer
 	fuse []byte
+	cfg  *cfg.ZebraConfig
 }
 
 func (m *marshalGen) Method() Method { return Marshal }
@@ -100,6 +104,7 @@ func (m *marshalGen) tuple(s *Struct) {
 
 func (m *marshalGen) mapstruct(s *Struct) {
 	data := make([]byte, 0, 64)
+	fast := m.cfg.UseZid
 	nfields := len(s.Fields) - s.SkipCount
 	if s.hasOmitEmptyTags {
 		m.p.printf("\n\n// honor the omitempty tags\n")
@@ -121,16 +126,21 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
 			m.p.printf("\n if !empty[%d] {", i)
 		}
-		switch s.KeyTyp {
-		case "Int64":
-			data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)
-		default:
-			data = msgp.AppendString(nil, s.Fields[i].FieldTag)
+
+		if fast {
+
+			m.p.printf("\n// string %q", s.Fields[i].FieldTag)
+		} else {
+			switch s.KeyTyp {
+			case "Int64":
+				data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)
+			default:
+				data = msgp.AppendString(nil, s.Fields[i].FieldTag)
+			}
+
+			m.p.printf("\n// string %q", s.Fields[i].FieldTag)
+			m.Fuse(data)
 		}
-
-		m.p.printf("\n// string %q", s.Fields[i].FieldTag)
-		m.Fuse(data)
-
 		next(m, s.Fields[i].FieldElem)
 
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {

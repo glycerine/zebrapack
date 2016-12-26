@@ -1,13 +1,10 @@
 package gen
 
-import (
-	"fmt"
-	"strings"
-)
+// -fast zid-using versions of decode/unmarshal
 
 // We treat empty fields as if they were Nil on the wire.
-var templateDecodeMsg = `
-	// -- templateDecodeMsg starts here--
+var templateDecodeMsgZid = `
+	// -- templateDecodeMsgZid starts here--
     var totalEncodedFields_ uint32
 	totalEncodedFields_, err = dc.ReadMapHeader()
 	if err != nil {
@@ -18,7 +15,7 @@ var templateDecodeMsg = `
 
 	var nextMiss_ int32 = -1
 	var found_ [maxFields_]bool
-	var curField_ string
+	var curField_ int
 
 doneWithStruct_:
 	// First fill all the encoded fields, then
@@ -27,11 +24,10 @@ doneWithStruct_:
         //fmt.Printf("encodedFieldsLeft: %%v, missingFieldsLeft: %%v, found: '%%v', fields: '%%#v'\n", encodedFieldsLeft_, missingFieldsLeft_, msgp.ShowFound(found_[:]), decodeMsgFieldOrder_)
 		if encodedFieldsLeft_ > 0 {
 			encodedFieldsLeft_--
-			field, err = dc.ReadMapKeyPtr()
+			curField_, err = dc.ReadInt()
 			if err != nil {
 				return
 			}
-			curField_ = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
 			if nextMiss_ < 0 {
@@ -48,24 +44,15 @@ doneWithStruct_:
 				break doneWithStruct_
 			}
 			missingFieldsLeft_--
-			curField_ = decodeMsgFieldOrder_[nextMiss_]
+			curField_ = nextMiss_
 		}
         //fmt.Printf("switching on curField: '%%v'\n", curField_)
 		switch curField_ {
 		// -- templateDecodeMsg ends here --
 `
 
-func genDecodeMsgTemplate(n int, fast bool) (template, nStr string) {
-	nStr = fmt.Sprintf("%v%v", n, randIdent())
-	tpl := templateDecodeMsg
-	if fast {
-		tpl = templateDecodeMsgZid
-	}
-	return strings.Replace(tpl, `_`, nStr, -1), nStr
-}
-
-var templateUnmarshalMsg = `
-	// -- templateUnmarshalMsg starts here--
+var templateUnmarshalMsgZid = `
+	// -- templateUnmarshalMsgZid starts here--
     var totalEncodedFields_ uint32
     if !nbs.AlwaysNil {
 	    totalEncodedFields_, bts, err = nbs.ReadMapHeaderBytes(bts)
@@ -79,7 +66,7 @@ var templateUnmarshalMsg = `
 
 	var nextMiss_ int32 = -1
 	var found_ [maxFields_]bool
-	var curField_ string
+	var curField_ int
 
 doneWithStruct_:
 	// First fill all the encoded fields, then
@@ -88,12 +75,11 @@ doneWithStruct_:
         //fmt.Printf("encodedFieldsLeft: %%v, missingFieldsLeft: %%v, found: '%%v', fields: '%%#v'\n", encodedFieldsLeft_, missingFieldsLeft_, msgp.ShowFound(found_[:]), unmarshalMsgFieldOrder_)
 		if encodedFieldsLeft_ > 0 {
 			encodedFieldsLeft_--
-			field, bts, err = nbs.ReadMapKeyZC(bts)
+			curField_, bts, err = nbs.ReadIntBytes(bts)
 			if err != nil { 
                 panic(err)
 				return
 			}
-			curField_ = msgp.UnsafeString(field)
 		} else {
 			//missing fields need handling
 			if nextMiss_ < 0 {
@@ -109,18 +95,9 @@ doneWithStruct_:
 				break doneWithStruct_
 			}
 			missingFieldsLeft_--
-			curField_ = unmarshalMsgFieldOrder_[nextMiss_]
+			curField_ = nextMiss_
 		}
         //fmt.Printf("switching on curField: '%%v'\n", curField_)
 		switch curField_ {
 		// -- templateUnmarshalMsg ends here --
 `
-
-func genUnmarshalMsgTemplate(n int, fast bool) (template, nStr string) {
-	nStr = fmt.Sprintf("%v%v", n, randIdent())
-	tpl := templateUnmarshalMsg
-	if fast {
-		tpl = templateUnmarshalMsgZid
-	}
-	return strings.Replace(tpl, `_`, nStr, -1), nStr
-}

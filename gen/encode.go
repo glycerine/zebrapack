@@ -2,13 +2,16 @@ package gen
 
 import (
 	"fmt"
-	"github.com/glycerine/zebrapack/msgp"
 	"io"
+
+	"github.com/glycerine/zebrapack/cfg"
+	"github.com/glycerine/zebrapack/msgp"
 )
 
-func encode(w io.Writer) *encodeGen {
+func encode(w io.Writer, cfg *cfg.ZebraConfig) *encodeGen {
 	return &encodeGen{
-		p: printer{w: w},
+		p:   printer{w: w},
+		cfg: cfg,
 	}
 }
 
@@ -16,6 +19,7 @@ type encodeGen struct {
 	passes
 	p    printer
 	fuse []byte
+	cfg  *cfg.ZebraConfig
 }
 
 func (e *encodeGen) Method() Method { return Encode }
@@ -106,6 +110,7 @@ func (e *encodeGen) appendraw(bts []byte) {
 func (e *encodeGen) structmap(s *Struct) {
 	nfields := len(s.Fields) - s.SkipCount
 	var data []byte
+	fast := e.cfg.UseZid
 	empty := "empty_" + randIdent()
 	inUse := "fieldsInUse_" + randIdent()
 	if s.hasOmitEmptyTags {
@@ -134,10 +139,13 @@ func (e *encodeGen) structmap(s *Struct) {
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
 			e.p.printf("\n if !%s[%d] {", empty, i)
 		}
+		if fast {
 
-		data = msgp.AppendString(nil, s.Fields[i].FieldTag)
-		e.p.printf("\n// write %q", s.Fields[i].FieldTag)
-		e.Fuse(data)
+		} else {
+			data = msgp.AppendString(nil, s.Fields[i].FieldTag)
+			e.p.printf("\n// write %q", s.Fields[i].FieldTag)
+			e.Fuse(data)
+		}
 		next(e, s.Fields[i].FieldElem)
 
 		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {

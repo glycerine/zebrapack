@@ -177,7 +177,8 @@ func (d *decodeGen) structAsMap(s *Struct) {
 	d.needsField()
 
 	k := genSerial()
-	tmpl, nStr := genDecodeMsgTemplate(k)
+	fast := d.cfg.UseZid
+	tmpl, nStr := genDecodeMsgTemplate(k, fast)
 
 	fieldOrder := fmt.Sprintf("\n var decodeMsgFieldOrder%s = []string{", nStr)
 	fieldSkip := fmt.Sprintf("\n var decodeMsgFieldSkip%s = []bool{", nStr)
@@ -208,8 +209,13 @@ func (d *decodeGen) structAsMap(s *Struct) {
 		if s.Fields[i].Skip {
 			continue
 		}
-		d.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
-		d.p.printf("\n%s[%d]=true;", found, i)
+		if fast {
+			d.p.printf("\ncase \"%v\":", s.Fields[i].ZebraId)
+			d.p.printf("\n%s[%d]=true;", found, i)
+		} else {
+			d.p.printf("\ncase \"%s\":", s.Fields[i].FieldTag)
+			d.p.printf("\n%s[%d]=true;", found, i)
+		}
 		//d.p.printf("\n fmt.Printf(\"I found field '%s' at depth=%d. dc.AlwaysNil = %%v\", dc.AlwaysNil);\n", s.Fields[i].FieldTag, d.depth)
 		d.depth++
 		next(d, s.Fields[i].FieldElem)
