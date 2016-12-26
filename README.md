@@ -7,13 +7,13 @@ It does all this while maintaining the possibility of easy compatibility with al
 
 Why start with [msgpack2](http://msgpack.org)?  Quite simple: msgpack2 is simple, fast, and extremely portable. It has an implementation in every language you've heard of, and some you haven't. It has a well defined and short spec.
 
-The ZebraPack format is actually binary compatible with msgpack2: it just adopts a new convention about how to encode the field names of structs. Structs are encoded in msgpack using maps, as usual. Hence all data is still encoded precisely in the msgpack2 format. The only difference in ZebraPack is this convention: maps that represent structs are now keyed by integers. Rather than have string keys -- the convention for most msgpack2 language bindings -- in ZebraPack we use integers as keys for those maps that are representing structs. These integers are associated with a field name and type in a (seperable) schema. The schema is also defined and encoded in msgpack2.
+The ZebraPack format is actually binary compatible with msgpack2: it just adopts a new convention about how to encode the field names of structs. Structs are encoded in msgpack2 using maps, as usual. Hence all data is still encoded precisely in the msgpack2 format. The only difference in ZebraPack is this convention: maps that represent structs are now keyed by integers. Rather than have string keys -- the convention for most msgpack2 language bindings -- in ZebraPack we use integers as keys for those maps that are representing structs. These integers are associated with a field name and type in a (seperable) schema. The schema is also defined and encoded in msgpack2.
 
 The resulting binary encoding is very similar in style to protobufs/Thrift/Capn'Proto. However it is much more friendly to other (dynamic) languages. Also it is screaming fast (see benchmarks below).
 
 Once we have a schema, we can be very strongly typed, and be very efficient. We borrow the idea of field deprecation from FlatBuffers. For conflicting update detection, we use CapnProto's field numbering discipline. We add support for the `omitempty` tag. In fact, in ZebraPack, all fields are `omitempty`. If they are empty they won't be serialized on the wire. Like FlatBuffers and Protobufs, this enables one to define a very large schema of possibilities, and then only transmit a very small (efficient) portion that is currently relevant over the wire.
 
-Full credit: the code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
+Full credit: the code here descends from the fantastic msgpack2 code generator https://github.com/tinylib/msgp by Philip Hofer.
 
 Note that we continue to offer straight msgpack2 serialization and deserialization, and we add support for the `omitempty` tag for efficiency. To get msgpack2 instead of zebrapack, just leave off the `-fast` flag to `zebrapack`. In other words, by default we codegen for msgpack2. To engage the zebrapack serialization you would simply add the `-fast` (and optionally `-fast-strings`) flags to the `zebrapack` run.  The defaults may change in the future.
 
