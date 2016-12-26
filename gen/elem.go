@@ -277,7 +277,7 @@ func (a *Array) TypeName() string {
 func (a *Array) GetZtype() (r zebra.Ztype) {
 
 	r.Name.Kind = zebra.ArrayCat
-	r.Name.Str = a.TypeName()
+	r.Name.Str = r.Name.Kind.String()
 
 	zt := a.Els.GetZtype()
 	r.Domain = &zt
@@ -315,7 +315,7 @@ type Map struct {
 func (m *Map) GetZtype() (r zebra.Ztype) {
 
 	r.Name.Kind = zebra.MapCat
-	r.Name.Str = m.TypeName()
+	r.Name.Str = r.Name.Kind.String()
 
 	r.Domain = &zebra.Ztype{}
 	r.Domain.Name.Kind = zebra.ZkindFromString(m.KeyTyp)
@@ -388,8 +388,8 @@ func (s *Slice) SetVarname(a string) {
 }
 
 func (s *Slice) GetZtype() (r zebra.Ztype) {
-	r.Name.Str = s.TypeName()
 	r.Name.Kind = zebra.SliceCat
+	r.Name.Str = r.Name.Kind.String()
 
 	dom := s.Els.GetZtype()
 	r.Domain = &dom
@@ -420,8 +420,8 @@ type Ptr struct {
 }
 
 func (s *Ptr) GetZtype() (r zebra.Ztype) {
-	r.Name.Str = s.TypeName()
 	r.Name.Kind = zebra.PtrCat
+	r.Name.Str = r.Name.Kind.String()
 
 	dom := s.Value.GetZtype()
 	r.Domain = &dom
@@ -501,7 +501,7 @@ type Struct struct {
 
 func (s *Struct) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.StructCat
-	r.Name.Str = s.TypeName()
+	r.Name.Str = r.Name.Kind.String() // s.TypeName()
 	return
 }
 
@@ -583,12 +583,7 @@ type BaseElem struct {
 
 func (s *BaseElem) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.Zkind(s.Value)
-	if r.Name.Kind < 22 {
-		r.Name.Str = r.Name.Kind.String()
-		return
-	}
-	r.Name.Str = s.TypeName()
-	//	panic(fmt.Errorf("what to do for BaseElem.GetZtype()? BaseElem.Value.String() = '%s'; r.Name.Str = '%v'", s.Value.String(), r.Name.Str))
+	r.Name.Str = r.Name.Kind.String()
 	return
 }
 
