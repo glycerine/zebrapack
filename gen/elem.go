@@ -280,9 +280,10 @@ func (a *Array) GetZtype() (r zebra.Ztype) {
 	r.Name.Str = a.TypeName()
 
 	zt := a.Els.GetZtype()
-	r.Domain = zt.Name
+	r.Domain = &zt.Name
 
 	// set Range to be the size of the array
+	r.Range = &zebra.KS{}
 	r.Range.Str = a.Size
 	n, err := strconv.Atoi(a.Size)
 	if err != nil {
@@ -316,11 +317,12 @@ func (m *Map) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.MapCat
 	r.Name.Str = m.TypeName()
 
+	r.Domain = &zebra.KS{}
 	r.Domain.Kind = zebra.ZkindFromString(m.KeyTyp)
 	r.Domain.Str = r.Domain.Kind.String()
 
 	rng := m.Value.GetZtype()
-	r.Range = rng.Name
+	r.Range = &rng.Name
 	return
 }
 
@@ -390,7 +392,7 @@ func (s *Slice) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.SliceCat
 
 	dom := s.Els.GetZtype()
-	r.Domain = dom.Name
+	r.Domain = &dom.Name
 	return
 }
 
@@ -422,7 +424,7 @@ func (s *Ptr) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.PtrCat
 
 	dom := s.Value.GetZtype()
-	r.Domain = dom.Name
+	r.Domain = &dom.Name
 	return
 }
 

@@ -53,6 +53,7 @@ const (
 type KS struct {
 	Kind Zkind
 	Str  string
+	Next *KS
 }
 
 // Ztype describes any type, be it a BaseElem,
@@ -62,11 +63,11 @@ type Ztype struct {
 
 	// key for maps. elem for ptr, slice, array.
 	// Invalid when Name.Kind is < 23 (for a primitive).
-	Domain KS
+	Domain *KS
 
 	// value for maps. otherwise typically zero (Invalid).
 	// For an array, holds the fixed size.
-	Range KS
+	Range *KS
 }
 
 // ZebraSchema is the top level container
@@ -109,7 +110,7 @@ type Field struct {
 	FieldTypeStr   string
 	FieldCategory  Zkind // will be InvalidCat if Skip is true
 	FieldPrimitive Zkind // avail if FieldCategory == BaseElemCat
-	FieldFullType  Ztype
+	FieldFullType  *Ztype
 
 	// if OmitEmpty then we don't serialize
 	// the field if it has its zero-value.

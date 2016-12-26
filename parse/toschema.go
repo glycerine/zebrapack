@@ -32,7 +32,8 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 					Deprecated:     f.Deprecated,
 				}
 				if !fld.Skip {
-					fld.FieldFullType = f.FieldElem.GetZtype()
+					zt := f.FieldElem.GetZtype()
+					fld.FieldFullType = &zt
 					fld.FieldTypeStr = f.FieldElem.TypeName()
 				}
 				//fmt.Printf("\n in %v,  on field %#v ... fld='%#v'\n", tr.StructName, f, fld)
