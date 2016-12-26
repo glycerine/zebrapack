@@ -5,7 +5,9 @@ ZebraPack is a data definition language and serialization format. It removes gra
 
 Why start with [msgpack2](http://msgpack.org)?  Quite simple: msgpack2 is simple, fast, and extremely portable. It has an implementation in every language you've heard of.
 
-The ZebraPack format is actually binary compatible with msgpack2: it just adopts a new convention about how to encode the field names of structs. Structs are encoded in msgpack using maps, as usual. Hence all data is still encoded precisely in the msgpack2 format. The only difference in ZebraPack is this convention: map keys are now integers. Rather than the strings that is the convention for msgpack2 language bindings, in ZebraPack we use integers. These integers are associated with a field name and type in a (seperable) schema. The schema is also defined and encoded in msgpack2.
+The ZebraPack format is actually binary compatible with msgpack2: it just adopts a new convention about how to encode the field names of structs. Structs are encoded in msgpack using maps, as usual. Hence all data is still encoded precisely in the msgpack2 format. The only difference in ZebraPack is this convention: maps that represent structs are now keyed by integers. Rather than have string keys -- the convention for most msgpack2 language bindings -- in ZebraPack we use integers as keys for those maps that are representing structs. These integers are associated with a field name and type in a (seperable) schema. The schema is also defined and encoded in msgpack2.
+
+The resulting binary encoding is very similar in style to protobufs/Thrift/Capn'Proto. However it is much more friendly to other (dynamic) languages. Also it is screaming fast (see benchmarks below).
 
 The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
