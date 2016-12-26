@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/shurcooL/go-goon"
 	"github.com/glycerine/zebrapack/msgp"
+	"github.com/shurcooL/go-goon"
 )
 
 var VerboseOmitTest = false
@@ -218,7 +218,7 @@ func TestMissingNilledOutWhenUnmarshallingOrDecodingNilIntoNestedStructs(t *test
 //   - b) target is an already allocated pointer. fill with nil.
 //
 // wire field is present
-//   - a) target is nil pointer. need to allocate then fil.
+//   - a) target is nil pointer. need to allocate then fill.
 //   - b) target is an already allocated pointer, need to fill it in.
 
 // next test if individual fields are marked nil, as opposed to whole structs.

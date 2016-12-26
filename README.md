@@ -17,7 +17,12 @@ type Hedgehog struct {
 ```
 If Furriness is the empty string, the field will not be serialized, thus saving the space of the field name on the wire.
 
-Generally, most zero values that have the omitempty tag applied will be skipped. Recursive struct elements are an exception; they are always included and are never impacted by omitempty tagging recursively. Naturally the member's own fields may have tags that will be in-force locally once the serializer reaches them. Note that member structs are different from member pointers-to-structs. Nil pointers that are tagged `omitempty` will have their field skipped.
+It is safe to re-use structs even with `omitempty`. For reference:
+
+from https://github.com/tinylib/msgp/issues/154:
+> The only special feature of UnmarshalMsg and DecodeMsg (from a zero-alloc standpoint) is that they will use pre-existing fields in an object rather than allocating new ones. So, if you decode into the same object repeatedly, things like slices and maps won't be re-allocated on each decode; instead, they will be re-sized appropriately. In other words, mutable fields are simply mutated in-place.
+
+This continues to hold true, and missing fields on the wire will zero the field in any re-used struct.
 
 Under tuple encoding, all fields are serialized and the omitempty tag is ignored.
 
