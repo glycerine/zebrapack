@@ -1,5 +1,9 @@
 package main
 
+import (
+	"time"
+)
+
 const zebraSchemaId64 = 0x6eb25cc0f9a3e
 
 func main() {}
@@ -21,4 +25,13 @@ type Big struct {
 	Myptr     *S2         `zid:"2"`
 	Myarray   [3]string   `zid:"3"`
 	MySlice   []string    `zid:"4"`
+}
+
+type A struct {
+	Name   string    `zid:"0"`
+	Bday   time.Time `zid:"1"`
+	Phone  string    `zid:"2"`
+	Sibs   int       `zid:"3"`
+	GPA    float64   `zid:"4"`
+	Friend bool      `zid:"5"`
 }

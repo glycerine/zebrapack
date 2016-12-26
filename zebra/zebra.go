@@ -36,17 +36,19 @@ const (
 	Intf       Zkind = 19 // interface{}
 	Time       Zkind = 20 // time.Time
 	Ext        Zkind = 21 // extension
-	IDENT      Zkind = 22 // IDENT means an unrecognized identifier
+
+	// IDENT means an unrecognized identifier;
+	// it typically means a named struct type.
+	IDENT Zkind = 22
 
 	// compound types
 	// implementation note: should correspond to gen/Elem.
-	InvalidCat  Zkind = 23
-	BaseElemCat Zkind = 24
-	MapCat      Zkind = 25
-	StructCat   Zkind = 26
-	SliceCat    Zkind = 27
-	ArrayCat    Zkind = 28
-	PointerCat  Zkind = 29
+	BaseElemCat Zkind = 23
+	MapCat      Zkind = 24
+	StructCat   Zkind = 25
+	SliceCat    Zkind = 26
+	ArrayCat    Zkind = 27
+	PointerCat  Zkind = 28
 )
 
 // KS is a building block for Ztype.
@@ -87,10 +89,15 @@ type Struct struct {
 // Field represents fields within a struct.
 type Field struct {
 
-	// Zid locates update collisions and ease resolution.
+	// Zid numbering detects update collisions
+	// when two developers simultaneously add two
+	// new fields. Zid numbering allows sane
+	// forward/backward data evolution, like protobufs
+	// and Cap'nProto.
 	//
-	// Both follow Cap'nProto semantics: start at numbering at 0,
-	// and strictly/always increase numbers monotically.
+	// Zid follows Cap'nProto numbering semantics:
+	// start at numbering at 0, and strictly/always
+	// increase numbers monotically.
 	//
 	// No gaps and no duplicate Zid are allowed.
 	//
@@ -102,8 +109,15 @@ type Field struct {
 	// just mark it as deprecated with the `deprecated:"true"`
 	// tag, and change its Go type to struct{}.
 	//
-	Zid          int64
-	FieldGoName  string
+
+	// the zebra id
+	Zid int64
+
+	// the name of the field in the Go schema/source file.
+	FieldGoName string
+
+	// optional wire-name designated by a
+	// `msg:"tagname"` tag on the struct field.
 	FieldTagName string
 
 	// =======================
@@ -113,7 +127,7 @@ type Field struct {
 	// human readable/Go type description
 	FieldTypeStr string `msg:",omitempty"`
 
-	// will be InvalidCat if Skip is true
+	// the broad category of this type. empty if Skip is true
 	FieldCategory Zkind `msg:",omitempty"`
 
 	// avail if FieldCategory == BaseElemCat
@@ -138,7 +152,7 @@ type Field struct {
 	// when reading.
 	Skip bool `msg:",omitempty"`
 
-	// Deprecated means tagged with `deprecated:"true"`
+	// Deprecated means tagged with `deprecated:"true"`.
 	// Compilers/libraries should discourage and warn
 	// users away from writing to such fields, while
 	// not making it impossible to either read or write
@@ -196,9 +210,8 @@ func ZkindFromString(s string) Zkind {
 	case "ext":
 		return Ext
 	case "ident":
+		// IDENT typically means a named struct
 		return IDENT
-	case "invalidcat":
-		return InvalidCat
 	case "baseelem":
 		return BaseElemCat
 	case "map":
@@ -265,9 +278,8 @@ func (i Zkind) String() string {
 	case Ext:
 		return "Ext"
 	case IDENT:
+		// IDENT typically means a named struct
 		return "IDENT"
-	case InvalidCat:
-		return "InvalidCat"
 	case BaseElemCat:
 		return "BaseElem"
 	case MapCat:
