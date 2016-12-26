@@ -9,6 +9,8 @@ import (
 
 // Zkind describes the detailed type of the field
 // implentation note: must correspond to gen/Primitive
+// Since it also stores the fixed size of a array type,
+// it needs to be large.
 type Zkind uint64
 
 const (
@@ -77,7 +79,7 @@ type Ztype struct {
 	Range *Ztype `msg:",omitempty"`
 }
 
-// ZebraSchema is the top level container
+// Schema is the top level container
 type Schema struct {
 	SourcePath    string
 	SourcePackage string
@@ -115,7 +117,7 @@ type Field struct {
 	// tag, and change its Go type to struct{}.
 	//
 
-	// the zebra id
+	// Zid is the zebrapack id
 	Zid int64
 
 	// the name of the field in the Go schema/source file.
