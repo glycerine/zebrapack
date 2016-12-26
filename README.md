@@ -385,6 +385,8 @@ Second, here is the (json version) of the zebrapack schema (stored canonically i
 }
 ~~~
 
+The official, machine-readable definition of the zebrapack format is given in this file: https://github.com/glycerine/zebrapack/blob/master/zebra/zebra.go
+
 command line flags
 ------------------
 
