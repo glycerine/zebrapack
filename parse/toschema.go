@@ -74,7 +74,7 @@ func getCatPrimiType(f *gen.StructField) (zc zebra.Zkind, zp zebra.Zkind) {
 	case *gen.Array:
 		zc = zebra.ArrayCat
 	case *gen.Ptr:
-		zc = zebra.PtrCat
+		zc = zebra.PointerCat
 	case *gen.BaseElem:
 		zc = zebra.BaseElemCat
 		zp = zebra.Zkind(e.Value)

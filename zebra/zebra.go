@@ -46,7 +46,7 @@ const (
 	StructCat   Zkind = 26
 	SliceCat    Zkind = 27
 	ArrayCat    Zkind = 28
-	PtrCat      Zkind = 29
+	PointerCat  Zkind = 29
 )
 
 // KS is a building block for Ztype.
@@ -56,7 +56,7 @@ type KS struct {
 }
 
 // Ztype describes any type, be it a BaseElem,
-// Map, Struct, Slice, Array, or Ptr.
+// Map, Struct, Slice, Array, or Pointer.
 type Ztype struct {
 	Name KS
 
@@ -184,18 +184,18 @@ func ZkindFromString(s string) Zkind {
 		return IDENT
 	case "invalidcat":
 		return InvalidCat
-	case "baseelemcat":
+	case "baseelem":
 		return BaseElemCat
-	case "mapcat":
+	case "map":
 		return MapCat
-	case "structcat":
+	case "struct":
 		return StructCat
-	case "slicecat":
+	case "slice":
 		return SliceCat
-	case "arraycat":
+	case "array":
 		return ArrayCat
-	case "ptrcat":
-		return PtrCat
+	case "pointer":
+		return PointerCat
 	}
 	panic(fmt.Errorf("unrecognized arg '%s' to ZkindFromString()", s))
 }
@@ -254,17 +254,17 @@ func (i Zkind) String() string {
 	case InvalidCat:
 		return "InvalidCat"
 	case BaseElemCat:
-		return "BaseElemCat"
+		return "BaseElem"
 	case MapCat:
-		return "MapCat"
+		return "Map"
 	case StructCat:
-		return "StructCat"
+		return "Struct"
 	case SliceCat:
-		return "SliceCat"
+		return "Slice"
 	case ArrayCat:
-		return "ArrayCat"
-	case PtrCat:
-		return "PtrCat"
+		return "Array"
+	case PointerCat:
+		return "Pointer"
 	default:
 		panic(fmt.Errorf("unrecognized Zkind value %#v", i))
 	}

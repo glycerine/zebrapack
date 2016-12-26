@@ -420,7 +420,7 @@ type Ptr struct {
 }
 
 func (s *Ptr) GetZtype() (r zebra.Ztype) {
-	r.Name.Kind = zebra.PtrCat
+	r.Name.Kind = zebra.PointerCat
 	r.Name.Str = r.Name.Kind.String()
 
 	dom := s.Value.GetZtype()
