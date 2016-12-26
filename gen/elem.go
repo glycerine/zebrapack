@@ -276,6 +276,9 @@ func (a *Array) TypeName() string {
 
 func (a *Array) GetZtype() (r zebra.Ztype) {
 
+	r.Name.Kind = zebra.ArrayCat
+	r.Name.Str = a.TypeName()
+
 	zt := a.Els.GetZtype()
 	r.Domain = zt.Name
 
