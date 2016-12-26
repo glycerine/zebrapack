@@ -5,7 +5,7 @@ ZebraPack is a data definition language and serialization format. It removes gra
 
 The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
-At this time it is experimental. See https://github.com/glycerine/zebra for the ideas that we are implementing here.
+At this time it feature complete, and in beta while we get experience with it. See https://github.com/glycerine/zebra for the spec/ideas that we are implementing here.
 
 ### `msgp:",omitempty"` tags on struct fields
 
