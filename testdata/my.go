@@ -28,10 +28,10 @@ type Big struct {
 }
 
 type A struct {
-	Name   string    `zid:"0"`
+	Name   string    `zid:"0" msg:"name"`
 	Bday   time.Time `zid:"1"`
-	Phone  string    `zid:"2"`
-	Sibs   int       `zid:"3"`
+	Phone  string    `zid:"2" msg:"phone,omitempty"`
+	Sibs   int       `zid:"3" msg:",omitempty"`
 	GPA    float64   `zid:"4"`
 	Friend bool      `zid:"5"`
 }

@@ -180,7 +180,7 @@
                 {
                     "Zid": 0,
                     "FieldGoName": "Name",
-                    "FieldTagName": "Name",
+                    "FieldTagName": "name",
                     "FieldTypeStr": "string",
                     "FieldCategory": 23,
                     "FieldPrimitive": 2,
@@ -204,14 +204,15 @@
                 {
                     "Zid": 2,
                     "FieldGoName": "Phone",
-                    "FieldTagName": "Phone",
+                    "FieldTagName": "phone",
                     "FieldTypeStr": "string",
                     "FieldCategory": 23,
                     "FieldPrimitive": 2,
                     "FieldFullType": {
                         "Kind": 2,
                         "Str": "string"
-                    }
+                    },
+                    "OmitEmpty": true
                 },
                 {
                     "Zid": 3,
@@ -223,7 +224,8 @@
                     "FieldFullType": {
                         "Kind": 13,
                         "Str": "int"
-                    }
+                    },
+                    "OmitEmpty": true
                 },
                 {
                     "Zid": 4,

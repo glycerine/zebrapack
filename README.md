@@ -271,7 +271,8 @@ schema
 
 what does a schema look like? See  https://github.com/glycerine/zebrapack/blob/master/testdata/my.go and  https://github.com/glycerine/zebrapack/blob/master/testdata/my.z.json for example:
 
-First here is (a shortened version of) the go file that we parsed:
+First here is (a shortened version of) the go file that we parsed. The zebraSchemaId64 is a random number generated with a quick command line call to `zebrapack -genid`. Assigning a `zebraSchemaId64` in your Go source/schema can avoid format ambiguity.
+
 ~~~
 package main
 
@@ -284,10 +285,10 @@ const zebraSchemaId64 = 0x6eb25cc0f9a3e
 func main() {}
 
 type A struct {
-	Name   string    `zid:"0"`
+	Name   string    `zid:"0" msg:"name"` 
 	Bday   time.Time `zid:"1"`
-	Phone  string    `zid:"2"`
-	Sibs   int       `zid:"3"`
+	Phone  string    `zid:"2" msg:"phone,omitempty"`
+	Sibs   int       `zid:"3" msg:",omitempty"`
 	GPA    float64   `zid:"4"`
 	Friend bool      `zid:"5"`
 }
@@ -307,7 +308,7 @@ Second, here is the (json version) of the zebrapack schema (stored canonically i
                 {
                     "Zid": 0,
                     "FieldGoName": "Name",
-                    "FieldTagName": "Name",
+                    "FieldTagName": "name",
                     "FieldTypeStr": "string",
                     "FieldCategory": 23,
                     "FieldPrimitive": 2,
@@ -331,14 +332,15 @@ Second, here is the (json version) of the zebrapack schema (stored canonically i
                 {
                     "Zid": 2,
                     "FieldGoName": "Phone",
-                    "FieldTagName": "Phone",
+                    "FieldTagName": "phone",
                     "FieldTypeStr": "string",
                     "FieldCategory": 23,
                     "FieldPrimitive": 2,
                     "FieldFullType": {
                         "Kind": 2,
                         "Str": "string"
-                    }
+                    },
+                    "OmitEmpty": true
                 },
                 {
                     "Zid": 3,
@@ -350,7 +352,8 @@ Second, here is the (json version) of the zebrapack schema (stored canonically i
                     "FieldFullType": {
                         "Kind": 13,
                         "Str": "int"
-                    }
+                    },
+                    "OmitEmpty": true
                 },
                 {
                     "Zid": 4,
