@@ -6,11 +6,11 @@ strings for field names.
 */
 package zebra
 
-// in the generate command, we do not want -fast: we
-// actually want to serialize our ZebraPack schema itself
+// in the generate command, we use -msgp so that
+// we serialize the ZebraPack schema itself
 // as simple msgpack2, rather than in ZebraPack format.
 
-//go:generate zebrapack
+//go:generate zebrapack -msgp
 
 // Zkind describes the detailed type of the field
 // implentation note: must correspond to gen/Primitive

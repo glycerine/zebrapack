@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-//go:generate zebrapack -o generated.go
+//go:generate zebrapack -msgp -o generated.go
 
 // All of the struct
 // definitions in this

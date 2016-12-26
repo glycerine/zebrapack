@@ -111,7 +111,7 @@ func (e *encodeGen) appendraw(bts []byte) {
 func (e *encodeGen) structmap(s *Struct) {
 	nfields := len(s.Fields) - s.SkipCount
 	var data []byte
-	fast := e.cfg.UseZid
+	fast := !e.cfg.UseMsgp2
 	empty := "empty_" + randIdent()
 	inUse := "fieldsInUse_" + randIdent()
 	// if fast, then always omit-empty.

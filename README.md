@@ -17,7 +17,7 @@ Once we have a schema, we can be very strongly typed, and be very efficient. We 
 
 Full credit: the code here descends from the fantastic msgpack2 code generator https://github.com/tinylib/msgp by Philip Hofer.
 
-Note that we continue to offer straight msgpack2 serialization and deserialization, and we add support for the `omitempty` tag for efficiency. To get msgpack2 instead of zebrapack, just leave off the `-fast` flag to `zebrapack`. In other words, by default we codegen for msgpack2. To engage the zebrapack serialization you would simply add the `-fast` (and optionally `-fast-strings`) flags to the `zebrapack` run.  The defaults may change in the future.
+By default we generate ZebraPack format encoders and decoders when the `zebrapack` tool is run. Note that we continue to offer straight msgpack2 serialization and deserialization with the `-msgp` flag to `zebrapack`.
 
 At this time it is feature complete, and in beta while we get experience with it. See the section below on background and motivation ideas that we are implementing here.
 
@@ -177,7 +177,7 @@ not allowed.
 
 # benchmarking
 
-Based on the implementation now available in https://github.com/glycerine/zebrapack, we measure read and write speed with the `-fast -fast-strings` optimizations on. Benchmarks from https://github.com/glycerine/go_serialization_benchmarks of this struct:
+Based on the implementation now available in https://github.com/glycerine/zebrapack, we measure read and write speed with the `-fast-strings` optimizations on. Benchmarks from https://github.com/glycerine/go_serialization_benchmarks of this struct:
 
 ```
 type A struct {
@@ -192,7 +192,7 @@ type A struct {
 
 ## read performance
 
-`zebrapack -fast -fast-strings` comes in 4th; behind go-capnproto-version-1, Gencode, and 2 nanoseconds behind gogoprotobuf. This is a very competitive showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
+`zebrapack -fast-strings` comes in 4th; behind go-capnproto-version-1, Gencode, and 2 nanoseconds behind gogoprotobuf. This is a very competitive showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
 
 ```
 benchmark                                       iter           time/iter         bytes alloc       allocs
@@ -219,7 +219,7 @@ benchmark                                       iter           time/iter        
 
 ## write performance
 
-`zebrapack -fast -fast-strings` dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
+`zebrapack -fast-strings` dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
 
 ```
 benchmark                                       iter           time/iter          bytes alloc      allocs
@@ -404,12 +404,10 @@ command line flags
 
   Usage of zebrapack:
 
-  -fast
-    	generate ZebraPack serializers instead of msgpack2.
-     For speed and type safety, instead of writing field names
-     to identify fields, zebrapack writes their zid number in
-     the serialization. See also -write-schema to generate
-     an external schema description to read/write in other languages.
+  -msgp
+    	generate msgpack2 serializers instead of ZebraPack;
+        for backward compatiblity or serializing the zebra
+        schema itself.
 
   -fast-strings
     	for speed when reading a string in a message that won't be

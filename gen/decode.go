@@ -177,7 +177,7 @@ func (d *decodeGen) structAsMap(s *Struct) {
 	d.needsField()
 
 	k := genSerial()
-	fast := d.cfg.UseZid
+	fast := !d.cfg.UseMsgp2
 	tmpl, nStr := genDecodeMsgTemplate(k, fast)
 
 	fieldOrder := fmt.Sprintf("\n var decodeMsgFieldOrder%s = []string{", nStr)

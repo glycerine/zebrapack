@@ -96,7 +96,7 @@ func (s *sizeGen) gStruct(st *Struct) {
 	if !s.p.ok() {
 		return
 	}
-	fast := s.cfg.UseZid
+	fast := !s.cfg.UseMsgp2
 	nfields := uint32(len(st.Fields) - st.SkipCount)
 
 	if st.AsTuple {

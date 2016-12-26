@@ -105,7 +105,7 @@ func (m *marshalGen) tuple(s *Struct) {
 
 func (m *marshalGen) mapstruct(s *Struct) {
 	data := make([]byte, 0, 64)
-	fast := m.cfg.UseZid
+	fast := !m.cfg.UseMsgp2
 	nfields := len(s.Fields) - s.SkipCount
 	// if fast, then always omit-empty.
 	if fast || s.hasOmitEmptyTags {

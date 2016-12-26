@@ -8,7 +8,7 @@
 // To use it, include the following directive in a
 // go source file with types requiring source generation:
 //
-//     //go:generate zebrapack -fast
+//     //go:generate zebrapack
 //
 // The go generate tool should set the proper environment variables for
 // the generator to execute without any command-line flags. However, the
@@ -18,12 +18,10 @@
 //
 //   Usage of zebrapack:
 //
-//   -fast
-//     	generate ZebraPack serializers instead of msgpack2.
-//      For speed and type safety, instead of writing field names
-//      to identify fields, zebrapack writes their zid number in
-//      the serialization. See also -write-schema to generate
-//      an external schema description to read/write in other languages.
+//  -msgp
+//    	generate msgpack2 serializers instead of ZebraPack;
+//      for backward compatiblity or serializing the zebra
+//      schema itself.
 //
 //   -fast-strings
 //     	for speed when reading a string in a message that won't be

@@ -53,8 +53,8 @@ func (e *fieldsEmpty) gStruct(s *Struct) {
 		}
 	}
 
-	// UseZid implies => always omitempty
-	if !e.cfg.UseZid {
+	// !UseMsgp2 implies => always omitempty
+	if e.cfg.UseMsgp2 {
 		if numOE == 0 {
 			// no fields tagged with omitempty, just return the full field count.
 			e.p.printf("\nreturn %d }\n", nfields)
@@ -72,7 +72,7 @@ func (e *fieldsEmpty) gStruct(s *Struct) {
 		if s.Fields[i].Skip {
 			continue
 		}
-		if e.cfg.UseZid || s.Fields[i].OmitEmpty {
+		if !e.cfg.UseMsgp2 || s.Fields[i].OmitEmpty {
 			e.p.printf("isempty[%d] = ", i)
 			next(om, s.Fields[i].FieldElem)
 

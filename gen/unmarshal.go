@@ -122,7 +122,7 @@ func (u *unmarshalGen) mapstruct(s *Struct) {
 	}
 	u.needsField()
 	k := genSerial()
-	fast := u.cfg.UseZid
+	fast := !u.cfg.UseMsgp2
 	tmpl, nStr := genUnmarshalMsgTemplate(k, fast)
 
 	fieldOrder := fmt.Sprintf("\n var unmarshalMsgFieldOrder%s = []string{", nStr)
