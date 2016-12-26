@@ -1,4 +1,4 @@
-ZebraPack: a data description language and serialization format. Gobs version 2.0.
+ZebraPack: a data description language and serialization format. Like Gobs but version 2.0.
 ==========
 
 ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding.
