@@ -5,6 +5,7 @@ package zebra
 
 import (
 	"fmt"
+	"io"
 	"strings"
 )
 
@@ -305,4 +306,40 @@ func (i Zkind) String() string {
 	default:
 		panic(fmt.Errorf("unrecognized Zkind value %#v", i))
 	}
+}
+
+// WriteToGo writes the zebrapack schema to w as a Go source file.
+func (s *Schema) WriteToGo(w io.Writer) (err error) {
+	fmt.Fprintf(w, "package %s\n\n", s.SourcePackage)
+	fmt.Fprintf(w, "const zebraSchemaId64 = 0x%x\n\n", s.ZebraSchemaId)
+	for i := range s.Structs {
+		err = s.Structs[i].WriteToGo(w)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *Struct) WriteToGo(w io.Writer) (err error) {
+	fmt.Fprintf(w, "\ntype %s struct {\n", s.StructName)
+	for _, f := range s.Fields {
+		needMsg := false
+		zid := fmt.Sprintf(`zid:"%v" `, f.Zid)
+		msg := "msg:\""
+		if f.FieldTagName != f.FieldGoName {
+			msg += f.FieldTagName
+			needMsg = true
+		}
+		if f.OmitEmpty {
+			msg += ",omitempty"
+			needMsg = true
+		}
+		if needMsg {
+			zid = zid + "`" + msg + "\"`"
+		}
+		fmt.Fprintf(w, "%s %s %s\n", f.FieldGoName, f.FieldTypeStr, zid)
+	}
+	fmt.Fprintf(w, "}\n\n")
+	return nil
 }

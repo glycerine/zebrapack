@@ -54,6 +54,7 @@ import (
 	"encoding/binary"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -62,6 +63,7 @@ import (
 	"github.com/glycerine/zebrapack/gen"
 	"github.com/glycerine/zebrapack/parse"
 	"github.com/glycerine/zebrapack/printer"
+	"github.com/glycerine/zebrapack/zebra"
 )
 
 func main() {
@@ -82,6 +84,11 @@ func main() {
 		n := binary.LittleEndian.Uint64(by[:])
 		n &= 0x0001ffffffffffff // restrict to 53 bits so R and js work
 		fmt.Printf("\n// This randomly generated zebraSchemaId64 uniquely identifies\n// your namespace. Paste it into your Go source.\n const zebraSchemaId64 = 0x%x\n\n", n)
+		os.Exit(0)
+	}
+
+	if c.SchemaToGo != "" {
+		handleSchemaToGo(c)
 		os.Exit(0)
 	}
 
@@ -161,4 +168,41 @@ func newFilename(out, old, pkg string) string {
 	}
 	// new file name is old file name + _gen.go
 	return strings.TrimSuffix(old, ".go") + "_gen.go"
+}
+
+func fileExists(name string) bool {
+	fi, err := os.Stat(name)
+	if err != nil {
+		return false
+	}
+	if fi.IsDir() {
+		return false
+	}
+	return true
+}
+
+func handleSchemaToGo(c *cfg.ZebraConfig) {
+	if !fileExists(c.SchemaToGo) {
+		fmt.Fprintf(os.Stderr, "error: -schema-to-go '%s' path not found\n", c.SchemaToGo)
+		os.Exit(1)
+	}
+	by, err := ioutil.ReadFile(c.SchemaToGo)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: -schema-to-go '%s' produced error on reading file: %v\n",
+			c.SchemaToGo, err)
+		os.Exit(1)
+	}
+	var sch zebra.Schema
+	_, err = sch.UnmarshalMsg(by)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: -schema-to-go '%s' produced error on UnmarshalMsg: %v\n",
+			c.SchemaToGo, err)
+		os.Exit(1)
+	}
+	err = sch.WriteToGo(os.Stdout)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: -schema-to-go '%s' produced error on UnmarshalMsg: %v\n",
+			c.SchemaToGo, err)
+		os.Exit(1)
+	}
 }
