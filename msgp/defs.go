@@ -1,7 +1,7 @@
-// This package is the support library for the msgp code generator (http://github.com/glycerine/zebrapack).
+// This package is the support library for the zebrapack code generator (http://github.com/glycerine/zebrapack).
 //
-// This package defines the utilites used by the msgp code generator for encoding and decoding MessagePack
-// from []byte and io.Reader/io.Writer types. Much of this package is devoted to helping the msgp code
+// This package defines the utilites used by the zebrapack code generator for encoding and decoding MessagePack
+// from []byte and io.Reader/io.Writer types. Much of this package is devoted to helping the zebrapack code
 // generator implement the Marshaler/Unmarshaler and Encodable/Decodable interfaces.
 //
 // This package defines four "families" of functions:
