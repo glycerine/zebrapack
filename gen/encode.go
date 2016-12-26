@@ -114,9 +114,10 @@ func (e *encodeGen) structmap(s *Struct) {
 	fast := e.cfg.UseZid
 	empty := "empty_" + randIdent()
 	inUse := "fieldsInUse_" + randIdent()
-	if s.hasOmitEmptyTags {
+	// if fast, then always omit-empty.
+	if fast || s.hasOmitEmptyTags {
 		e.p.printf("\n\n// honor the omitempty tags\n")
-		e.p.printf("var %s [%d]bool\n", empty, nfields)
+		e.p.printf("var %s [%d]bool\n", empty, len(s.Fields))
 		e.p.printf("%s := %s.fieldsNotEmpty(%s[:])\n",
 			inUse, s.vname, empty)
 		e.p.printf("\n// map header\n")
@@ -137,7 +138,7 @@ func (e *encodeGen) structmap(s *Struct) {
 			return
 		}
 
-		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
+		if fast || (s.hasOmitEmptyTags && s.Fields[i].OmitEmpty) {
 			e.p.printf("\n if !%s[%d] {", empty, i)
 		}
 		if fast {
@@ -157,7 +158,7 @@ func (e *encodeGen) structmap(s *Struct) {
 		e.Fuse(data)
 		next(e, s.Fields[i].FieldElem)
 
-		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
+		if fast || (s.hasOmitEmptyTags && s.Fields[i].OmitEmpty) {
 			e.p.printf("\n }\n")
 		}
 	}

@@ -3,11 +3,14 @@ package gen
 import (
 	"fmt"
 	"io"
+
+	"github.com/glycerine/zebrapack/cfg"
 )
 
-func fieldsempty(w io.Writer) *fieldsEmpty {
+func fieldsempty(w io.Writer, cfg *cfg.ZebraConfig) *fieldsEmpty {
 	return &fieldsEmpty{
-		p: printer{w: w},
+		p:   printer{w: w},
+		cfg: cfg,
 	}
 }
 
@@ -15,6 +18,7 @@ type fieldsEmpty struct {
 	passes
 	p     printer
 	recvr string
+	cfg   *cfg.ZebraConfig
 }
 
 func (e *fieldsEmpty) Method() Method { return FieldsEmpty }
@@ -41,19 +45,22 @@ func (e *fieldsEmpty) gStruct(s *Struct) {
 	e.p.printf("// fieldsNotEmpty supports omitempty tags\n")
 	e.p.printf("func (%s) fieldsNotEmpty(isempty []bool) uint32 {", e.recvr)
 
-	nfields := len(s.Fields)
+	nfields := len(s.Fields) - s.SkipCount
 	numOE := 0
 	for i := range s.Fields {
 		if s.Fields[i].OmitEmpty {
 			numOE++
 		}
 	}
-	if numOE == 0 {
-		// no fields tagged with omitempty, just return the full field count.
-		e.p.printf("\nreturn %d }\n", nfields)
-		return
-	}
 
+	// UseZid implies => always omitempty
+	if !e.cfg.UseZid {
+		if numOE == 0 {
+			// no fields tagged with omitempty, just return the full field count.
+			e.p.printf("\nreturn %d }\n", nfields)
+			return
+		}
+	}
 	// remember this to avoid recomputing it in other passes.
 	s.hasOmitEmptyTags = true
 
@@ -65,7 +72,7 @@ func (e *fieldsEmpty) gStruct(s *Struct) {
 		if s.Fields[i].Skip {
 			continue
 		}
-		if s.Fields[i].OmitEmpty {
+		if e.cfg.UseZid || s.Fields[i].OmitEmpty {
 			e.p.printf("isempty[%d] = ", i)
 			next(om, s.Fields[i].FieldElem)
 

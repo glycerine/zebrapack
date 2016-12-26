@@ -118,7 +118,7 @@ func NewPrinter(m Method, out io.Writer, tests io.Writer, cfg *cfg.ZebraConfig) 
 	// must run FieldsEmpty before Encode/Marshal, so as
 	// to set Struct.hasOmitEmptyTags
 	if m.isset(FieldsEmpty) {
-		gens = append(gens, fieldsempty(out))
+		gens = append(gens, fieldsempty(out, cfg))
 	}
 	if m.isset(Encode) {
 		gens = append(gens, encode(out, cfg))

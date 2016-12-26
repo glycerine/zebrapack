@@ -106,10 +106,11 @@ func (m *marshalGen) tuple(s *Struct) {
 func (m *marshalGen) mapstruct(s *Struct) {
 	data := make([]byte, 0, 64)
 	fast := m.cfg.UseZid
-	nfields := len(s.Fields) - s.SkipCount
-	if s.hasOmitEmptyTags {
+	//nfields := len(s.Fields) - s.SkipCount
+	// if fast, then always omit-empty.
+	if fast || s.hasOmitEmptyTags {
 		m.p.printf("\n\n// honor the omitempty tags\n")
-		m.p.printf("var empty [%d]bool\n", nfields)
+		m.p.printf("var empty [%d]bool\n", len(s.Fields))
 		m.p.printf("fieldsInUse := %s.fieldsNotEmpty(empty[:])\n", s.vname)
 		m.p.printf("	o = msgp.AppendMapHeader(o, fieldsInUse)\n")
 	} else {
@@ -124,7 +125,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		if !m.p.ok() {
 			return
 		}
-		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
+		if fast || (s.hasOmitEmptyTags && s.Fields[i].OmitEmpty) {
 			m.p.printf("\n if !empty[%d] {", i)
 		}
 
@@ -152,7 +153,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		m.Fuse(data)
 		next(m, s.Fields[i].FieldElem)
 
-		if s.hasOmitEmptyTags && s.Fields[i].OmitEmpty {
+		if fast || (s.hasOmitEmptyTags && s.Fields[i].OmitEmpty) {
 			m.p.printf("\n }\n")
 		}
 	}
