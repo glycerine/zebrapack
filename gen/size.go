@@ -180,10 +180,10 @@ func (s *sizeGen) gMap(m *Map) {
 	s.p.printf("\n_ = %s", m.Validx) // we may not use the value
 	s.p.printf("\n_ = %s", m.Keyidx) // we may not use the value
 	switch m.KeyTyp {
-	case "Int64":
-		s.p.printf("\ns += msgp.Int64Size")
-	default:
+	case "String":
 		s.p.printf("\ns += msgp.StringPrefixSize + len(%s)", m.Keyidx)
+	default:
+		s.p.printf("\ns += msgp.%sSize", m.KeyTyp)
 	}
 	s.state = expr
 	next(s, m.Value)

@@ -313,8 +313,8 @@ func (m *Map) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.MapCat
 	r.Name.Str = m.TypeName()
 
-	r.Domain.Str = m.KeyTyp
 	r.Domain.Kind = zebra.ZkindFromString(m.KeyTyp)
+	r.Domain.Str = r.Domain.Kind.String()
 
 	rng := m.Value.GetZtype()
 	r.Range = rng.Name
@@ -578,10 +578,12 @@ type BaseElem struct {
 
 func (s *BaseElem) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.Zkind(s.Value)
-	r.Name.Str = r.Name.Kind.String()
-	//	if r.Name.Str != strings.ToLower(s.Value.String()) {
-	//		panic(fmt.Errorf("BaseElem.Value.String() == '%s' string does not match r.Name.Str = '%v'", s.Value.String(), r.Name.Str))
-	//	}
+	if r.Name.Kind < 22 {
+		r.Name.Str = r.Name.Kind.String()
+		return
+	}
+	r.Name.Str = s.TypeName()
+	//	panic(fmt.Errorf("what to do for BaseElem.GetZtype()? BaseElem.Value.String() = '%s'; r.Name.Str = '%v'", s.Value.String(), r.Name.Str))
 	return
 }
 

@@ -16,5 +16,9 @@ type S2 struct {
 }
 
 type Big struct {
-	Slice []S2 `zid:"0"`
+	Slice     []S2        `zid:"0"`
+	Transform map[int]*S2 `zid:"1"`
+	Myptr     *S2         `zid:"2"`
+	Myarray   [3]string   `zid:"3"`
+	MySlice   []string    `zid:"4"`
 }
