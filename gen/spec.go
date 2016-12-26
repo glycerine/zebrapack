@@ -130,7 +130,7 @@ func NewPrinter(m Method, out io.Writer, tests io.Writer, cfg *cfg.ZebraConfig) 
 		gens = append(gens, unmarshal(out, cfg))
 	}
 	if m.isset(Size) {
-		gens = append(gens, sizes(out))
+		gens = append(gens, sizes(out, cfg))
 	}
 	if m.isset(marshaltest) {
 		gens = append(gens, mtest(tests))

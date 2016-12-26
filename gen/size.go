@@ -2,9 +2,11 @@ package gen
 
 import (
 	"fmt"
-	"github.com/glycerine/zebrapack/msgp"
 	"io"
 	"strconv"
+
+	"github.com/glycerine/zebrapack/cfg"
+	"github.com/glycerine/zebrapack/msgp"
 )
 
 type sizeState uint8
@@ -20,10 +22,11 @@ const (
 	expr
 )
 
-func sizes(w io.Writer) *sizeGen {
+func sizes(w io.Writer, cfg *cfg.ZebraConfig) *sizeGen {
 	return &sizeGen{
 		p:     printer{w: w},
 		state: assign,
+		cfg:   cfg,
 	}
 }
 
@@ -31,6 +34,7 @@ type sizeGen struct {
 	passes
 	p     printer
 	state sizeState
+	cfg   *cfg.ZebraConfig
 }
 
 func (s *sizeGen) Method() Method { return Size }
@@ -92,7 +96,7 @@ func (s *sizeGen) gStruct(st *Struct) {
 	if !s.p.ok() {
 		return
 	}
-
+	fast := s.cfg.UseZid
 	nfields := uint32(len(st.Fields) - st.SkipCount)
 
 	if st.AsTuple {
@@ -116,7 +120,11 @@ func (s *sizeGen) gStruct(st *Struct) {
 				continue
 			}
 			data = data[:0]
-			data = msgp.AppendString(data, st.Fields[i].FieldTag)
+			if fast {
+				data = msgp.AppendInt64(data, st.Fields[i].ZebraId)
+			} else {
+				data = msgp.AppendString(data, st.Fields[i].FieldTag)
+			}
 			s.addConstant(strconv.Itoa(len(data)))
 			next(s, st.Fields[i].FieldElem)
 		}

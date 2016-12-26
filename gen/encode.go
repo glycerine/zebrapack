@@ -3,6 +3,7 @@ package gen
 import (
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/msgp"
@@ -140,6 +141,12 @@ func (e *encodeGen) structmap(s *Struct) {
 			e.p.printf("\n if !%s[%d] {", empty, i)
 		}
 		if fast {
+			// sanity check
+			if s.Fields[i].ZebraId < 0 {
+				fmt.Fprintf(os.Stderr, "\nzebrapack error: field '%s' is missing a zid number; cannot proceed under -fast\n", s.Fields[i].FieldTag)
+				os.Exit(1)
+			}
+			// proceed
 			data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)
 			e.p.printf("\n// zid %v for %q", s.Fields[i].ZebraId,
 				s.Fields[i].FieldTag)
