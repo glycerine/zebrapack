@@ -1,7 +1,7 @@
 ZebraPack: a data description language and serialization format. This one is all black and white. No gray areas.
 ==========
 
-ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding. It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support.
+ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding. It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support. If you language has a library that reads msgpack, then it would be a days work to adapt the library to read zebrapack: the schema are in msgpack, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
 
 The code here descends from the fantastic msgpack code generator https://github.com/tinylib/msgp by Philip Hofer.
 
