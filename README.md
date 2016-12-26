@@ -417,10 +417,10 @@ This is a code generation tool and serialization library for [MessagePack](http:
 In a source file, include the following directive:
 
 ```go
-//go:generate zebrapack
+//go:generate zebrapack -fast
 ```
 
-The `zebrapack` command will generate serialization methods for all exported type declarations in the file.
+The `zebrapack` command will generate serialization methods for all exported type declarations in the file. If you leave off the `-fast`, it will generate msgpack2. With the `-fast`, it generates zebrapack. For other language's use, schemas can can be written to a separate file using `zebrapack -file my.go -write-schema` at the shell. (By default schemas are not written to the wire, just as in protobufs/capnproto/thrift.)
 
 You can [read more about the code generation options here](http://github.com/tinylib/msgp/wiki/Using-the-Code-Generator).
 
