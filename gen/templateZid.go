@@ -13,7 +13,7 @@ var templateDecodeMsgZid = `
 	encodedFieldsLeft_ := totalEncodedFields_
 	missingFieldsLeft_ := maxFields_ - totalEncodedFields_
 
-	var nextMiss_ int32 = -1
+	var nextMiss_ int = -1
 	var found_ [maxFields_]bool
 	var curField_ int
 
@@ -64,7 +64,7 @@ var templateUnmarshalMsgZid = `
 	encodedFieldsLeft_ := totalEncodedFields_
 	missingFieldsLeft_ := maxFields_ - totalEncodedFields_
 
-	var nextMiss_ int32 = -1
+	var nextMiss_ int = -1
 	var found_ [maxFields_]bool
 	var curField_ int
 
