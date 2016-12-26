@@ -276,20 +276,20 @@ func (a *Array) TypeName() string {
 
 func (a *Array) GetZtype() (r zebra.Ztype) {
 
-	r.Name.Kind = zebra.ArrayCat
-	r.Name.Str = r.Name.Kind.String()
+	r.Kind = zebra.ArrayCat
+	r.Str = r.Kind.String()
 
 	zt := a.Els.GetZtype()
 	r.Range = &zt
 
 	// set Domain to be the size of the array
 	r.Domain = &zebra.Ztype{}
-	r.Domain.Name.Str = a.Size
+	r.Domain.Str = a.Size
 	n, err := strconv.Atoi(a.Size)
 	if err != nil {
 		panic(err)
 	}
-	r.Domain.Name.Kind = zebra.Zkind(n)
+	r.Domain.Kind = zebra.Zkind(n)
 	return
 }
 
@@ -314,12 +314,12 @@ type Map struct {
 
 func (m *Map) GetZtype() (r zebra.Ztype) {
 
-	r.Name.Kind = zebra.MapCat
-	r.Name.Str = r.Name.Kind.String()
+	r.Kind = zebra.MapCat
+	r.Str = r.Kind.String()
 
 	r.Domain = &zebra.Ztype{}
-	r.Domain.Name.Kind = zebra.ZkindFromString(m.KeyTyp)
-	r.Domain.Name.Str = r.Domain.Name.Kind.String()
+	r.Domain.Kind = zebra.ZkindFromString(m.KeyTyp)
+	r.Domain.Str = r.Domain.Kind.String()
 
 	rng := m.Value.GetZtype()
 	r.Range = &rng
@@ -388,8 +388,8 @@ func (s *Slice) SetVarname(a string) {
 }
 
 func (s *Slice) GetZtype() (r zebra.Ztype) {
-	r.Name.Kind = zebra.SliceCat
-	r.Name.Str = r.Name.Kind.String()
+	r.Kind = zebra.SliceCat
+	r.Str = r.Kind.String()
 
 	dom := s.Els.GetZtype()
 	r.Domain = &dom
@@ -420,8 +420,8 @@ type Ptr struct {
 }
 
 func (s *Ptr) GetZtype() (r zebra.Ztype) {
-	r.Name.Kind = zebra.PointerCat
-	r.Name.Str = r.Name.Kind.String()
+	r.Kind = zebra.PointerCat
+	r.Str = r.Kind.String()
 
 	dom := s.Value.GetZtype()
 	r.Domain = &dom
@@ -500,8 +500,8 @@ type Struct struct {
 }
 
 func (s *Struct) GetZtype() (r zebra.Ztype) {
-	r.Name.Kind = zebra.StructCat
-	r.Name.Str = r.Name.Kind.String() // s.TypeName()
+	r.Kind = zebra.StructCat
+	r.Str = r.Kind.String() // s.TypeName()
 	return
 }
 
@@ -582,12 +582,12 @@ type BaseElem struct {
 }
 
 func (s *BaseElem) GetZtype() (r zebra.Ztype) {
-	r.Name.Kind = zebra.Zkind(s.Value)
-	if r.Name.Kind != 22 {
-		r.Name.Str = r.Name.Kind.String()
+	r.Kind = zebra.Zkind(s.Value)
+	if r.Kind != 22 {
+		r.Str = r.Kind.String()
 		return
 	}
-	r.Name.Str = s.TypeName()
+	r.Str = s.TypeName()
 	return
 }
 

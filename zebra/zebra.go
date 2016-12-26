@@ -51,24 +51,29 @@ const (
 	PointerCat  Zkind = 28
 )
 
-// KS is a building block for Ztype.
-type KS struct {
-	Kind Zkind
-	Str  string
-}
-
 // Ztype describes any type, be it a BaseElem,
 // Map, Struct, Slice, Array, or Pointer.
 type Ztype struct {
-	Name KS
 
-	// key for maps. elem for ptr, slice.
-	// For arrays, holds the fixed size.
-	// null when Name.Kind is < 23 (for a primitive).
+	// Kind gives the exact type for primitives,
+	// and the category for compound types.
+	Kind Zkind
+
+	// Str holds the struct name when Kind == 22 (IDENT).
+	// Otherwise it typically reflects Kind directly
+	// which is useful for human readability.
+	Str string `msg:",omitempty"`
+
+	// Domain holds the key type for maps. For
+	// pointers and slices it holds the element type.
+	// For arrays, it holds the fixed size.
+	// Domain is null when Kind is a primitive
 	Domain *Ztype `msg:",omitempty"`
 
-	// value for maps.  For arrays, holds element type.
-	// Otherwise typically null.
+	// Range holds the value type for maps.
+	// For arrays (always a fixed size), Range holds
+	// the element type.  Otherwise Range is
+	// typically null.
 	Range *Ztype `msg:",omitempty"`
 }
 
