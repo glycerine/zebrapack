@@ -1,14 +1,14 @@
 package zebra
 
 // NOTE: THIS FILE WAS PRODUCED BY THE
-// MSGP CODE GENERATION TOOL (github.com/tinylib/msgp)
+// ZEBRAPACK CODE GENERATION TOOL (github.com/glycerine/zebrapack)
 // DO NOT EDIT
 
 import (
 	"bytes"
 	"testing"
 
-	"github.com/tinylib/msgp/msgp"
+	"github.com/glycerine/zebrapack/msgp"
 )
 
 func TestMarshalUnmarshalField(t *testing.T) {

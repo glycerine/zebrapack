@@ -62,11 +62,11 @@ type Ztype struct {
 
 	// key for maps. elem for ptr, slice, array.
 	// null when Name.Kind is < 23 (for a primitive).
-	Domain *Ztype
+	Domain *Ztype `msg:",omitempty"`
 
 	// value for maps. otherwise typically null.
 	// For an array, holds the fixed size.
-	Range *Ztype
+	Range *Ztype `msg:",omitempty"`
 }
 
 // ZebraSchema is the top level container
@@ -113,7 +113,7 @@ type Field struct {
 
 	// if OmitEmpty then we don't serialize
 	// the field if it has its zero-value.
-	OmitEmpty bool
+	OmitEmpty bool `msg:",omitempty"`
 
 	// Skip means either type struct{} or
 	// other unserializable type;
@@ -121,14 +121,14 @@ type Field struct {
 	// if Skip is true: do not serialize
 	// this field when writing, and ignore it
 	// when reading.
-	Skip bool
+	Skip bool `msg:",omitempty"`
 
 	// Deprecated means tagged with `deprecated:"true"`
 	// Compilers/libraries should discourage and warn
 	// users away from writing to such fields, while
 	// not making it impossible to either read or write
 	// the field.
-	Deprecated bool
+	Deprecated bool `msg:",omitempty"`
 }
 
 func ZkindFromString(s string) Zkind {
