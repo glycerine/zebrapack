@@ -251,7 +251,7 @@ type A struct {
 ```
 *In addition,* you'll want to change the type of the deprecated field, substituting `struct{}` for the old type. By converting the type of the deprecated field to struct{}, it will no longer takes up any space in the Go struct. This saves space. Even if a struct evolves heavily in time (rare), the changes will cause no extra overhead in terms of memory. It also allows the compiler to detect and reject any new writes to the field that are using the old type. 
 ```
-// best practice for deprecation of fields, to save space + get compiler support for deprectation
+// best practice for deprecation of fields, to save space + get compiler support for deprecation
 type A struct {
   Name     string      `zid:"0"`
   Bday     time.Time   `zid:"1"`
