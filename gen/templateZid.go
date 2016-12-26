@@ -48,7 +48,7 @@ doneWithStruct_:
 		}
         //fmt.Printf("switching on curField: '%%v'\n", curField_)
 		switch curField_ {
-		// -- templateDecodeMsg ends here --
+		// -- templateDecodeMsgZid ends here --
 `
 
 var templateUnmarshalMsgZid = `
@@ -99,5 +99,5 @@ doneWithStruct_:
 		}
         //fmt.Printf("switching on curField: '%%v'\n", curField_)
 		switch curField_ {
-		// -- templateUnmarshalMsg ends here --
+		// -- templateUnmarshalMsgZid ends here --
 `
