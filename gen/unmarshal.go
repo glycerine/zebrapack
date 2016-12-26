@@ -55,7 +55,7 @@ func (u *unmarshalGen) Execute(p Elem) error {
 	vname := p.Varname()
 	methRcvr := methodReceiver(p)
 	if u.cfg.ReadStringsFast {
-		u.p.printf("\nfunc (%s %s) UnmarshalMsg(bts []byte) (o []byte, err error) {\n cfg := msgp.RuntimeConfig{UnsafeZeroCopy:true}; return %s.UnmarshalMsgWithCfg(bts, cfg)\n}", vname, methRcvr, vname)
+		u.p.printf("\nfunc (%s %s) UnmarshalMsg(bts []byte) (o []byte, err error) {\n cfg := &msgp.RuntimeConfig{UnsafeZeroCopy:true}; return %s.UnmarshalMsgWithCfg(bts, cfg)\n}", vname, methRcvr, vname)
 	} else {
 		u.p.printf("\nfunc (%s %s) UnmarshalMsg(bts []byte) (o []byte, err error) {\n return %s.UnmarshalMsgWithCfg(bts, nil)\n}", vname, methRcvr, vname)
 	}
