@@ -583,7 +583,11 @@ type BaseElem struct {
 
 func (s *BaseElem) GetZtype() (r zebra.Ztype) {
 	r.Name.Kind = zebra.Zkind(s.Value)
-	r.Name.Str = r.Name.Kind.String()
+	if r.Name.Kind != 22 {
+		r.Name.Str = r.Name.Kind.String()
+		return
+	}
+	r.Name.Str = s.TypeName()
 	return
 }
 
