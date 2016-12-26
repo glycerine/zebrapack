@@ -1,7 +1,7 @@
 // zebrapack is a code generation tool for
 // creating methods to serialize and de-serialize
 // Go data structures to and from ZebraPack (a
-// schema-based serialization format derived
+// schema-based serialization format that is derived
 // from MessagePack2).
 //
 // This package is targeted at the `go generate` tool.
@@ -12,20 +12,30 @@
 //
 // The go generate tool should set the proper environment variables for
 // the generator to execute without any command-line flags. However, the
-// following options are supported, if you need them:
+// following options are supported, if you need them (See zebrapack -h):
+//
+// $ zebrapack -h
+// Usage of zebrapack:
 //
 //   -fast
-//     	generate ZebraPack serializers. For speed and type safety, instead of writing field names in structs, write the numeric zid into (an otherwise) msgpack2 serialization. See also -write-schema to generate an external schema description to read/write in other languages.
+//     	generate ZebraPack serializers instead of msgpack2.
+//      For speed and type safety, instead of writing field names
+//      to identify fields, zebrapack writes their zid number in
+//      the serialization. See also -write-schema to generate
+//      an external schema description to read/write in other languages.
 //
 //   -fast-strings
-//     	for speed when reading a string in a message that won't be reused, this flag means we'll use unsafe to cast the string header and avoid allocation.
+//     	for speed when reading a string in a message that won't be
+//      reused, this flag means we'll use unsafe to cast the string
+//      header and avoid allocation.
 //
-//   -file string
-//     	input file name (or directory; default is $GOFILE,
-//      which is set by the `go generate` command)
+//   -file go generate
+//     	input file (or directory); default is $GOFILE, which
+//      is set by the go generate command.
 //
 //   -genid
-//     	generate a fresh random zebraSchemaId64 value for your schema
+//     	generate a fresh random zebraSchemaId64 value to
+//      include in your Go source schema
 //
 //   -io
 //     	create Encode and Decode methods (default true)
@@ -34,7 +44,12 @@
 //     	create Marshal and Unmarshal methods (default true)
 //
 //   -o string
-//     	output file (default is {input}_gen.go)
+//     	output file (default is {input_file}_gen.go
+//
+//   -schema-to-go string
+//     	(standalone functionality) path to schema in msgpack2
+//      format; we will convert it to Go, write the Go on stdout,
+//      and exit immediately
 //
 //   -tests
 //     	create tests and benchmarks (default true)
@@ -43,7 +58,8 @@
 //     	also process unexported types
 //
 //   -write-schema string
-//     	write schema header to this file; - for stdout
+// 		write schema header to this file; - for stdout
+//
 //
 // For more information, please read README.md, and the wiki at github.com/glycerine/zebrapack
 //
