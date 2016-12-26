@@ -1,14 +1,21 @@
 /*
 package zebra specifies the ZebraPack serialization format.
+To bootstrap, the ZebraPack schema is itself stored
+in msgpack2 format.
 */
 package zebra
+
+// in the generate command, we do not want -fast: we
+// actually want to serialize our ZebraPack schema itself
+// as simple msgpack2, rather than in ZebraPack format.
 
 //go:generate zebrapack
 
 // Zkind describes the detailed type of the field
 // implentation note: must correspond to gen/Primitive
 // Since it also stores the fixed size of a array type,
-// it needs to be large.
+// it needs to be large. When serialized as msgpack2,
+// it will be compressed.
 type Zkind uint64
 
 const (
