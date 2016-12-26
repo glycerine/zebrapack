@@ -192,7 +192,7 @@ type A struct {
 
 ## read performance
 
-`zebrapack -fast -fast-strings` comes in 4th; behind Gencode, Gogoprotobuf, and go-capnproto-version-1. This is a very competitive showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
+`zebrapack -fast -fast-strings` comes in 4th; behind go-capnproto-version-1, Gencode, and 2 nanoseconds behind gogoprotobuf. This is a very competitive showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
 
 ```
 benchmark                                       iter           time/iter         bytes alloc       allocs
