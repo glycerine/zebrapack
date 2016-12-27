@@ -165,7 +165,7 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 		}
 	}
 
-	return printer.PrintFile(newFilename(c.Out, c.GoFile, fs.Package), fs, mode, c)
+	return printer.PrintFile(newFilename(c.Out, c.GoFile, fs.Package), fs, mode, c, c.GoFile)
 }
 
 // picks a new file name based on input flags and input filename(s).

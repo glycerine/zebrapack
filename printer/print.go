@@ -19,8 +19,22 @@ func infof(s string, v ...interface{}) {
 // PrintFile prints the methods for the provided list
 // of elements to the given file name and canonical
 // package path.
-func PrintFile(file string, f *parse.FileSet, mode gen.Method, cfg *cfg.ZebraConfig) error {
+func PrintFile(file string, f *parse.FileSet, mode gen.Method, cfg *cfg.ZebraConfig, pathGoSource string) error {
 	out, tests, err := generate(f, mode, cfg)
+	if err != nil {
+		return err
+	}
+
+	// add the serialized msgpack2 zebra schema in []byte form.
+	tr, err := parse.TranslateToZebraSchema(pathGoSource, f)
+	if err != nil {
+		return err
+	}
+	sby, err := tr.MarshalMsg(nil)
+	if err != nil {
+		return err
+	}
+	_, err = fmt.Fprintf(out, "\nvar ZebraSchemaInMsgpack2Format = %#v\n", sby)
 	if err != nil {
 		return err
 	}
