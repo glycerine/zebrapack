@@ -60,10 +60,11 @@ type A struct {
 }
 
 then to serialize the following instance `a`, we would
-print the schema information at the front of the file,
-in the form of a zebra.StructT structure. Then
+print the schema information at the front of the file --
+or detached completely and kept in a separate file --
+in the form of a zebra.Schema (see https://github.com/glycerine/zebrapack/blob/master/zebra/zebra.go for the spec) structure. Then
 the data follows as a map whose keys are now integers
-instead of strings:
+instead of strings. A simple example:
          
 original(msgpack2) ->        schema(msgpack2)      +    each instance(msgpack2)
 --------                     --------------             -------------
@@ -79,13 +80,13 @@ a := A{                      zebra.StructT{             map{
 ```
 
 
-The central idea of ZebraPack: start with msgpack2, but when encoding a struct (in msgpack2 a struct is represented as a map), replace the key strings with small integers. In maps, typically for JSON compatibility the keys are all strings.
+The central idea of ZebraPack: start with msgpack2, but when encoding a struct (in msgpack2 a struct is represented as a map), replace the key strings with small integers.
 
-By adding a small schema description (essentially a lookup table with int->string mappings and a type identifier) at the front of the serialization stream/file, we get known schema types up-front, plus compression and the ability to evolve our data without crashes. If you've ever had your msgpack crash your server because you tried to change the type of a field but keep the same name, then you know how fragile msgpack can be.
+By having a small schema description (essentially a lookup table with int->string mappings and a type identifier) either separate or serialized at the front of the serialization stream/file, we get known schema types up-front, plus compression and the ability to evolve our data without crashes. If you've ever had your msgpack crash your server because you tried to change the type of a field but keep the same name, then you know how fragile msgpack can be.
 
 By default, today, we serialize the schema to a separate file so that the wire encoding is as fast as possible. However it is trivial to add/pre-pend the encoded schema to any file when you need to. The `zebrapack` generated Go code incorporates knowledge of the schema, so if you are only working in Go there is no need to `zebrapack -write-schema` to generate an external schema desription file. In summary, by default we behave like protobufs/thrift/capnproto, but dynamic languages and runtime type discovery can be supported in full fidelity.
 
-The second easy idea: use the Go language struct definition syntax as our serialization schema. Since https://github.com/tinylib/msgp already easily parses Go files, we can use this to our advantage. While we are focused on a serialization format for Go, other language's that can read msgpack2 can readily parse the schema. The schema is stored in msgpack2 (and optionally json), rather than zebrapack, for ease of bootstrapping.
+The second easy idea: use the Go language struct definition syntax as our serialization schema. Why invent another format? Serialization for Go developers should be almost trivially easy. While we are focused on a serialization format for Go, because other language can read msgpack2, they can also readily parse the schema. The schema is stored in msgpack2 struct convention (and optionally json), rather than the ZebraPack struct convention, for bootstrapping.
 
 # background
 
