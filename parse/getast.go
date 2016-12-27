@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"go/ast"
 	//"go/importer"
-	"go/parser"
-	"go/token"
+	//"go/parser"
+	//"go/token"
 	//"go/types"
 	"os"
 	"reflect"
@@ -63,69 +63,38 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 
 	var lc loader.Config
 	lc.CreateFromFilenames(name)
+	fmt.Printf("debug: lc = %#v\n", lc)
 	lprog, err := lc.Load()
 	if err != nil {
 		panic(err)
 		return nil, err
 	}
 	fmt.Printf("debug: lprog = %#v\n", lprog)
-	pkg := lprog.Package(name)
-	if !pkg.TransitivelyErrorFree {
+	pkgInfo := lprog.Package(name)
+	fmt.Printf("debug: pkgInfo for '%s' = %#v\n", name, pkgInfo)
+	if !pkgInfo.TransitivelyErrorFree {
 		panic(fmt.Errorf("loader detected (possibly transitive) error during package load"))
 	}
-	pkg.Files
-	fmt.Printf("debug: pkg = %#v\n", pkg.Pkg)
+	fmt.Printf("debug: len(pkgInfo.Files) = %v\n", len(pkgInfo.Files))
 
-	/*
-		//	goon.Dump(pkg)
+	fs.Package = pkgInfo.Pkg.Name()
 
-		//	typeCheckerConfig := loader.Config{ParserMode: parser.ParseComments}
-		//	var checkedPkg *types.Package
-		//	typeInfo := &types.Info{}
-		//	var files []*ast.File
-	*/
-	fset := token.NewFileSet()
+	gotZebraSchema := false
 	finfo, err := os.Stat(name)
 	if err != nil {
 		return nil, err
 	}
 	if finfo.IsDir() {
-		pkgs, err := parser.ParseDir(fset, name, nil, parser.ParseComments)
-		if err != nil {
-			return nil, err
-		}
-		if len(pkgs) != 1 {
-			return nil, fmt.Errorf("multiple packages in directory: %s", name)
-		}
-
-		var one *ast.Package
-		for _, nm := range pkgs {
-			one = nm
-			break
-		}
-
-		/*
-			// do type checking before FileExports()
-			for _, fl := range one.Files {
-				files = append(files, fl)
-			}
-
-			typeCheckerConfig.Import(fs)
-			checkedPkg, err = typeCheckerConfig.Check(fs.Package, fset, files, typeInfo)
-			if err != nil {
-				panic(err)
-				return nil, err
-			}
-			fmt.Printf("debug: 1 checkedPkg = %#v\n", checkedPkg)
-		*/
-
-		fs.Package = one.Name
-		for _, fl := range one.Files {
+		fmt.Printf("\n in a dir\n")
+		for _, fl := range pkgInfo.Files {
 			pushstate(fl.Name.Name)
 			fs.Directives = append(fs.Directives, yieldComments(fl.Comments)...)
 
-			// must get zebraSchemaId prior to FileExports(), as it dumps non-exports.
-			fs.getZebraSchemaId(fl)
+			if !gotZebraSchema {
+				// must get zebraSchemaId prior to FileExports(), as it dumps non-exports.
+				fs.getZebraSchemaId(fl)
+				gotZebraSchema = true
+			}
 			if !c.Unexported {
 				ast.FileExports(fl)
 			}
@@ -133,20 +102,14 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 			popstate()
 		}
 	} else {
-		f, err := parser.ParseFile(fset, name, nil, parser.ParseComments)
-		if err != nil {
-			return nil, err
+		if len(pkgInfo.Files) > 1 {
+			fmt.Printf("debug: single file, but: len(pkgInfo.Files) = %v\n", len(pkgInfo.Files))
+
+			// probably have to search through the .Files looking
+			// for the one we specifically requested to set f below.
+			panic("huh?!? what to do with multiple files here?")
 		}
-		/*
-			files = append(files, f)
-			checkedPkg, err = typeChecker.Check(f.Name.Name, fset, files, typeInfo)
-			if err != nil {
-				panic(err)
-				return nil, err
-			}
-			fmt.Printf("debug: 2 checkedPkg = %#v\n", checkedPkg)
-		*/
-		fs.Package = f.Name.Name
+		f := pkgInfo.Files[0]
 		fs.Directives = yieldComments(f.Comments)
 		fs.getZebraSchemaId(f)
 
