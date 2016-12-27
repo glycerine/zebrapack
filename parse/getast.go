@@ -3,10 +3,10 @@ package parse
 import (
 	"fmt"
 	"go/ast"
-	"go/importer"
+	//"go/importer"
 	"go/parser"
 	"go/token"
-	"go/types"
+	//"go/types"
 	"os"
 	"reflect"
 	"sort"
@@ -15,6 +15,7 @@ import (
 
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
+	"golang.org/x/tools/go/loader"
 
 	"github.com/shurcooL/go-goon"
 )
@@ -41,6 +42,11 @@ type FileSet struct {
 // If unexport is false, only exported identifiers are included in the FileSet.
 // If the resulting FileSet would be empty, an error is returned.
 func File(c *cfg.ZebraConfig) (*FileSet, error) {
+	ok, isDir := fileOrDir(c.GoFile)
+	if !ok {
+		return nil, fmt.Errorf("error: path '%s' does not exist", c.GoFile)
+	}
+	_ = isDir
 	name := c.GoFile
 	pushstate(name)
 	defer popstate()
@@ -50,14 +56,34 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		Cfg:        c,
 	}
 
-	// type checking needed to get constants involved
-	// in array definitions, for example the constant
-	// `n` in the declaration `type S struct { arr [n]int }`
-	typeChecker := types.Config{Importer: importer.Default()}
-	var checkedPkg *types.Package
-	typeInfo := &types.Info{}
-	var files []*ast.File
+	// loading/type checking is needed to get the constants involved
+	// in array definitions. For example, the constant
+	// `n` in the declaration `type S struct { arr [n]int }`;
+	// `n` might be a constant in another package.
 
+	var lc loader.Config
+	lc.CreateFromFilenames(name)
+	lprog, err := lc.Load()
+	if err != nil {
+		panic(err)
+		return nil, err
+	}
+	fmt.Printf("debug: lprog = %#v\n", lprog)
+	pkg := lprog.Package(name)
+	if !pkg.TransitivelyErrorFree {
+		panic(fmt.Errorf("loader detected (possibly transitive) error during package load"))
+	}
+	pkg.Files
+	fmt.Printf("debug: pkg = %#v\n", pkg.Pkg)
+
+	/*
+		//	goon.Dump(pkg)
+
+		//	typeCheckerConfig := loader.Config{ParserMode: parser.ParseComments}
+		//	var checkedPkg *types.Package
+		//	typeInfo := &types.Info{}
+		//	var files []*ast.File
+	*/
 	fset := token.NewFileSet()
 	finfo, err := os.Stat(name)
 	if err != nil {
@@ -71,26 +97,30 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		if len(pkgs) != 1 {
 			return nil, fmt.Errorf("multiple packages in directory: %s", name)
 		}
+
 		var one *ast.Package
 		for _, nm := range pkgs {
 			one = nm
 			break
 		}
 
-		// do type checking before FileExports()
-		for _, fl := range one.Files {
-			files = append(files, fl)
-		}
-		checkedPkg, err = typeChecker.Check(fs.Package, fset, files, typeInfo)
-		if err != nil {
-			panic(err)
-			return nil, err
-		}
-		fmt.Printf("debug: 1 checkedPkg = %#v\n", checkedPkg)
+		/*
+			// do type checking before FileExports()
+			for _, fl := range one.Files {
+				files = append(files, fl)
+			}
+
+			typeCheckerConfig.Import(fs)
+			checkedPkg, err = typeCheckerConfig.Check(fs.Package, fset, files, typeInfo)
+			if err != nil {
+				panic(err)
+				return nil, err
+			}
+			fmt.Printf("debug: 1 checkedPkg = %#v\n", checkedPkg)
+		*/
 
 		fs.Package = one.Name
 		for _, fl := range one.Files {
-			files = append(files, fl)
 			pushstate(fl.Name.Name)
 			fs.Directives = append(fs.Directives, yieldComments(fl.Comments)...)
 
@@ -107,14 +137,15 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		if err != nil {
 			return nil, err
 		}
-		files = append(files, f)
-		checkedPkg, err = typeChecker.Check(f.Name.Name, fset, files, typeInfo)
-		if err != nil {
-			panic(err)
-			return nil, err
-		}
-		fmt.Printf("debug: 2 checkedPkg = %#v\n", checkedPkg)
-
+		/*
+			files = append(files, f)
+			checkedPkg, err = typeChecker.Check(f.Name.Name, fset, files, typeInfo)
+			if err != nil {
+				panic(err)
+				return nil, err
+			}
+			fmt.Printf("debug: 2 checkedPkg = %#v\n", checkedPkg)
+		*/
 		fs.Package = f.Name.Name
 		fs.Directives = yieldComments(f.Comments)
 		fs.getZebraSchemaId(f)
@@ -833,4 +864,15 @@ func (fs *FileSet) getZebraSchemaId(f *ast.File) {
 			}
 		}
 	}
+}
+
+func fileOrDir(name string) (ok, isDir bool) {
+	fi, err := os.Stat(name)
+	if err != nil {
+		return false, false
+	}
+	if fi.IsDir() {
+		return true, true
+	}
+	return true, false
 }
