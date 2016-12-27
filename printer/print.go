@@ -25,17 +25,20 @@ func PrintFile(file string, f *parse.FileSet, mode gen.Method, cfg *cfg.ZebraCon
 		return err
 	}
 
-	// add the serialized msgpack2 zebra schema in []byte form.
+	// add the serialized msgpack2 zebra schema
 	tr, err := parse.TranslateToZebraSchema(pathGoSource, f)
 	if err != nil {
+		panic(err)
 		return err
 	}
 	sby, err := tr.MarshalMsg(nil)
 	if err != nil {
+		panic(err)
 		return err
 	}
 	_, err = fmt.Fprintf(out, "\nvar ZebraSchemaInMsgpack2Format = %#v\n", sby)
 	if err != nil {
+		panic(err)
 		return err
 	}
 
