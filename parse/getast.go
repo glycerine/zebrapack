@@ -3,8 +3,10 @@ package parse
 import (
 	"fmt"
 	"go/ast"
+	"go/importer"
 	"go/parser"
 	"go/token"
+	"go/types"
 	"os"
 	"reflect"
 	"sort"
@@ -13,6 +15,8 @@ import (
 
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
+
+	"github.com/shurcooL/go-goon"
 )
 
 var StopOnError bool
@@ -46,6 +50,14 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		Cfg:        c,
 	}
 
+	// type checking needed to get constants involved
+	// in array definitions, for example the constant
+	// `n` in the declaration `type S struct { arr [n]int }`
+	typeChecker := types.Config{Importer: importer.Default()}
+	var checkedPkg *types.Package
+	typeInfo := &types.Info{}
+	var files []*ast.File
+
 	fset := token.NewFileSet()
 	finfo, err := os.Stat(name)
 	if err != nil {
@@ -64,10 +76,25 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 			one = nm
 			break
 		}
+
+		// do type checking before FileExports()
+		for _, fl := range one.Files {
+			files = append(files, fl)
+		}
+		checkedPkg, err = typeChecker.Check(fs.Package, fset, files, typeInfo)
+		if err != nil {
+			panic(err)
+			return nil, err
+		}
+		fmt.Printf("debug: 1 checkedPkg = %#v\n", checkedPkg)
+
 		fs.Package = one.Name
 		for _, fl := range one.Files {
+			files = append(files, fl)
 			pushstate(fl.Name.Name)
 			fs.Directives = append(fs.Directives, yieldComments(fl.Comments)...)
+
+			// must get zebraSchemaId prior to FileExports(), as it dumps non-exports.
 			fs.getZebraSchemaId(fl)
 			if !c.Unexported {
 				ast.FileExports(fl)
@@ -80,9 +107,18 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		if err != nil {
 			return nil, err
 		}
+		files = append(files, f)
+		checkedPkg, err = typeChecker.Check(f.Name.Name, fset, files, typeInfo)
+		if err != nil {
+			panic(err)
+			return nil, err
+		}
+		fmt.Printf("debug: 2 checkedPkg = %#v\n", checkedPkg)
+
 		fs.Package = f.Name.Name
 		fs.Directives = yieldComments(f.Comments)
 		fs.getZebraSchemaId(f)
+
 		if !c.Unexported {
 			ast.FileExports(f)
 		}
@@ -646,6 +682,8 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 			return nil, nil
 		}
 
+		fmt.Printf("debug: e.Len = %T/%#v\n", e.Len, e.Len)
+
 		// array and not a slice
 		if e.Len != nil {
 			switch s := e.Len.(type) {
@@ -662,6 +700,8 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 				}, nil
 
 			case *ast.SelectorExpr:
+				fmt.Printf("debug SelectorExpr s:\n")
+				goon.Dump(s)
 				return &gen.Array{
 					Size: stringify(s),
 					Els:  els,

@@ -19,28 +19,38 @@ func infof(s string, v ...interface{}) {
 // PrintFile prints the methods for the provided list
 // of elements to the given file name and canonical
 // package path.
-func PrintFile(file string, f *parse.FileSet, mode gen.Method, cfg *cfg.ZebraConfig, pathGoSource string) error {
+func PrintFile(
+	file string,
+	f *parse.FileSet,
+	mode gen.Method,
+	cfg *cfg.ZebraConfig,
+	pathToGoSource string) error {
+
 	out, tests, err := generate(f, mode, cfg)
 	if err != nil {
 		return err
 	}
 
-	// add the serialized msgpack2 zebra schema
-	tr, err := parse.TranslateToZebraSchema(pathGoSource, f)
-	if err != nil {
-		panic(err)
-		return err
-	}
-	sby, err := tr.MarshalMsg(nil)
-	if err != nil {
-		panic(err)
-		return err
-	}
-	_, err = fmt.Fprintf(out, "\nvar ZebraSchemaInMsgpack2Format = %#v\n", sby)
-	if err != nil {
-		panic(err)
-		return err
-	}
+	/*
+		// add the serialized msgpack2 zebra schema
+		tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
+		if err != nil {
+			panic(err)
+			return err
+		}
+		fmt.Printf("tr = %#v\n", tr)
+		sby, err := tr.MarshalMsg(nil)
+		if err != nil {
+			panic(err)
+			return err
+		}
+		fmt.Printf("\n// debug: var ZebraSchemaInMsgpack2Format = %#v\n", sby)
+		_, err = fmt.Fprintf(out, "\nvar ZebraSchemaInMsgpack2Format = %#v\n", sby)
+		if err != nil {
+			panic(err)
+			return err
+		}
+	*/
 
 	// we'll run goimports on the main file
 	// in another goroutine, and run it here

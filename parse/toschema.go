@@ -5,6 +5,7 @@ import (
 
 	"github.com/glycerine/zebrapack/gen"
 	"github.com/glycerine/zebrapack/zebra"
+	"github.com/shurcooL/go-goon"
 )
 
 func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
@@ -20,7 +21,8 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 			}
 			for _, f := range x.Fields {
 				zc, zp := getCatPrimiType(&f)
-				//fmt.Printf("\n on f = %#v\n", f)
+				fmt.Printf("\n on f = %#v\n", f)
+				goon.Dump(f)
 				fld := zebra.Field{
 					Zid:            f.ZebraId,
 					OmitEmpty:      f.OmitEmpty,
@@ -48,7 +50,8 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 				case *BaseElem:
 			*/
 		default:
-			return nil, fmt.Errorf("unhandled type %T", x)
+			//fmt.Fprintf(os.Stderr, "\nwarning: ignoring type '%v'; we only support top-level structs in a schema at present.\n", x.TypeName())
+			//return nil, fmt.Errorf("unhandled type %T", x)
 		}
 	}
 	imports := []string{}
