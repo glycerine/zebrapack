@@ -43,7 +43,7 @@ test: all
 	go test -v ./_generated
 	go test -v ./zebra
 	go build && ./zebrapack -write-schema testdata/my.z -file testdata/my.go && go test -v ./testdata
-	./zebrapack -file testdata/my.go && go test -v ./testdata
+	./zebrapack -file testdata/my.go && go test -v ./testdata/my_gen_test.go ./testdata/my.go ./testdata/my_gen.go
 	./zebrapack -schema-to-go testdata/my.z > /tmp/remy.go && echo "func main() {}" >> /tmp/remy.go && go run /tmp/remy.go && rm /tmp/remy.go
 
 

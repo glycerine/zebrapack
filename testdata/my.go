@@ -35,3 +35,10 @@ type A struct {
 	GPA    float64   `zid:"4"`
 	Friend bool      `zid:"5"`
 }
+
+// verify that //msgp:ignore is working:
+// otherwise this interface will cause problems.
+
+type Sys struct {
+	F interface{} `zid:"0"`
+}

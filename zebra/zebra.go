@@ -45,7 +45,7 @@ const (
 	Int32      Zkind = 16
 	Int64      Zkind = 17
 	Bool       Zkind = 18
-	Intf       Zkind = 19 // interface of some kind
+	Intf       Zkind = 19 // interface{}
 	Time       Zkind = 20 // time.Time
 	Ext        Zkind = 21 // extension
 
