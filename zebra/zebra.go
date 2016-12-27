@@ -12,16 +12,20 @@ package zebra
 
 //go:generate zebrapack -msgp
 
-// Zkind describes the detailed type of the field
-// implentation note: must correspond to gen/Primitive
+// Zkind describes the detailed type of the field.
 // Since it also stores the fixed size of a array type,
 // it needs to be large. When serialized as msgpack2,
 // it will be compressed.
+//
+// Implentation note: primitives must correspond
+// to gen/Primitive, as we will cast/convert them directly.
+//
 type Zkind uint64
 
 const (
 	// primitives
-	// implementation note: must correspond to gen/Primitive.
+
+	// Implementation note: must correspond to gen/Primitive.
 	Invalid    Zkind = 0
 	Bytes      Zkind = 1 // []byte
 	String     Zkind = 2
@@ -41,12 +45,14 @@ const (
 	Int32      Zkind = 16
 	Int64      Zkind = 17
 	Bool       Zkind = 18
-	Intf       Zkind = 19 // interface{}
+	Intf       Zkind = 19 // interface of some kind
 	Time       Zkind = 20 // time.Time
 	Ext        Zkind = 21 // extension
 
 	// IDENT means an unrecognized identifier;
 	// it typically means a named struct type.
+	// The Str field in the Ztype will hold the
+	// name of the struct.
 	IDENT Zkind = 22
 
 	// compound types
@@ -85,19 +91,40 @@ type Ztype struct {
 	Range *Ztype `msg:",omitempty"`
 }
 
-// Schema is the top level container
+// Schema is the top level container in ZebraPack.
+// It all starts here.
 type Schema struct {
-	SourcePath    string
+
+	// SourcePath gives the path to the original Go
+	// source file that was parsed to produce this schema.
+	SourcePath string
+
+	// SourcePackage notes the original package presented
+	// by the SourcePath file.
 	SourcePackage string
+
+	// ZebraSchemaId is a randomly chosen but stable
+	// identifier (see zebrapack -genid) that can be used
+	// to distinguish schemas.
 	ZebraSchemaId int64
-	Structs       []Struct
-	Imports       []string
+
+	// Structs holds the collection of the main data
+	// descriptor, the Struct.
+	Structs []Struct
+
+	// Imports archives the imports in the SourcePath
+	// to make it possible to understand other package
+	// type references.
+	Imports []string
 }
 
 // Struct represents a single message or struct.
 type Struct struct {
+	// StructName is the typename of the struct in Go.
 	StructName string
-	Fields     []Field
+
+	// Fields hold the individual Field descriptors.
+	Fields []Field
 }
 
 // Field represents fields within a struct.
