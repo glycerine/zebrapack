@@ -23,8 +23,8 @@ package zebra
 type Zkind uint64
 
 const (
-	// primitives
 
+	// primitives.
 	// Implementation note: must correspond to gen/Primitive.
 	Invalid    Zkind = 0
 	Bytes      Zkind = 1 // []byte
