@@ -104,8 +104,8 @@ type Schema struct {
 	SourcePackage string
 
 	// ZebraSchemaId is a randomly chosen but stable
-	// identifier (see zebrapack -genid) that can be used
-	// to distinguish schemas.
+	// 53-bit positive integer identifier (see
+	// zebrapack -genid) that can be used to distinguish schemas.
 	ZebraSchemaId int64
 
 	// Structs holds the collection of the main data
