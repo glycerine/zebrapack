@@ -89,7 +89,8 @@ as unsigned integers. This causes crashes in readers
 who were expected a signed integer, which they may
 have originated themselves in the original struct.
 
-That's right, msgpack2 lets data types changes as
+That's right, the exiting conventions for msgpack2
+language bindings allows the data types changes as
 they are read and re-serialized. Simple copying of
 a serialized struct can change the types of its
 numbers. This is horrible. Now we have to guess
@@ -156,6 +157,13 @@ using the msgpack2 encoding.
 be adhered to. Strings and raw binary byte arrays
 are distinct, and must be marked distinctly; msgpack1 encoding is
 not allowed.
+
+* All language bindings must respect the declared type in
+the ZebraPack schema when writing data. For example,
+this means that signed and unsigned declarations
+must be respected.
+
+
 
 # benchmarking
 
