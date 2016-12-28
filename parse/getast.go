@@ -70,7 +70,6 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 
 	packageName, err := getPackageNameFromGoFile(filenames[0])
 	if err != nil {
-		panic(err)
 		return nil, err
 	}
 
@@ -78,6 +77,8 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	// in array definitions. For example, the constant
 	// `n` in the declaration `type S struct { arr [n]int }`;
 	// `n` might be a constant in another package.
+	// Hence we must load and thereby fully resolve
+	// constants; we can't get away with doing a shallow parse.
 
 	var lc loader.Config
 	lc.CreatePkgs = []loader.PkgSpec{{Filenames: filenames}}
@@ -86,22 +87,15 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error in getast.go: loader.Load() error: '%v'", err)
 	}
-	//	for k, v := range lprog.AllPackages {
-	//		fmt.Printf("lprog has %v  %v with %v files.\n", k.Path(), k.Name(), len(v.Files))
-	//	}
-	//fmt.Printf("debug: lprog = %#v\n", lprog)
 	pkgInfo := lprog.Package(packageName)
 	if pkgInfo == nil {
 		panic(fmt.Errorf("load of '%s' for package name '%s' failed", name, packageName))
 	}
-	//fmt.Printf("debug: pkgInfo for '%s' = %#v\n", name, pkgInfo)
 	if !pkgInfo.TransitivelyErrorFree {
 		panic(fmt.Errorf("loader detected (possibly transitive) error during package load"))
 	}
-	fmt.Printf("debug: len(pkgInfo.Files) = %v\n", len(pkgInfo.Files))
 
 	fs.Package = pkgInfo.Pkg.Name()
-
 	gotZebraSchema := false
 	if isDir {
 		fmt.Printf("\n in a dir\n")
@@ -122,11 +116,8 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		}
 	} else {
 		if len(pkgInfo.Files) != 1 {
-			fmt.Printf("debug: single file, but: len(pkgInfo.Files) = %v\n", len(pkgInfo.Files))
-
-			// probably have to search through the .Files looking
-			// for the one we specifically requested to set f below.
-			panic("huh?!? what to do with multiple files here?")
+			fmt.Printf("debug: expected single file, but got: len(pkgInfo.Files) = %v\n", len(pkgInfo.Files))
+			panic("huh?!? what to do with multiple or zero files here?")
 		}
 		f := pkgInfo.Files[0]
 		fs.Directives = yieldComments(f.Comments)
