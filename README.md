@@ -487,7 +487,7 @@ In a source file, include the following directive:
 //go:generate zebrapack -fast
 ```
 
-The `zebrapack` command will generate serialization methods for all exported type declarations in the file. If you add the flag `-msgp`, it will generate msgpack2.
+The `zebrapack` command will generate serialization methods for all exported type declarations in the file. If you add the flag `-msgp`, it will generate msgpack2 rather than ZebraPack format.
 
 For other language's use, schemas can can be written to a separate file using `zebrapack -file my.go -write-schema` at the shell. (By default schemas are not written to the wire, just as in protobufs/CapnProto/Thrift.)
 
