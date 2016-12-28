@@ -156,12 +156,12 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 	if len(fs.Identities) == 0 {
 		fmt.Println("No types requiring code generation were found!")
 		return nil
-	} else {
-		if c.WriteSchema != "" { // saveSchemaAsMsgpackToFile
-			err := fs.SaveMsgpackFile(c.GoFile, c.WriteSchema)
-			if err != nil {
-				panic(err)
-			}
+	}
+
+	if c.WriteSchema != "" { // saveSchemaAsMsgpackToFile
+		err := fs.SaveMsgpackFile(c.GoFile, c.WriteSchema)
+		if err != nil {
+			panic(err)
 		}
 	}
 
