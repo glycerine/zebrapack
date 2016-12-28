@@ -21,24 +21,6 @@ By default we generate ZebraPack format encoders and decoders when the `zebrapac
 
 At this time it is feature complete, and in beta while we get experience with it. See the section below on background and motivation ideas that we are implementing here.
 
-### `msg:",omitempty"` tags on struct fields
-
-In the following example,
-```
-type Hedgehog struct {
-   Furriness string `msg:",omitempty"`
-}
-```
-If Furriness is the empty string, the field will not be serialized, thus saving the space of the field name on the wire.
-
-It is safe to re-use structs even with `omitempty`. For reference:
-
-from https://github.com/tinylib/msgp/issues/154:
-> The only special feature of UnmarshalMsg and DecodeMsg (from a zero-alloc standpoint) is that they will use pre-existing fields in an object rather than allocating new ones. So, if you decode into the same object repeatedly, things like slices and maps won't be re-allocated on each decode; instead, they will be re-sized appropriately. In other words, mutable fields are simply mutated in-place.
-
-This continues to hold true, and missing fields on the wire will zero the field in any re-used struct.
-
-Under tuple encoding, all fields are serialized and the omitempty tag is ignored.
 
 # background and motivation
 
@@ -447,6 +429,29 @@ command line flags
 		write schema to this file; - for stdout
 
 ~~~
+
+## `zebrapack -msgp` as a msgpack2 code-generator
+
+### `msg:",omitempty"` tags on struct fields
+
+If you're using `zebrapack -msgp` to generate msgpack2 serialization code, then you can use the `omitempty` tag on your struct fields.
+
+In the following example,
+```
+type Hedgehog struct {
+   Furriness string `msg:",omitempty"`
+}
+```
+If Furriness is the empty string, the field will not be serialized, thus saving the space of the field name on the wire.
+
+It is safe to re-use structs even with `omitempty`. For reference:
+
+from https://github.com/tinylib/msgp/issues/154:
+> The only special feature of UnmarshalMsg and DecodeMsg (from a zero-alloc standpoint) is that they will use pre-existing fields in an object rather than allocating new ones. So, if you decode into the same object repeatedly, things like slices and maps won't be re-allocated on each decode; instead, they will be re-sized appropriately. In other words, mutable fields are simply mutated in-place.
+
+This continues to hold true, and missing fields on the wire will zero the field in any re-used struct.
+
+NB: Under tuple encoding (https://github.com/tinylib/msgp/wiki/Preprocessor-Directives), for example `//msgp:tuple Hedgehog`, then all fields are always serialized and the omitempty tag is ignored.
 
 notices
 -------
