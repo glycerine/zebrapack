@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-//go:generate zebrapack -msgp
+//go:generate zebrapack -msgp -no-embedded-schema
 
 // Issue 94: shims were not propogated recursively,
 // which caused shims that weren't at the top level

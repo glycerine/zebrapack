@@ -150,8 +150,7 @@ https://github.com/ugorji/go which
 make schema compilation easy.
 
 * Schema serialization: schemas are serialized
-using the msgpack2 encoding. It is turtles all the
-way down.
+using the msgpack2 encoding.
 
 * Requirement: zerbapack requires that the msgpack2 standard
 be adhered to. Strings and raw binary byte arrays

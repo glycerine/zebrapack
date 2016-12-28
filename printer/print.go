@@ -34,53 +34,68 @@ func PrintFile(
 		return err
 	}
 
-	// add the serialized msgpack2 zebra schema
-	tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
-	if err != nil {
-		return err
-	}
-	//fmt.Printf("tr = %#v\n", tr)
-	sby, err := tr.MarshalMsg(nil)
-	if err != nil {
-		return err
-	}
-	_, err = fmt.Fprintf(out, "\n// ZebraSchemaInMsgpack2Format "+
-		"provides the ZebraPack Schema in msgpack2 format, length "+
-		"%v bytes\nvar ZebraSchemaInMsgpack2Format = %#v\n",
-		len(sby), sby)
-	if err != nil {
-		return err
-	}
+	if !cfg.NoEmbeddedSchema {
+		// add the serialized msgpack2 zebra schema
+		tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
+		if err != nil {
+			return err
+		}
+		//fmt.Printf("tr = %#v\n", tr)
+		sby, err := tr.MarshalMsg(nil)
+		if err != nil {
+			return err
+		}
+		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInMsgpack2Format "+
+			"provides the ZebraPack Schema in msgpack2 format, length "+
+			"%v bytes\nvar ZebraSchemaInMsgpack2Format = []byte{",
+			len(sby))
+		if err != nil {
+			return err
+		}
+		for i := range sby {
+			if i%16 == 0 {
+				fmt.Fprintf(out, "\n")
+			}
+			_, err = fmt.Fprintf(out, "0x%x,", sby[i])
+			if err != nil {
+				return err
+			}
+		}
+		_, err = fmt.Fprintf(out, "\n}\n\n")
+		if err != nil {
+			return err
+		}
 
-	// store as json and pretty-printed too
-	buf := bytes.NewBuffer(sby)
-	var compactJson, pretty bytes.Buffer
-	_, err = msgp.CopyToJSON(&compactJson, buf)
-	if err != nil {
-		return err
-	}
+		// store as json and pretty-printed too
+		buf := bytes.NewBuffer(sby)
+		var compactJson, pretty bytes.Buffer
+		_, err = msgp.CopyToJSON(&compactJson, buf)
+		if err != nil {
+			return err
+		}
 
-	jby := compactJson.Bytes()
-	_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonCompact provides "+
-		"the ZebraPack schema in compact JSON format, length %v bytes\n"+
-		"var ZebraSchemaInJsonCompact = `%s`\n",
-		len(jby), string(jby))
-	if err != nil {
-		return err
-	}
+		jby := compactJson.Bytes()
+		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonCompact provides "+
+			"the ZebraPack schema in compact JSON format, length %v bytes\n"+
+			"var ZebraSchemaInJsonCompact = `%s`\n",
+			len(jby), string(jby))
+		if err != nil {
+			return err
+		}
 
-	err = json.Indent(&pretty, compactJson.Bytes(), "", "    ")
-	if err != nil {
-		return err
-	}
+		err = json.Indent(&pretty, compactJson.Bytes(), "", "    ")
+		if err != nil {
+			return err
+		}
 
-	pby := pretty.Bytes()
-	_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonPretty provides"+
-		" the ZebraPack schema in pretty JSON, length %v bytes\nvar "+
-		"ZebraSchemaInJsonPretty = `%s`\n",
-		len(pby), string(pby))
-	if err != nil {
-		return err
+		pby := pretty.Bytes()
+		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonPretty provides"+
+			" the ZebraPack schema in pretty JSON, length %v bytes\nvar "+
+			"ZebraSchemaInJsonPretty = `%s`\n",
+			len(pby), string(pby))
+		if err != nil {
+			return err
+		}
 	}
 
 	// we'll run goimports on the main file

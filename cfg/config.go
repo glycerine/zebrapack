@@ -19,8 +19,9 @@ type ZebraConfig struct {
 	// encoders instead of ZebraPack
 	UseMsgp2 bool
 
-	ReadStringsFast bool
-	SchemaToGo      string
+	ReadStringsFast  bool
+	SchemaToGo       string
+	NoEmbeddedSchema bool
 }
 
 // call DefineFlags before myflags.Parse()
@@ -37,6 +38,7 @@ func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 	fs.BoolVar(&c.UseMsgp2, "msgp", false, "generate msgpack2 serializers instead of ZebraPack; for backward compatiblity and serializing the zebra.go schema itself.")
 	fs.BoolVar(&c.ReadStringsFast, "fast-strings", false, "for speed when reading a string in a message that won't be reused, this flag means we'll use unsafe to cast the string header and avoid allocation.")
 	fs.StringVar(&c.SchemaToGo, "schema-to-go", "", "(standalone functionality) path to schema in msgpack2 format; we will convert it to Go, write the Go on stdout, and exit immediately")
+	fs.BoolVar(&c.NoEmbeddedSchema, "no-embedded-schema", false, "don't embed the schema in the generated files")
 }
 
 // call c.ValidateConfig() after myflags.Parse()
