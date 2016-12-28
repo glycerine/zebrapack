@@ -3,7 +3,7 @@ ZebraPack: a data description language and serialization format. Like Gobs versi
 
 ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding.
 
-It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support. If you language has a library that reads msgpack2, then it would be a days work to adapt the library to read zebrapack: the schema are in msgpack2, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
+It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support. If your favorite language (after Go, of course) has a library that reads msgpack2, then it would be only a day's work to adapt the library to read zebrapack: the schema are in msgpack2, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
 
 Why start with [msgpack2](http://msgpack.org)?  Quite simple: msgpack2 is simple, fast, and extremely portable. It has an implementation in every language you've heard of, and some you haven't (some 50 libraries are available). It has a well defined and short spec. The mspack1 vs msgpack2 terminology is a distinction we make here: msgpack1 spec poorly distringuished between strings and raw binary bytes, but that was remedied in msgpack2. Importantly, msgpack2 is dynamic-language friendly because it is largely self-describing.
 
