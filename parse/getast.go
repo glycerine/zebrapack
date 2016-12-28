@@ -109,25 +109,14 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	// map from short package import name to the package
 	quickPack := make(map[string]*loader.PackageInfo)
 	for k, v := range lprog.AllPackages {
-		//map[*types.Package]*PackageInfo
-		// k.Name() takes on "msgp" i.e. the imported package
-		//fmt.Printf("pkgInfo.AllPackages[%#v] \n", k.Name())
 		quickPack[k.Name()] = v
 	}
 	fs.QuickPack = quickPack
-	//	for k, v := range pkgInfo.Defs {
-	//		fmt.Printf("pkgInfo.Defs[%#v] = %#v\n", k, v)
-	//	}
-
-	//	for k, v := range pkgInfo.Selections {
-	//		fmt.Printf("pkgInfo.Selections[%#v] = %#v\n", k, v)
-	//	}
 
 	fs.Package = pkgInfo.Pkg.Name()
 	fs.PackageInfo = pkgInfo
 	gotZebraSchema := false
 	if isDir {
-		fmt.Printf("\n in a dir\n")
 		for _, fl := range pkgInfo.Files {
 			pushstate(fl.Name.Name)
 			fs.Directives = append(fs.Directives, yieldComments(fl.Comments)...)
@@ -715,8 +704,6 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 			return nil, nil
 		}
 
-		//fmt.Printf("debug: e.Len = %T/%#v\n", e.Len, e.Len)
-
 		// array and not a slice
 		if e.Len != nil {
 			switch s := e.Len.(type) {
@@ -733,11 +720,11 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 				}, nil
 
 			case *ast.SelectorExpr:
-				fmt.Printf("debug SelectorExpr s where s.X is type %T:\n", s.X) // *ast.Ident
-				//goon.Dump(s)
+				// fmt.Printf("debug SelectorExpr s where s.X is type %T/%#v:\n", s.X, s.X) // *ast.Ident
 				// s.Sel.NamePos is the position we want
-				fmt.Printf("debug s.Sel.NamePos='%#v'  s.Sel.Name='%s'\n", s.Sel.NamePos, s.Sel.Name)
-				// get the package, e.g. msgp
+				// fmt.Printf("debug s.Sel.NamePos='%#v'  s.Sel.Name='%s'\n", s.Sel.NamePos, s.Sel.Name)
+				// get the package, e.g. msgp in the _generated/def.go
+				// type Things struct{Arr [msgp.ExtensionPrefixSize]float64} example.
 
 				var obj types.Object
 				// default to current pkg
@@ -762,7 +749,7 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 				switch cnst := obj.(type) {
 				case *types.Const:
 					asStr := cnst.Val().String()
-					fmt.Printf("debug s.Sel.Name '%s' resolved to '%s'\n", s.Sel.Name, asStr)
+					//fmt.Printf("debug s.Sel.Name '%s' resolved to '%s'\n", s.Sel.Name, asStr)
 					return &gen.Array{
 						Size: asStr,
 						Els:  els,
@@ -770,7 +757,7 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 				default:
 					panic(fmt.Errorf("what to do with type %T here???", cnst))
 				}
-				fmt.Printf("\n selector using default return path...\n")
+				//fmt.Printf("\n selector using default return path...\n")
 				return &gen.Array{
 					Size: stringify(s),
 					Els:  els,
