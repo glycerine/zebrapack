@@ -34,20 +34,17 @@ func PrintFile(
 	// add the serialized msgpack2 zebra schema
 	tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
 	if err != nil {
-		panic(err)
 		return err
 	}
 	//fmt.Printf("tr = %#v\n", tr)
 	sby, err := tr.MarshalMsg(nil)
 	if err != nil {
-		panic(err)
 		return err
 	}
 	//fmt.Printf("\n// debug: var ZebraSchemaInMsgpack2Format = %#v\n", sby)
 	_, err = fmt.Fprintf(out, "\n// length %v bytes\nvar ZebraSchemaInMsgpack2Format = %#v\n",
 		len(sby), sby)
 	if err != nil {
-		panic(err)
 		return err
 	}
 
@@ -78,7 +75,6 @@ func format(file string, data []byte) error {
 	if err != nil {
 		fmt.Printf("\n\n debug: problem file:\n%s\n", file)
 		ioutil.WriteFile(file, data, 0600)
-		panic(err)
 		return err
 	}
 	return ioutil.WriteFile(file, out, 0600)

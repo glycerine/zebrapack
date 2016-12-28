@@ -736,7 +736,7 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 					selPkg, found = fs.QuickPack[y.Name]
 					if !found {
 						panic(fmt.Errorf("could not find package "+
-							"named '%s' for selector ",
+							"named '%s' for selector '%s'",
 							y.Name, stringify(s)))
 					}
 				default:
@@ -758,13 +758,14 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 				default:
 					panic(fmt.Errorf("what to do with type %T here???", cnst))
 				}
-				//fmt.Printf("\n selector using default return path...\n")
-				return &gen.Array{
-					SizeNamed:    stringify(s),
-					SizeResolved: stringify(s), // not really resolved, but don't leave it blank.
-					Els:          els,
-				}, nil
-
+				/*
+					//fmt.Printf("\n selector using default return path...\n")
+						return &gen.Array{
+							SizeNamed:    stringify(s),
+							SizeResolved: stringify(s), // not really resolved, but don't leave it blank.
+							Els:          els,
+						}, nil
+				*/
 			default:
 				return nil, nil
 			}

@@ -434,7 +434,7 @@ func (s *Ptr) ZeroLiteral(v string) string {
 	switch x := s.Value.(type) {
 	case *Struct:
 		if x.common.alias != "" {
-			return fmt.Sprintf(" _, err = %v.UnmarshalMsg(msgp.OnlyNilSlice); if err != nil { return };\n", v, s.TypeName())
+			return fmt.Sprintf(" _, err = %v.UnmarshalMsg(msgp.OnlyNilSlice); if err != nil { return };\n", v) // , s.TypeName())
 		} else {
 			return fmt.Sprintf("\n// what Ptr.ZeroLiteral(v='%v') goes here?????\n", v)
 		}
