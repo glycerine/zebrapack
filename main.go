@@ -42,6 +42,9 @@
 //   -marshal
 //     	create Marshal and Unmarshal methods (default true)
 //
+//  -no-embedded-schema
+//      don't embed the schema in the generated files
+//
 //   -o string
 //     	output file (default is {input_file}_gen.go
 //
