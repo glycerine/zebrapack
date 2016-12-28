@@ -209,7 +209,7 @@ func (e *encodeGen) gArray(a *Array) {
 		return
 	}
 
-	e.writeAndCheck(arrayHeader, literalFmt, a.Size)
+	e.writeAndCheck(arrayHeader, literalFmt, a.SizeResolved)
 	e.p.rangeBlock(a.Index, a.Varname(), e, a.Els)
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/glycerine/zebrapack/msgp"
 	"time"
 )
 
@@ -17,6 +18,9 @@ type S2 struct {
 	P uint16           `zid:"3" deprecated:"true"`
 	Q uint32           `zid:"4"`
 	T int64            `zid:"5"`
+
+	// test const array and *ast.SelectorExpr as array size
+	Arr [msgp.ExtensionPrefixSize]float64 `zid:"6" msg:"arr"`
 }
 
 type Big struct {

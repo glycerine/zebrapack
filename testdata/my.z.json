@@ -79,6 +79,25 @@
                         "Kind": 17,
                         "Str": "int64"
                     }
+                },
+                {
+                    "Zid": 6,
+                    "FieldGoName": "Arr",
+                    "FieldTagName": "arr",
+                    "FieldTypeStr": "[msgp.ExtensionPrefixSize]float64",
+                    "FieldCategory": 27,
+                    "FieldFullType": {
+                        "Kind": 27,
+                        "Str": "Array",
+                        "Domain": {
+                            "Kind": 6,
+                            "Str": "msgp.ExtensionPrefixSize"
+                        },
+                        "Range": {
+                            "Kind": 4,
+                            "Str": "float64"
+                        }
+                    }
                 }
             ]
         },
@@ -272,6 +291,7 @@
         }
     ],
     "Imports": [
+        "\"github.com/glycerine/zebrapack/msgp\"",
         "\"time\""
     ]
 }

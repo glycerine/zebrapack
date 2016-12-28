@@ -242,9 +242,10 @@ func Ident(id string) *BaseElem {
 
 type Array struct {
 	common
-	Index string // index variable name
-	Size  string // array size
-	Els   Elem   // child
+	Index        string // index variable name
+	SizeNamed    string // array size
+	SizeResolved string // array size
+	Els          Elem   // child
 }
 
 func (a *Array) ZeroLiteral(v string) string {
@@ -270,7 +271,7 @@ func (a *Array) TypeName() string {
 	if a.common.alias != "" {
 		return a.common.alias
 	}
-	a.common.Alias(fmt.Sprintf("[%s]%s", a.Size, a.Els.TypeName()))
+	a.common.Alias(fmt.Sprintf("[%s]%s", a.SizeNamed, a.Els.TypeName()))
 	return a.common.alias
 }
 
@@ -284,9 +285,9 @@ func (a *Array) GetZtype() (r zebra.Ztype) {
 
 	// set Domain to be the size of the array
 	r.Domain = &zebra.Ztype{}
-	r.Domain.Str = a.Size
+	r.Domain.Str = a.SizeNamed
 	//fmt.Printf("a is '%#v'\n", a)
-	n, err := strconv.Atoi(a.Size)
+	n, err := strconv.Atoi(a.SizeResolved)
 	if err != nil {
 		panic(err)
 	}

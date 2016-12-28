@@ -709,20 +709,20 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 			switch s := e.Len.(type) {
 			case *ast.BasicLit:
 				return &gen.Array{
-					Size: s.Value,
-					Els:  els,
+					SizeNamed:    s.Value,
+					SizeResolved: s.Value,
+					Els:          els,
 				}, nil
 
 			case *ast.Ident:
 				return &gen.Array{
-					Size: s.String(),
-					Els:  els,
+					SizeNamed:    s.String(),
+					SizeResolved: s.String(),
+					Els:          els,
 				}, nil
 
 			case *ast.SelectorExpr:
 				// fmt.Printf("debug SelectorExpr s where s.X is type %T/%#v:\n", s.X, s.X) // *ast.Ident
-				// s.Sel.NamePos is the position we want
-				// fmt.Printf("debug s.Sel.NamePos='%#v'  s.Sel.Name='%s'\n", s.Sel.NamePos, s.Sel.Name)
 				// get the package, e.g. msgp in the _generated/def.go
 				// type Things struct{Arr [msgp.ExtensionPrefixSize]float64} example.
 
@@ -751,16 +751,18 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 					asStr := cnst.Val().String()
 					//fmt.Printf("debug s.Sel.Name '%s' resolved to '%s'\n", s.Sel.Name, asStr)
 					return &gen.Array{
-						Size: asStr,
-						Els:  els,
+						SizeNamed:    stringify(s),
+						SizeResolved: asStr,
+						Els:          els,
 					}, nil
 				default:
 					panic(fmt.Errorf("what to do with type %T here???", cnst))
 				}
 				//fmt.Printf("\n selector using default return path...\n")
 				return &gen.Array{
-					Size: stringify(s),
-					Els:  els,
+					SizeNamed:    stringify(s),
+					SizeResolved: stringify(s), // not really resolved, but don't leave it blank.
+					Els:          els,
 				}, nil
 
 			default:
