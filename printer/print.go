@@ -45,9 +45,12 @@ func PrintFile(
 		if err != nil {
 			return err
 		}
+
 		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInMsgpack2Format "+
 			"provides the ZebraPack Schema in msgpack2 format, length "+
-			"%v bytes\nvar ZebraSchemaInMsgpack2Format = []byte{",
+			"%v bytes\nfunc ZebraSchemaInMsgpack2Format() []byte {return "+
+			"zebraSchemaInMsgpack2Format}\n"+
+			"var zebraSchemaInMsgpack2Format = []byte{",
 			len(sby))
 		if err != nil {
 			return err
@@ -75,9 +78,12 @@ func PrintFile(
 		}
 
 		jby := compactJson.Bytes()
-		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonCompact provides "+
-			"the ZebraPack schema in compact JSON format, length %v bytes\n"+
-			"var ZebraSchemaInJsonCompact = `%s`\n",
+
+		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonCompact "+
+			"provides the ZebraPack Schema in compact JSON format, length "+
+			"%v bytes\nfunc ZebraSchemaInJsonCompact() []byte {return "+
+			"zebraSchemaInJsonCompact}\n"+
+			"var zebraSchemaInJsonCompact = []byte(`%s`)",
 			len(jby), string(jby))
 		if err != nil {
 			return err
@@ -89,9 +95,11 @@ func PrintFile(
 		}
 
 		pby := pretty.Bytes()
-		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonPretty provides"+
-			" the ZebraPack schema in pretty JSON, length %v bytes\nvar "+
-			"ZebraSchemaInJsonPretty = `%s`\n",
+		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonPretty "+
+			"provides the ZebraPack Schema in pretty JSON format, length "+
+			"%v bytes\nfunc ZebraSchemaInJsonPretty() []byte {return "+
+			"zebraSchemaInJsonPretty}\n"+
+			"var zebraSchemaInJsonPretty = []byte(`%s`)",
 			len(pby), string(pby))
 		if err != nil {
 			return err
