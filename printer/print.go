@@ -2,14 +2,17 @@ package printer
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/glycerine/zebrapack/cfg"
-	"github.com/glycerine/zebrapack/gen"
-	"github.com/glycerine/zebrapack/parse"
-	"golang.org/x/tools/imports"
 	"io"
 	"io/ioutil"
 	"strings"
+
+	"github.com/glycerine/zebrapack/cfg"
+	"github.com/glycerine/zebrapack/gen"
+	"github.com/glycerine/zebrapack/msgp"
+	"github.com/glycerine/zebrapack/parse"
+	"golang.org/x/tools/imports"
 )
 
 func infof(s string, v ...interface{}) {
@@ -41,9 +44,41 @@ func PrintFile(
 	if err != nil {
 		return err
 	}
-	//fmt.Printf("\n// debug: var ZebraSchemaInMsgpack2Format = %#v\n", sby)
-	_, err = fmt.Fprintf(out, "\n// length %v bytes\nvar ZebraSchemaInMsgpack2Format = %#v\n",
+	_, err = fmt.Fprintf(out, "\n// ZebraSchemaInMsgpack2Format "+
+		"provides the ZebraPack Schema in msgpack2 format, length "+
+		"%v bytes\nvar ZebraSchemaInMsgpack2Format = %#v\n",
 		len(sby), sby)
+	if err != nil {
+		return err
+	}
+
+	// store as json and pretty-printed too
+	buf := bytes.NewBuffer(sby)
+	var compactJson, pretty bytes.Buffer
+	_, err = msgp.CopyToJSON(&compactJson, buf)
+	if err != nil {
+		return err
+	}
+
+	jby := compactJson.Bytes()
+	_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonCompact provides "+
+		"the ZebraPack schema in compact JSON format, length %v bytes\n"+
+		"var ZebraSchemaInJsonCompact = `%s`\n",
+		len(jby), string(jby))
+	if err != nil {
+		return err
+	}
+
+	err = json.Indent(&pretty, compactJson.Bytes(), "", "    ")
+	if err != nil {
+		return err
+	}
+
+	pby := pretty.Bytes()
+	_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonPretty provides"+
+		" the ZebraPack schema in pretty JSON, length %v bytes\nvar "+
+		"ZebraSchemaInJsonPretty = `%s`\n",
+		len(pby), string(pby))
 	if err != nil {
 		return err
 	}
