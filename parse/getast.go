@@ -3,9 +3,10 @@ package parse
 import (
 	"fmt"
 	"go/ast"
+	"path/filepath"
 	//"go/importer"
-	//"go/parser"
-	//"go/token"
+	"go/parser"
+	"go/token"
 	//"go/types"
 	"os"
 	"reflect"
@@ -46,7 +47,7 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	if !ok {
 		return nil, fmt.Errorf("error: path '%s' does not exist", c.GoFile)
 	}
-	_ = isDir
+
 	name := c.GoFile
 	pushstate(name)
 	defer popstate()
@@ -56,22 +57,44 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		Cfg:        c,
 	}
 
+	var filenames []string
+	var err error
+	if isDir {
+		filenames, err = ListOfGoFilesInDir(name)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		filenames = []string{name}
+	}
+
+	packageName, err := getPackageNameFromGoFile(filenames[0])
+	if err != nil {
+		panic(err)
+		return nil, err
+	}
+
 	// loading/type checking is needed to get the constants involved
 	// in array definitions. For example, the constant
 	// `n` in the declaration `type S struct { arr [n]int }`;
 	// `n` might be a constant in another package.
 
 	var lc loader.Config
-	lc.CreateFromFilenames(name)
-	fmt.Printf("debug: lc = %#v\n", lc)
+	lc.CreatePkgs = []loader.PkgSpec{{Filenames: filenames}}
+	lc.ParserMode = parser.ParseComments
 	lprog, err := lc.Load()
 	if err != nil {
-		panic(err)
-		return nil, err
+		return nil, fmt.Errorf("error in getast.go: loader.Load() error: '%v'", err)
 	}
-	fmt.Printf("debug: lprog = %#v\n", lprog)
-	pkgInfo := lprog.Package(name)
-	fmt.Printf("debug: pkgInfo for '%s' = %#v\n", name, pkgInfo)
+	//	for k, v := range lprog.AllPackages {
+	//		fmt.Printf("lprog has %v  %v with %v files.\n", k.Path(), k.Name(), len(v.Files))
+	//	}
+	//fmt.Printf("debug: lprog = %#v\n", lprog)
+	pkgInfo := lprog.Package(packageName)
+	if pkgInfo == nil {
+		panic(fmt.Errorf("load of '%s' for package name '%s' failed", name, packageName))
+	}
+	//fmt.Printf("debug: pkgInfo for '%s' = %#v\n", name, pkgInfo)
 	if !pkgInfo.TransitivelyErrorFree {
 		panic(fmt.Errorf("loader detected (possibly transitive) error during package load"))
 	}
@@ -80,11 +103,7 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	fs.Package = pkgInfo.Pkg.Name()
 
 	gotZebraSchema := false
-	finfo, err := os.Stat(name)
-	if err != nil {
-		return nil, err
-	}
-	if finfo.IsDir() {
+	if isDir {
 		fmt.Printf("\n in a dir\n")
 		for _, fl := range pkgInfo.Files {
 			pushstate(fl.Name.Name)
@@ -102,7 +121,7 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 			popstate()
 		}
 	} else {
-		if len(pkgInfo.Files) > 1 {
+		if len(pkgInfo.Files) != 1 {
 			fmt.Printf("debug: single file, but: len(pkgInfo.Files) = %v\n", len(pkgInfo.Files))
 
 			// probably have to search through the .Files looking
@@ -838,4 +857,36 @@ func fileOrDir(name string) (ok, isDir bool) {
 		return true, true
 	}
 	return true, false
+}
+
+func ListOfGoFilesInDir(path string) (gofiles []string, err error) {
+	fd, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer fd.Close()
+
+	list, err := fd.Readdir(-1)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, d := range list {
+		if strings.HasSuffix(d.Name(), ".go") {
+			gofiles = append(gofiles, filepath.Join(path, d.Name()))
+		}
+	}
+
+	return
+}
+
+func getPackageNameFromGoFile(gofile string) (packageName string, err error) {
+
+	fset := token.NewFileSet()
+	f, err := parser.ParseFile(fset, gofile, nil, parser.PackageClauseOnly)
+	if err != nil {
+		return "", err
+	}
+	packageName = f.Name.Name
+	return packageName, nil
 }
