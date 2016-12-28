@@ -31,26 +31,25 @@ func PrintFile(
 		return err
 	}
 
-	/*
-		// add the serialized msgpack2 zebra schema
-		tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
-		if err != nil {
-			panic(err)
-			return err
-		}
-		fmt.Printf("tr = %#v\n", tr)
-		sby, err := tr.MarshalMsg(nil)
-		if err != nil {
-			panic(err)
-			return err
-		}
-		fmt.Printf("\n// debug: var ZebraSchemaInMsgpack2Format = %#v\n", sby)
-		_, err = fmt.Fprintf(out, "\nvar ZebraSchemaInMsgpack2Format = %#v\n", sby)
-		if err != nil {
-			panic(err)
-			return err
-		}
-	*/
+	// add the serialized msgpack2 zebra schema
+	tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
+	if err != nil {
+		panic(err)
+		return err
+	}
+	//fmt.Printf("tr = %#v\n", tr)
+	sby, err := tr.MarshalMsg(nil)
+	if err != nil {
+		panic(err)
+		return err
+	}
+	//fmt.Printf("\n// debug: var ZebraSchemaInMsgpack2Format = %#v\n", sby)
+	_, err = fmt.Fprintf(out, "\n// length %v bytes\nvar ZebraSchemaInMsgpack2Format = %#v\n",
+		len(sby), sby)
+	if err != nil {
+		panic(err)
+		return err
+	}
 
 	// we'll run goimports on the main file
 	// in another goroutine, and run it here

@@ -5,7 +5,7 @@ import (
 
 	"github.com/glycerine/zebrapack/gen"
 	"github.com/glycerine/zebrapack/zebra"
-	"github.com/shurcooL/go-goon"
+	//"github.com/shurcooL/go-goon"
 )
 
 func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
@@ -21,8 +21,8 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 			}
 			for _, f := range x.Fields {
 				zc, zp := getCatPrimiType(&f)
-				fmt.Printf("\n on f = %#v\n", f)
-				goon.Dump(f)
+				//fmt.Printf("\n on f = %#v\n", f)
+				//goon.Dump(f)
 				fld := zebra.Field{
 					Zid:            f.ZebraId,
 					OmitEmpty:      f.OmitEmpty,

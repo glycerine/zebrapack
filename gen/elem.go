@@ -285,7 +285,7 @@ func (a *Array) GetZtype() (r zebra.Ztype) {
 	// set Domain to be the size of the array
 	r.Domain = &zebra.Ztype{}
 	r.Domain.Str = a.Size
-	fmt.Printf("a is '%#v'\n", a)
+	//fmt.Printf("a is '%#v'\n", a)
 	n, err := strconv.Atoi(a.Size)
 	if err != nil {
 		panic(err)

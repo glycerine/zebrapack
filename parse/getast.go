@@ -1,13 +1,15 @@
 package parse
 
 import (
+	"bytes"
 	"fmt"
 	"go/ast"
 	"path/filepath"
 	//"go/importer"
+	"go/format"
 	"go/parser"
 	"go/token"
-	//"go/types"
+	"go/types"
 	"os"
 	"reflect"
 	"sort"
@@ -16,9 +18,8 @@ import (
 
 	"github.com/glycerine/zebrapack/cfg"
 	"github.com/glycerine/zebrapack/gen"
+	//	"github.com/shurcooL/go-goon"
 	"golang.org/x/tools/go/loader"
-
-	"github.com/shurcooL/go-goon"
 )
 
 var StopOnError bool
@@ -34,6 +35,10 @@ type FileSet struct {
 	Cfg        *cfg.ZebraConfig
 
 	ZebraSchemaId int64
+	PackageInfo   *loader.PackageInfo
+	LoadedProg    *loader.Program
+	QuickPack     map[string]*loader.PackageInfo
+	Fset          *token.FileSet
 }
 
 // File parses a file at the relative path
@@ -73,6 +78,9 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		return nil, err
 	}
 
+	fset := token.NewFileSet()
+	fs.Fset = fset
+
 	// loading/type checking is needed to get the constants involved
 	// in array definitions. For example, the constant
 	// `n` in the declaration `type S struct { arr [n]int }`;
@@ -80,13 +88,16 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 	// Hence we must load and thereby fully resolve
 	// constants; we can't get away with doing a shallow parse.
 
-	var lc loader.Config
-	lc.CreatePkgs = []loader.PkgSpec{{Filenames: filenames}}
-	lc.ParserMode = parser.ParseComments
+	lc := loader.Config{
+		Fset:       fset,
+		CreatePkgs: []loader.PkgSpec{{Filenames: filenames}},
+		ParserMode: parser.ParseComments,
+	}
 	lprog, err := lc.Load()
 	if err != nil {
 		return nil, fmt.Errorf("error in getast.go: loader.Load() error: '%v'", err)
 	}
+	fs.LoadedProg = lprog
 	pkgInfo := lprog.Package(packageName)
 	if pkgInfo == nil {
 		panic(fmt.Errorf("load of '%s' for package name '%s' failed", name, packageName))
@@ -95,7 +106,25 @@ func File(c *cfg.ZebraConfig) (*FileSet, error) {
 		panic(fmt.Errorf("loader detected (possibly transitive) error during package load"))
 	}
 
+	// map from short package import name to the package
+	quickPack := make(map[string]*loader.PackageInfo)
+	for k, v := range lprog.AllPackages {
+		//map[*types.Package]*PackageInfo
+		// k.Name() takes on "msgp" i.e. the imported package
+		//fmt.Printf("pkgInfo.AllPackages[%#v] \n", k.Name())
+		quickPack[k.Name()] = v
+	}
+	fs.QuickPack = quickPack
+	//	for k, v := range pkgInfo.Defs {
+	//		fmt.Printf("pkgInfo.Defs[%#v] = %#v\n", k, v)
+	//	}
+
+	//	for k, v := range pkgInfo.Selections {
+	//		fmt.Printf("pkgInfo.Selections[%#v] = %#v\n", k, v)
+	//	}
+
 	fs.Package = pkgInfo.Pkg.Name()
+	fs.PackageInfo = pkgInfo
 	gotZebraSchema := false
 	if isDir {
 		fmt.Printf("\n in a dir\n")
@@ -686,7 +715,7 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 			return nil, nil
 		}
 
-		fmt.Printf("debug: e.Len = %T/%#v\n", e.Len, e.Len)
+		//fmt.Printf("debug: e.Len = %T/%#v\n", e.Len, e.Len)
 
 		// array and not a slice
 		if e.Len != nil {
@@ -704,8 +733,44 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 				}, nil
 
 			case *ast.SelectorExpr:
-				fmt.Printf("debug SelectorExpr s:\n")
-				goon.Dump(s)
+				fmt.Printf("debug SelectorExpr s where s.X is type %T:\n", s.X) // *ast.Ident
+				//goon.Dump(s)
+				// s.Sel.NamePos is the position we want
+				fmt.Printf("debug s.Sel.NamePos='%#v'  s.Sel.Name='%s'\n", s.Sel.NamePos, s.Sel.Name)
+				// get the package, e.g. msgp
+
+				var obj types.Object
+				// default to current pkg
+				selPkg := fs.PackageInfo
+				// but actually lookup in the imported package, if one is used:
+				switch y := s.X.(type) {
+				case *ast.Ident:
+					found := false
+					selPkg, found = fs.QuickPack[y.Name]
+					if !found {
+						panic(fmt.Errorf("could not find package "+
+							"named '%s' for selector ",
+							y.Name, stringify(s)))
+					}
+				default:
+					// ignore, no package
+					fmt.Printf("ignoring, no package; s.X=%#v\n", s.X)
+				}
+
+				// get the scope:
+				_, obj = selPkg.Pkg.Scope().LookupParent(s.Sel.Name, token.NoPos)
+				switch cnst := obj.(type) {
+				case *types.Const:
+					asStr := cnst.Val().String()
+					fmt.Printf("debug s.Sel.Name '%s' resolved to '%s'\n", s.Sel.Name, asStr)
+					return &gen.Array{
+						Size: asStr,
+						Els:  els,
+					}, nil
+				default:
+					panic(fmt.Errorf("what to do with type %T here???", cnst))
+				}
+				fmt.Printf("\n selector using default return path...\n")
 				return &gen.Array{
 					Size: stringify(s),
 					Els:  els,
@@ -825,7 +890,7 @@ func (fs *FileSet) getZebraSchemaId(f *ast.File) {
 								//fmt.Printf("\n !!!!! \n got a BasicLit %T/%#v\n", specid, specid)
 								n, err := strconv.ParseInt(specid.Value, 0, 64)
 								if err != nil {
-									panic(fmt.Errorf("could not conver to integer this zebraSchemaId64 value: '%v': %v", specid.Value, err))
+									panic(fmt.Errorf("could not convert to integer this zebraSchemaId64 value: '%v': %v", specid.Value, err))
 								}
 								fs.ZebraSchemaId = int64(n)
 								return
@@ -880,4 +945,60 @@ func getPackageNameFromGoFile(gofile string) (packageName string, err error) {
 	}
 	packageName = f.Name.Name
 	return packageName, nil
+}
+
+// nodeString formats a syntax tree in the style of gofmt.
+func nodeString(n ast.Node, fset *token.FileSet) string {
+	var buf bytes.Buffer
+	format.Node(&buf, fset, n)
+	return buf.String()
+}
+
+// mode returns a string describing the mode of an expression.
+func mode(tv types.TypeAndValue) string {
+	s := ""
+	if tv.IsVoid() {
+		s += ",void"
+	}
+	if tv.IsType() {
+		s += ",type"
+	}
+	if tv.IsBuiltin() {
+		s += ",builtin"
+	}
+	if tv.IsValue() {
+		s += ",value"
+	}
+	if tv.IsNil() {
+		s += ",nil"
+	}
+	if tv.Addressable() {
+		s += ",addressable"
+	}
+	if tv.Assignable() {
+		s += ",assignable"
+	}
+	if tv.HasOk() {
+		s += ",ok"
+	}
+	return s[1:]
+}
+
+// sample code for diagnostics on the tree
+func (fs *FileSet) walkAstHelper(selPkg *loader.PackageInfo) {
+	for k, file := range selPkg.Files {
+		fmt.Printf("=============== for the %v-th file in package '%s'...\n", k, file.Name.Name)
+		ast.Inspect(file, func(n ast.Node) bool {
+			if expr, ok := n.(ast.Expr); ok {
+				if tv, ok := selPkg.Info.Types[expr]; ok {
+					fmt.Printf("%-24s\tmode:  %s\n", nodeString(expr, fs.Fset), mode(tv))
+					fmt.Printf("\t\t\t\ttype:  %v\n", tv.Type)
+					if tv.Value != nil {
+						fmt.Printf("\t\t\t\tvalue: %v\n", tv.Value)
+					}
+				}
+			}
+			return true
+		})
+	}
 }
