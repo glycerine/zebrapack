@@ -4,102 +4,6 @@
     "ZebraSchemaId": 1947397430155838,
     "Structs": [
         {
-            "StructName": "A",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "Name",
-                    "FieldTagName": "name",
-                    "FieldTypeStr": "string",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 2,
-                    "FieldFullType": {
-                        "Kind": 2,
-                        "Str": "string"
-                    }
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "Bday",
-                    "FieldTagName": "Bday",
-                    "FieldTypeStr": "time.Time",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 20,
-                    "FieldFullType": {
-                        "Kind": 20,
-                        "Str": "Time"
-                    }
-                },
-                {
-                    "Zid": 2,
-                    "FieldGoName": "Phone",
-                    "FieldTagName": "phone",
-                    "FieldTypeStr": "string",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 2,
-                    "FieldFullType": {
-                        "Kind": 2,
-                        "Str": "string"
-                    },
-                    "OmitEmpty": true
-                },
-                {
-                    "Zid": 3,
-                    "FieldGoName": "Sibs",
-                    "FieldTagName": "Sibs",
-                    "FieldTypeStr": "int",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 13,
-                    "FieldFullType": {
-                        "Kind": 13,
-                        "Str": "int"
-                    },
-                    "OmitEmpty": true
-                },
-                {
-                    "Zid": 4,
-                    "FieldGoName": "GPA",
-                    "FieldTagName": "GPA",
-                    "FieldTypeStr": "float64",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 4,
-                    "FieldFullType": {
-                        "Kind": 4,
-                        "Str": "float64"
-                    }
-                },
-                {
-                    "Zid": 5,
-                    "FieldGoName": "Friend",
-                    "FieldTagName": "Friend",
-                    "FieldTypeStr": "bool",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 18,
-                    "FieldFullType": {
-                        "Kind": 18,
-                        "Str": "bool"
-                    }
-                }
-            ]
-        },
-        {
-            "StructName": "Sys",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "F",
-                    "FieldTagName": "F",
-                    "FieldTypeStr": "interface{}",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 19,
-                    "FieldFullType": {
-                        "Kind": 19,
-                        "Str": "Intf"
-                    }
-                }
-            ]
-        },
-        {
             "StructName": "S2",
             "Fields": [
                 {
@@ -285,6 +189,102 @@
                             "Kind": 2,
                             "Str": "string"
                         }
+                    }
+                }
+            ]
+        },
+        {
+            "StructName": "A",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "Name",
+                    "FieldTagName": "name",
+                    "FieldTypeStr": "string",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 2,
+                    "FieldFullType": {
+                        "Kind": 2,
+                        "Str": "string"
+                    }
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "Bday",
+                    "FieldTagName": "Bday",
+                    "FieldTypeStr": "time.Time",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 20,
+                    "FieldFullType": {
+                        "Kind": 20,
+                        "Str": "Time"
+                    }
+                },
+                {
+                    "Zid": 2,
+                    "FieldGoName": "Phone",
+                    "FieldTagName": "phone",
+                    "FieldTypeStr": "string",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 2,
+                    "FieldFullType": {
+                        "Kind": 2,
+                        "Str": "string"
+                    },
+                    "OmitEmpty": true
+                },
+                {
+                    "Zid": 3,
+                    "FieldGoName": "Sibs",
+                    "FieldTagName": "Sibs",
+                    "FieldTypeStr": "int",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 13,
+                    "FieldFullType": {
+                        "Kind": 13,
+                        "Str": "int"
+                    },
+                    "OmitEmpty": true
+                },
+                {
+                    "Zid": 4,
+                    "FieldGoName": "GPA",
+                    "FieldTagName": "GPA",
+                    "FieldTypeStr": "float64",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 4,
+                    "FieldFullType": {
+                        "Kind": 4,
+                        "Str": "float64"
+                    }
+                },
+                {
+                    "Zid": 5,
+                    "FieldGoName": "Friend",
+                    "FieldTagName": "Friend",
+                    "FieldTypeStr": "bool",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 18,
+                    "FieldFullType": {
+                        "Kind": 18,
+                        "Str": "bool"
+                    }
+                }
+            ]
+        },
+        {
+            "StructName": "Sys",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "F",
+                    "FieldTagName": "F",
+                    "FieldTypeStr": "interface{}",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 19,
+                    "FieldFullType": {
+                        "Kind": 19,
+                        "Str": "Intf"
                     }
                 }
             ]
