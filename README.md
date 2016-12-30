@@ -89,11 +89,11 @@ as unsigned integers. This causes crashes in readers
 who were expected a signed integer, which they may
 have originated themselves in the original struct.
 
-That's right, the exiting conventions for msgpack2
-language bindings allows the data types changes as
+Astonishing, but true: the existing practice for msgpack2
+language bindings allows the data types to change as
 they are read and re-serialized. Simple copying of
-a serialized struct can change the types of its
-numbers. This is horrible. Now we have to guess
+a serialized struct can change the types of data
+from signed to unsigned. This is horrible. Now we have to guess
 whether an unsigned integer was really intended because
 of the integer's range, or if data will be silently
 truncated or lost when coercing a 64-bit integer to
@@ -103,7 +103,9 @@ makes logical sense, which it may not.
 This kind of tragedy happens because of a lack of
 shared communication across time and space between
 readers and writers. It is easily addressed with
-a shared schema.
+a shared schema. ZebraPack, in its essense, is the
+agreement to follow that schema when binding
+msgpack2 to a new language.
 
 While not always necessary, a schema provides
 many benefits, both for coordinating between

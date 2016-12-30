@@ -81,7 +81,7 @@ type Ztype struct {
 	// Domain holds the key type for maps. For
 	// pointers and slices it holds the element type.
 	// For arrays, it holds the fixed size.
-	// Domain is null when Kind is a primitive
+	// Domain is null when Kind is a primitive.
 	Domain *Ztype `msg:",omitempty"`
 
 	// Range holds the value type for maps.
