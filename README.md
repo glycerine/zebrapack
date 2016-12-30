@@ -496,7 +496,7 @@ This is a code generation tool and serialization library for [MessagePack](http:
 In a source file, include the following directive:
 
 ```go
-//go:generate zebrapack -fast
+//go:generate zebrapack
 ```
 
 The `zebrapack` command will generate serialization methods for all exported type declarations in the file. If you add the flag `-msgp`, it will generate msgpack2 rather than ZebraPack format.
