@@ -12,6 +12,8 @@ package zebra
 
 //go:generate zebrapack -msgp
 
+const zebraSchemaId64 = 0x1a5a94bd49624
+
 // Zkind describes the detailed type of the field.
 // Since it also stores the fixed size of a array type,
 // it needs to be large. When serialized as msgpack2,
@@ -109,8 +111,13 @@ type Schema struct {
 	ZebraSchemaId int64
 
 	// Structs holds the collection of the main data
-	// descriptor, the Struct.
-	Structs []Struct
+	// descriptor, the Struct. The key is identical
+	// to Struct.StructName.
+	//
+	// This a map rather than a slice in order to:
+	// a) insure there are no duplicate struct names; and
+	// b) make decoding easy and fast.
+	Structs map[string]*Struct
 
 	// Imports archives the imports in the SourcePath
 	// to make it possible to understand other package

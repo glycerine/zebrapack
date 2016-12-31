@@ -16,7 +16,7 @@ import (
 // Currently we only record structs.
 func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 
-	structs := []zebra.Struct{}
+	structs := make(map[string]*zebra.Struct)
 
 	for _, ele := range fs.Identities {
 
@@ -47,7 +47,8 @@ func TranslateToZebraSchema(path string, fs *FileSet) (*zebra.Schema, error) {
 				//fmt.Printf("\n in %v,  on field %#v ... fld='%#v'\n", tr.StructName, f, fld)
 				tr.Fields = append(tr.Fields, fld)
 			}
-			structs = append(structs, tr)
+			structs[tr.StructName] = &tr
+			//structs = append(structs, tr)
 			/*
 				case *Ptr:
 				case *Array:

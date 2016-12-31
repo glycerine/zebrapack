@@ -2,8 +2,8 @@
     "SourcePath": "testdata/my.go",
     "SourcePackage": "main",
     "ZebraSchemaId": 1947397430155838,
-    "Structs": [
-        {
+    "Structs": {
+        "S2": {
             "StructName": "S2",
             "Fields": [
                 {
@@ -101,7 +101,7 @@
                 }
             ]
         },
-        {
+        "Big": {
             "StructName": "Big",
             "Fields": [
                 {
@@ -193,7 +193,7 @@
                 }
             ]
         },
-        {
+        "A": {
             "StructName": "A",
             "Fields": [
                 {
@@ -272,7 +272,7 @@
                 }
             ]
         },
-        {
+        "Sys": {
             "StructName": "Sys",
             "Fields": [
                 {
@@ -289,7 +289,7 @@
                 }
             ]
         }
-    ],
+    },
     "Imports": [
         "\"github.com/glycerine/zebrapack/msgp\"",
         "\"time\""
