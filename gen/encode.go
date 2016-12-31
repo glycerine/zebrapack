@@ -121,13 +121,35 @@ func (e *encodeGen) structmap(s *Struct) {
 		e.p.printf("%s := %s.fieldsNotEmpty(%s[:])\n",
 			inUse, s.vname, empty)
 		e.p.printf("\n// map header\n")
-		e.p.printf("	err = en.WriteMapHeader(%s)\n", inUse)
+		if fast {
+			// +1 for the -1:structName type-identifier.
+			e.p.printf("	err = en.WriteMapHeader(%s+1)\n", inUse)
+		} else {
+			e.p.printf("	err = en.WriteMapHeader(%s)\n", inUse)
+		}
 		e.p.printf("	if err != nil {\n")
 		e.p.printf("		return err\n}\n")
 	} else {
 		data = msgp.AppendMapHeader(nil, uint32(nfields))
 		e.p.printf("\n// map header, size %d", nfields)
 		e.Fuse(data)
+	}
+
+	if fast {
+		// record the struct name under integer key -1
+		recv := imutMethodReceiver(s)
+		e.p.printf("\n// runtime struct type identification for '%s'\n", recv)
+		hexname := ""
+		for i := range recv {
+			hexname += fmt.Sprintf("0x%x,", recv[i])
+		}
+		e.p.printf("err = en.Append(0xe1)\n")
+		e.p.printf("	if err != nil {\n")
+		e.p.printf("		return err\n}\n")
+
+		e.p.printf("err = en.Append([]byte{%s}...)\n", hexname)
+		e.p.printf("	if err != nil {\n")
+		e.p.printf("		return err\n}\n")
 	}
 
 	for i := range s.Fields {

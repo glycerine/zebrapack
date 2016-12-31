@@ -122,6 +122,10 @@ func (s *sizeGen) gStruct(st *Struct) {
 			data = data[:0]
 			if fast {
 				data = msgp.AppendInt64(data, st.Fields[i].ZebraId)
+
+				// account for the -1:structName
+				recv := imutMethodReceiver(st)
+				data = msgp.AppendNegativeOneAndStringAsBytes(data, []byte(recv))
 			} else {
 				data = msgp.AppendString(data, st.Fields[i].FieldTag)
 			}

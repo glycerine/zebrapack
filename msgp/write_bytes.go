@@ -409,3 +409,9 @@ func AppendIntf(b []byte, i interface{}) ([]byte, error) {
 		return b, &ErrUnsupportedType{T: v.Type()}
 	}
 }
+
+// AppendNegativeOneAndString is a helper for runtime struct id
+func AppendNegativeOneAndStringAsBytes(b []byte, str []byte) []byte {
+	o := AppendInt64(b, -1)
+	return AppendBytes(o, str)
+}

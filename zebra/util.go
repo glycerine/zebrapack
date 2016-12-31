@@ -196,3 +196,13 @@ func (s *Struct) WriteToGo(w io.Writer) (err error) {
 	fmt.Fprintf(w, "}\n\n")
 	return nil
 }
+
+/*
+func (sch *Schema) EncodedStructInstanceToCompactBytes(b []byte) (out []byte, err error) {
+	var str Struct
+	left, err := str.DecodeMsg(b)
+	if err != nil {
+		return nil, err
+	}
+}
+*/
