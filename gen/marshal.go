@@ -126,7 +126,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 
 	if fast {
 		// record the struct name under integer key -1
-		recv := imutMethodReceiver(s)
+		recv := s.TypeName() // imutMethodReceiver(s)
 		m.p.printf("\n// runtime struct type identification for '%s'\n", recv)
 		hexname := ""
 		for i := range recv {

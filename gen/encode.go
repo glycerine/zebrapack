@@ -137,7 +137,7 @@ func (e *encodeGen) structmap(s *Struct) {
 
 	if fast {
 		// record the struct name under integer key -1
-		recv := imutMethodReceiver(s)
+		recv := s.TypeName() // imutMethodReceiver(s)
 		e.p.printf("\n// runtime struct type identification for '%s'\n", recv)
 		hexname := ""
 		for i := range recv {

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/glycerine/zebrapack/msgp"
 )
 
 func ZkindFromString(s string) Zkind {
@@ -197,12 +199,112 @@ func (s *Struct) WriteToGo(w io.Writer) (err error) {
 	return nil
 }
 
-/*
-func (sch *Schema) EncodedStructInstanceToCompactBytes(b []byte) (out []byte, err error) {
-	var str Struct
-	left, err := str.DecodeMsg(b)
+func (sch *Schema) ZebraToMsgp2(bts []byte) (out []byte, left []byte, err error) {
+
+	// get the -1 key out of the map.
+	var n uint32
+	var nbs msgp.NilBitsStack
+	n, bts, err = nbs.ReadMapHeaderBytes(bts)
+	origMapFields := bts
 	if err != nil {
-		return nil, err
+		panic(err)
+		return nil, nil, err
 	}
+
+	var fnum int
+	var name string
+	foundMinusOne := false
+
+findMinusOneLoop:
+	for i := uint32(0); i < n; i++ {
+		fnum, bts, err = nbs.ReadIntBytes(bts)
+		if fnum == -1 {
+			name, bts, err = nbs.ReadStringBytes(bts)
+			if err != nil {
+				panic(err)
+			}
+			foundMinusOne = true
+			break findMinusOneLoop
+		}
+		bts, err = msgp.Skip(bts)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	if !foundMinusOne {
+		return nil, nil, fmt.Errorf("error: no -1 rtti field found in zebrapack struct")
+	}
+
+	// INVAR: name is set. lookup the fields.
+	tr := sch.Structs[name]
+
+	// translate to msgpack2
+	out = msgp.AppendMapHeader(out, n-1)
+
+	// re-read
+	bts = origMapFields
+	for i := uint32(0); i < n; i++ {
+		fnum, bts, err = nbs.ReadIntBytes(bts)
+		if err != nil {
+			panic(err)
+		}
+		if fnum == -1 {
+			bts, err = msgp.Skip(bts)
+			if err != nil {
+				panic(err)
+			}
+			continue
+		}
+		// encode fnum-> string translation for field name, then the field following
+		out = msgp.AppendString(out, tr.Fields[fnum].FieldTagName)
+
+		// arrays and maps need to be recursively decoded.
+		out, bts, err = sch.zebraToMsgp2helper(bts, out)
+		if err != nil {
+			panic(err)
+		}
+	}
+	return out, bts, nil
 }
-*/
+
+func (sch *Schema) zebraToMsgp2helper(bts []byte, startOut []byte) (out []byte, left []byte, err error) {
+	out = startOut
+	var nbs msgp.NilBitsStack
+
+	k := msgp.NextType(bts)
+	switch k {
+	case msgp.MapType:
+		// recurse
+		var o2 []byte
+		o2, bts, err = sch.ZebraToMsgp2(bts)
+		out = append(out, o2...)
+	case msgp.ArrayType:
+		// recurse
+		var sz uint32
+		sz, bts, err = nbs.ReadArrayHeaderBytes(bts)
+		if err != nil {
+			return nil, nil, err
+		}
+		out = msgp.AppendArrayHeader(out, sz)
+		for i := uint32(0); i < sz; i++ {
+			out, bts, err = sch.zebraToMsgp2helper(bts, out)
+			if err != nil {
+				return nil, nil, err
+			}
+		}
+	default:
+		// find the end of the next field
+		var end []byte
+		end, err = msgp.Skip(bts)
+		if err != nil {
+			panic(err)
+		}
+		// copy field directly
+		sz := len(bts) - len(end)
+		out = append(out, bts[:sz]...)
+		bts = end
+	}
+
+	return out, bts, nil
+}
