@@ -34,7 +34,7 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 
 		// turn it into msgpack2 and display as json
 
-		m2, _, err := zSchema.ZebraToMsgp2(data)
+		m2, _, err := zSchema.ZebraToMsgp2(data, false)
 		panicOn(err)
 		var json bytes.Buffer
 		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
@@ -50,7 +50,7 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 		data, err = e.MarshalMsg(nil)
 		panicOn(err)
 
-		m2, _, err = zSchema.ZebraToMsgp2(data)
+		m2, _, err = zSchema.ZebraToMsgp2(data, false)
 		panicOn(err)
 		json.Reset()
 		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
