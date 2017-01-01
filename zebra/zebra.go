@@ -149,6 +149,8 @@ type Struct struct {
 // Field represents fields within a struct.
 type Field struct {
 
+	// Zid is the zebrapack id.
+	//
 	// Zid numbering detects update collisions
 	// when two developers simultaneously add two
 	// new fields. Zid numbering allows sane
@@ -169,8 +171,6 @@ type Field struct {
 	// just mark it as deprecated with the `deprecated:"true"`
 	// tag, and change its Go type to struct{}.
 	//
-
-	// Zid is the zebrapack id
 	Zid int64
 
 	// the name of the field in the Go schema/source file.
