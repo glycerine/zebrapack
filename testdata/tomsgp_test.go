@@ -63,6 +63,16 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 		panicOn(err)
 		cv.So(string(encbuf2.Bytes()), cv.ShouldEqual, string(data))
 
+		// handle missing schema gracefully, test by
+		// zero-ing out the Structs map.
+		zSchema.Structs = make(map[string]*zebra.Struct)
+		m2, _, err = zSchema.ZebraToMsgp2(data, true)
+		panicOn(err)
+		json.Reset()
+		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
+		panicOn(err)
+		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"1":"hello","3":43,"6":[0,0,0,0,0,0],"7":{"0":[{"0":[{"1":"leaf"}],"1":"mid"}],"1":"root"}}`)
+
 	})
 }
 

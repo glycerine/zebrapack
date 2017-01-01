@@ -247,7 +247,10 @@ findMinusOneLoop:
 	}
 
 	// INVAR: name is set. lookup the fields.
-	tr := sch.Structs[name]
+	tr, found := sch.Structs[name]
+	if !found {
+		foundMinusOne = false
+	}
 
 	// translate to msgpack2
 	out = msgp.AppendMapHeader(out, n-1)
