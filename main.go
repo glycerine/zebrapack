@@ -217,7 +217,7 @@ func handleSchemaToGo(c *cfg.ZebraConfig) {
 			c.SchemaToGo, err)
 		os.Exit(1)
 	}
-	err = sch.WriteToGo(os.Stdout, c.SchemaToGo)
+	err = sch.WriteToGo(os.Stdout, c.SchemaToGo, "main")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: -schema-to-go '%s' produced error on UnmarshalMsg: %v\n",
 			c.SchemaToGo, err)

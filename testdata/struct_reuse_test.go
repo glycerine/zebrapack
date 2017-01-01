@@ -1,8 +1,4 @@
-package main
-
-// NOTE: THIS FILE WAS PRODUCED BY THE
-// ZEBRAPACK CODE GENERATION TOOL (github.com/glycerine/zebrapack)
-// DO NOT EDIT
+package testdata
 
 import (
 	//"fmt"

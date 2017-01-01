@@ -413,5 +413,5 @@ func AppendIntf(b []byte, i interface{}) ([]byte, error) {
 // AppendNegativeOneAndString is a helper for runtime struct id
 func AppendNegativeOneAndStringAsBytes(b []byte, str []byte) []byte {
 	o := AppendInt64(b, -1)
-	return AppendBytes(o, str)
+	return AppendStringFromBytes(o, str)
 }

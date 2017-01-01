@@ -1,13 +1,15 @@
-package main
+package testdata
 
 import (
 	"github.com/glycerine/zebrapack/msgp"
 	"time"
 )
 
+//go:generate zebrapack
+
 const zebraSchemaId64 = 0x6eb25cc0f9a3e
 
-func main() {}
+//func main() {}
 
 type S struct{}
 
