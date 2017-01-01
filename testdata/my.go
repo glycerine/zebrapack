@@ -5,7 +5,8 @@ import (
 	"time"
 )
 
-//go:generate zebrapack  -method-prefix Zp
+//go:generate zebrapack
+//go:generate zebrapack -msgp -o my_msgp_gen.go -method-prefix=MSGP -io=false -tests=false
 
 const zebraSchemaId64 = 0x6eb25cc0f9a3e
 

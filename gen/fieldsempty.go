@@ -46,8 +46,9 @@ func (e *fieldsEmpty) Execute(p Elem) error {
 }
 
 func (e *fieldsEmpty) gStruct(s *Struct) {
-	e.p.printf("// fieldsNotEmpty supports omitempty tags\n")
-	e.p.printf("func (%s) fieldsNotEmpty(isempty []bool) uint32 {", e.recvr)
+	e.p.printf("// %sfieldsNotEmpty supports omitempty tags\n", e.cfg.MethodPrefix)
+	e.p.printf("func (%s) %sfieldsNotEmpty(isempty []bool) uint32 {",
+		e.recvr, e.cfg.MethodPrefix)
 
 	nfields := len(s.Fields) - s.SkipCount
 	numOE := 0

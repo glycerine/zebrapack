@@ -46,12 +46,16 @@ func PrintFile(
 			return err
 		}
 
-		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInMsgpack2Format "+
+		pre := cfg.MethodPrefix
+
+		_, err = fmt.Fprintf(out, "\n// %sZebraSchemaInMsgpack2Format "+
 			"provides the ZebraPack Schema in msgpack2 format, length "+
-			"%v bytes\nfunc ZebraSchemaInMsgpack2Format() []byte {return "+
-			"zebraSchemaInMsgpack2Format}\n"+
-			"var zebraSchemaInMsgpack2Format = []byte{",
-			len(sby))
+			"%v bytes\nfunc %sZebraSchemaInMsgpack2Format() []byte {return "+
+			"%szebraSchemaInMsgpack2Format}\n"+
+			"var %szebraSchemaInMsgpack2Format = []byte{",
+			pre,
+			len(sby),
+			pre, pre, pre)
 		if err != nil {
 			return err
 		}
@@ -79,12 +83,12 @@ func PrintFile(
 
 		jby := compactJson.Bytes()
 
-		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonCompact "+
+		_, err = fmt.Fprintf(out, "\n// %sZebraSchemaInJsonCompact "+
 			"provides the ZebraPack Schema in compact JSON format, length "+
-			"%v bytes\nfunc ZebraSchemaInJsonCompact() []byte {return "+
-			"zebraSchemaInJsonCompact}\n"+
-			"var zebraSchemaInJsonCompact = []byte(`%s`)",
-			len(jby), string(jby))
+			"%v bytes\nfunc %sZebraSchemaInJsonCompact() []byte {return "+
+			"%szebraSchemaInJsonCompact}\n"+
+			"var %szebraSchemaInJsonCompact = []byte(`%s`)",
+			pre, len(jby), pre, pre, pre, string(jby))
 		if err != nil {
 			return err
 		}
@@ -95,12 +99,12 @@ func PrintFile(
 		}
 
 		pby := pretty.Bytes()
-		_, err = fmt.Fprintf(out, "\n// ZebraSchemaInJsonPretty "+
+		_, err = fmt.Fprintf(out, "\n// %sZebraSchemaInJsonPretty "+
 			"provides the ZebraPack Schema in pretty JSON format, length "+
-			"%v bytes\nfunc ZebraSchemaInJsonPretty() []byte {return "+
-			"zebraSchemaInJsonPretty}\n"+
-			"var zebraSchemaInJsonPretty = []byte(`%s`)",
-			len(pby), string(pby))
+			"%v bytes\nfunc %sZebraSchemaInJsonPretty() []byte {return "+
+			"%szebraSchemaInJsonPretty}\n"+
+			"var %szebraSchemaInJsonPretty = []byte(`%s`)",
+			pre, len(pby), pre, pre, pre, string(pby))
 		if err != nil {
 			return err
 		}
