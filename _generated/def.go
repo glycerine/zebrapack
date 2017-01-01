@@ -291,3 +291,13 @@ type OmitSimple struct {
 	CountDrocula int
 	Inside1      OmitEmptyInside1 `msg:",omitempty"`
 }
+
+type Wrapper struct {
+	Tree *Tree
+}
+
+type Tree struct {
+	Children []Tree
+	Element  int
+	Parent   *Wrapper
+}
