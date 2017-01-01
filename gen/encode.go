@@ -23,6 +23,10 @@ type encodeGen struct {
 	cfg  *cfg.ZebraConfig
 }
 
+func (e *encodeGen) MethodPrefix() string {
+	return e.cfg.MethodPrefix
+}
+
 func (e *encodeGen) Method() Method { return Encode }
 
 func (e *encodeGen) Apply(dirs []string) error {
@@ -61,9 +65,9 @@ func (e *encodeGen) Execute(p Elem) error {
 		return nil
 	}
 
-	e.p.comment("EncodeMsg implements msgp.Encodable")
+	e.p.comment(fmt.Sprintf("%sEncodeMsg implements msgp.Encodable", e.cfg.MethodPrefix))
 
-	e.p.printf("\nfunc (%s %s) EncodeMsg(en *msgp.Writer) (err error) {", p.Varname(), imutMethodReceiver(p))
+	e.p.printf("\nfunc (%s %s) %sEncodeMsg(en *msgp.Writer) (err error) {", p.Varname(), imutMethodReceiver(p), e.cfg.MethodPrefix)
 	next(e, p)
 	e.p.nakedReturn()
 	return e.p.err
@@ -246,7 +250,7 @@ func (e *encodeGen) gBase(b *BaseElem) {
 	}
 
 	if b.Value == IDENT { // unknown identity
-		e.p.printf("\nerr = %s.EncodeMsg(en)", vname)
+		e.p.printf("\nerr = %s.%sEncodeMsg(en)", vname, e.cfg.MethodPrefix)
 		e.p.print(errcheck)
 	} else { // typical case
 		e.writeAndCheck(b.BaseName(), literalFmt, vname)

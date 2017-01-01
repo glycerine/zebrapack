@@ -133,10 +133,10 @@ func NewPrinter(m Method, out io.Writer, tests io.Writer, cfg *cfg.ZebraConfig) 
 		gens = append(gens, sizes(out, cfg))
 	}
 	if m.isset(marshaltest) {
-		gens = append(gens, mtest(tests))
+		gens = append(gens, mtest(tests, cfg))
 	}
 	if m.isset(encodetest) {
-		gens = append(gens, etest(tests))
+		gens = append(gens, etest(tests, cfg))
 	}
 	if len(gens) == 0 {
 		panic("NewPrinter called with invalid method flags")

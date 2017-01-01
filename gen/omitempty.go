@@ -16,6 +16,10 @@ type omitEmpty struct {
 	varname string
 }
 
+func (s *omitEmpty) MethodPrefix() string {
+	return ""
+}
+
 func (s *omitEmpty) gStruct(st *Struct) {
 	s.p.printf("false // struct values are never empty\n")
 }

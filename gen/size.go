@@ -37,6 +37,10 @@ type sizeGen struct {
 	cfg   *cfg.ZebraConfig
 }
 
+func (s *sizeGen) MethodPrefix() string {
+	return s.cfg.MethodPrefix
+}
+
 func (s *sizeGen) Method() Method { return Size }
 
 func (s *sizeGen) Apply(dirs []string) error {
@@ -83,9 +87,9 @@ func (s *sizeGen) Execute(p Elem) error {
 		return nil
 	}
 
-	s.p.comment("Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message")
+	s.p.comment(fmt.Sprintf("%sMsgsize returns an upper bound estimate of the number of bytes occupied by the serialized message", s.cfg.MethodPrefix))
 
-	s.p.printf("\nfunc (%s %s) Msgsize() (s int) {", p.Varname(), imutMethodReceiver(p))
+	s.p.printf("\nfunc (%s %s) %sMsgsize() (s int) {", p.Varname(), imutMethodReceiver(p), s.cfg.MethodPrefix)
 	s.state = assign
 	next(s, p)
 	s.p.nakedReturn()
@@ -208,7 +212,7 @@ func (s *sizeGen) gBase(b *BaseElem) {
 	if !s.p.ok() {
 		return
 	}
-	s.addConstant(basesizeExpr(b))
+	s.addConstant(basesizeExpr(b, s))
 }
 
 // returns "len(slice)"
@@ -281,7 +285,7 @@ func fixedsizeExpr(e Elem) (string, bool) {
 }
 
 // print size expression of a variable name
-func basesizeExpr(b *BaseElem) string {
+func basesizeExpr(b *BaseElem, s *sizeGen) string {
 	vname := b.Varname()
 	if b.Convert {
 		vname = tobaseConvert(b)
@@ -292,7 +296,7 @@ func basesizeExpr(b *BaseElem) string {
 	case Intf:
 		return "msgp.GuessSize(" + vname + ")"
 	case IDENT:
-		return vname + ".Msgsize()"
+		return vname + fmt.Sprintf(".%sMsgsize()", s.cfg.MethodPrefix)
 	case Bytes:
 		return "msgp.BytesPrefixSize + len(" + vname + ")"
 	case String:

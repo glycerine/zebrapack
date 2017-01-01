@@ -23,6 +23,10 @@ type marshalGen struct {
 	cfg  *cfg.ZebraConfig
 }
 
+func (m *marshalGen) MethodPrefix() string {
+	return m.cfg.MethodPrefix
+}
+
 func (m *marshalGen) Method() Method { return Marshal }
 
 func (m *marshalGen) Apply(dirs []string) error {
@@ -41,15 +45,15 @@ func (m *marshalGen) Execute(p Elem) error {
 		return nil
 	}
 
-	m.p.comment("MarshalMsg implements msgp.Marshaler")
+	m.p.comment(fmt.Sprintf("%sMarshalMsg implements msgp.Marshaler", m.cfg.MethodPrefix))
 
 	// save the vname before
 	// calling methodReceiver so
 	// that z.Msgsize() is printed correctly
 	c := p.Varname()
 
-	m.p.printf("\nfunc (%s %s) MarshalMsg(b []byte) (o []byte, err error) {", p.Varname(), imutMethodReceiver(p))
-	m.p.printf("\no = msgp.Require(b, %s.Msgsize())", c)
+	m.p.printf("\nfunc (%s %s) %sMarshalMsg(b []byte) (o []byte, err error) {", p.Varname(), imutMethodReceiver(p), m.cfg.MethodPrefix)
+	m.p.printf("\no = msgp.Require(b, %s.%sMsgsize())", c, m.cfg.MethodPrefix)
 	next(m, p)
 	m.p.nakedReturn()
 	return m.p.err
@@ -247,7 +251,7 @@ func (m *marshalGen) gBase(b *BaseElem) {
 	switch b.Value {
 	case IDENT:
 		echeck = true
-		m.p.printf("\no, err = %s.MarshalMsg(o)", vname)
+		m.p.printf("\no, err = %s.%sMarshalMsg(o)", vname, m.cfg.MethodPrefix)
 	case Intf, Ext:
 		echeck = true
 		m.p.printf("\no, err = msgp.Append%s(o, %s)", b.BaseName(), vname)

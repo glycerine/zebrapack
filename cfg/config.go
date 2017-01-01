@@ -23,6 +23,8 @@ type ZebraConfig struct {
 	SchemaToGo            string
 	NoEmbeddedSchema      bool
 	NoEmbeddedStructNames bool
+
+	MethodPrefix string
 }
 
 // call DefineFlags before myflags.Parse()
@@ -41,6 +43,7 @@ func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 	fs.StringVar(&c.SchemaToGo, "schema-to-go", "", "(standalone functionality) path to schema in msgpack2 format; we will convert it to Go, write the Go on stdout, and exit immediately")
 	fs.BoolVar(&c.NoEmbeddedSchema, "no-embedded-schema", false, "don't embed the schema in the generated files")
 	fs.BoolVar(&c.NoEmbeddedStructNames, "no-structnames-onwire", false, "don't embed the name of the struct in the serialized zebrapack. Skipping the embedded struct names saves time and space and matches what protocol buffers/thrift/capnproto/msgpack do. You must know the type on the wire you expect; or embed a type tag in one universal wrapper struct. Embedded struct names are a feature of ZebraPack to help with dynamic language bindings.")
+	fs.StringVar(&c.MethodPrefix, "method-prefix", "", "(optional) prefix that will be pre-prended to the front of generated method names; useful when you need to avoid namespace collisions")
 }
 
 // call c.ValidateConfig() after myflags.Parse()

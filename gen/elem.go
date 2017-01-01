@@ -169,12 +169,27 @@ var builtins = map[string]struct{}{
 type common struct {
 	vname string
 	alias string
+
+	hmp HasMethodPrefix
+}
+
+type HasMethodPrefix interface {
+	MethodPrefix() string
 }
 
 func (c *common) SetVarname(s string) { c.vname = s }
 func (c *common) Varname() string     { return c.vname }
 func (c *common) Alias(typ string)    { c.alias = typ }
 func (c *common) hidden()             {}
+func (c *common) MethodPrefix() string {
+	if c.hmp == nil {
+		return ""
+	}
+	return c.hmp.MethodPrefix()
+}
+func (c *common) SetHasMethodPrefix(hmp HasMethodPrefix) {
+	c.hmp = hmp
+}
 
 func IsPrintable(e Elem) bool {
 	if be, ok := e.(*BaseElem); ok && !be.Printable() {
@@ -224,6 +239,10 @@ type Elem interface {
 
 	// GetZtype provides type info in a uniform way.
 	GetZtype() zebra.Ztype
+
+	// for template instantiation with custom method prefix
+	MethodPrefix() string
+	SetHasMethodPrefix(hmp HasMethodPrefix)
 
 	hidden()
 }

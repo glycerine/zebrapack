@@ -1,6 +1,7 @@
 package gen
 
 import (
+	"github.com/glycerine/zebrapack/cfg"
 	"io"
 	"text/template"
 )
@@ -17,13 +18,18 @@ var (
 // "Type{}" syntax.
 // we should support all the types.
 
-func mtest(w io.Writer) *mtestGen {
-	return &mtestGen{w: w}
+func mtest(w io.Writer, cfg *cfg.ZebraConfig) *mtestGen {
+	return &mtestGen{w: w, cfg: cfg}
 }
 
 type mtestGen struct {
 	passes
-	w io.Writer
+	w   io.Writer
+	cfg *cfg.ZebraConfig
+}
+
+func (m *mtestGen) MethodPrefix() string {
+	return m.cfg.MethodPrefix
 }
 
 func (m *mtestGen) Execute(p Elem) error {
@@ -31,6 +37,7 @@ func (m *mtestGen) Execute(p Elem) error {
 	if p != nil && IsPrintable(p) {
 		switch p.(type) {
 		case *Struct, *Array, *Slice, *Map:
+			p.SetHasMethodPrefix(m)
 			return marshalTestTempl.Execute(m.w, p)
 		}
 	}
@@ -41,11 +48,16 @@ func (m *mtestGen) Method() Method { return marshaltest }
 
 type etestGen struct {
 	passes
-	w io.Writer
+	w   io.Writer
+	cfg *cfg.ZebraConfig
 }
 
-func etest(w io.Writer) *etestGen {
-	return &etestGen{w: w}
+func etest(w io.Writer, cfg *cfg.ZebraConfig) *etestGen {
+	return &etestGen{w: w, cfg: cfg}
+}
+
+func (e *etestGen) MethodPrefix() string {
+	return e.cfg.MethodPrefix
 }
 
 func (e *etestGen) Execute(p Elem) error {
@@ -53,6 +65,7 @@ func (e *etestGen) Execute(p Elem) error {
 	if p != nil && IsPrintable(p) {
 		switch p.(type) {
 		case *Struct, *Array, *Slice, *Map:
+			p.SetHasMethodPrefix(e)
 			return encodeTestTempl.Execute(e.w, p)
 		}
 	}
@@ -64,16 +77,16 @@ func (e *etestGen) Method() Method { return encodetest }
 func init() {
 	template.Must(marshalTestTempl.Parse(`func TestMarshalUnmarshal{{.TypeName}}(t *testing.T) {
 	v := {{.TypeName}}{}
-	bts, err := v.MarshalMsg(nil)
+	bts, err := v.{{.MethodPrefix}}MarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	left, err := v.UnmarshalMsg(bts)
+	left, err := v.{{.MethodPrefix}}UnmarshalMsg(bts)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(left) > 0 {
-		t.Errorf("%d bytes left over after UnmarshalMsg(): %q", len(left), left)
+		t.Errorf("%d bytes left over after {{.MethodPrefix}}UnmarshalMsg(): %q", len(left), left)
 	}
 
 	left, err = msgp.Skip(bts)
@@ -90,30 +103,30 @@ func BenchmarkMarshalMsg{{.TypeName}}(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i:=0; i<b.N; i++ {
-		v.MarshalMsg(nil)
+		v.{{.MethodPrefix}}MarshalMsg(nil)
 	}
 }
 
 func BenchmarkAppendMsg{{.TypeName}}(b *testing.B) {
 	v := {{.TypeName}}{}
-	bts := make([]byte, 0, v.Msgsize())
-	bts, _ = v.MarshalMsg(bts[0:0])
+	bts := make([]byte, 0, v.{{.MethodPrefix}}Msgsize())
+	bts, _ = v.{{.MethodPrefix}}MarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i:=0; i<b.N; i++ {
-		bts, _ = v.MarshalMsg(bts[0:0])
+		bts, _ = v.{{.MethodPrefix}}MarshalMsg(bts[0:0])
 	}
 }
 
 func BenchmarkUnmarshal{{.TypeName}}(b *testing.B) {
 	v := {{.TypeName}}{}
-	bts, _ := v.MarshalMsg(nil)
+	bts, _ := v.{{.MethodPrefix}}MarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
 	b.ResetTimer()
 	for i:=0; i<b.N; i++ {
-		_, err := v.UnmarshalMsg(bts)
+		_, err := v.{{.MethodPrefix}}UnmarshalMsg(bts)
 		if err != nil {
 			b.Fatal(err)
 		}
@@ -127,9 +140,9 @@ func BenchmarkUnmarshal{{.TypeName}}(b *testing.B) {
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
-	m := v.Msgsize()
+	m := v.{{.MethodPrefix}}Msgsize()
 	if buf.Len() > m {
-		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
+		t.Logf("WARNING: {{.MethodPrefix}}Msgsize() for %v is inaccurate", v)
 	}
 
 	vn := {{.TypeName}}{}
@@ -155,7 +168,7 @@ func BenchmarkEncode{{.TypeName}}(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i:=0; i<b.N; i++ {
-		v.EncodeMsg(en)
+		v.{{.MethodPrefix}}EncodeMsg(en)
 	}
 	en.Flush()
 }
@@ -170,7 +183,7 @@ func BenchmarkDecode{{.TypeName}}(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i:=0; i<b.N; i++ {
-		err := v.DecodeMsg(dc)
+		err := v.{{.MethodPrefix}}DecodeMsg(dc)
 		if  err != nil {
 			b.Fatal(err)
 		}

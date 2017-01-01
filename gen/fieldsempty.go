@@ -21,6 +21,10 @@ type fieldsEmpty struct {
 	cfg   *cfg.ZebraConfig
 }
 
+func (e *fieldsEmpty) MethodPrefix() string {
+	return e.cfg.MethodPrefix
+}
+
 func (e *fieldsEmpty) Method() Method { return FieldsEmpty }
 
 func (e *fieldsEmpty) Execute(p Elem) error {

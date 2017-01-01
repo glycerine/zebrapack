@@ -27,6 +27,10 @@ type decodeGen struct {
 	post postDefs
 }
 
+func (s *decodeGen) MethodPrefix() string {
+	return s.cfg.MethodPrefix
+}
+
 type postDefs struct {
 	varnames map[string]int
 	endlines []string // var declarations declared after method defitions.
@@ -80,9 +84,9 @@ func (d *decodeGen) Execute(p Elem) error {
 		return nil
 	}
 
-	d.p.comment("DecodeMsg implements msgp.Decodable")
+	d.p.comment(fmt.Sprintf("%sDecodeMsg implements msgp.Decodable", d.cfg.MethodPrefix))
 	d.p.comment("We treat empty fields as if we read a Nil from the wire.")
-	d.p.printf("\nfunc (%s %s) DecodeMsg(dc *msgp.Reader) (err error) {\n", p.Varname(), methodReceiver(p))
+	d.p.printf("\nfunc (%s %s) %sDecodeMsg(dc *msgp.Reader) (err error) {\n", p.Varname(), methodReceiver(p), d.cfg.MethodPrefix)
 
 	d.p.printf(`var sawTopNil bool
   if dc.IsNil() {
@@ -259,7 +263,7 @@ func (d *decodeGen) gBase(b *BaseElem) {
 			d.p.printf("\n%s, err = dc.ReadBytes(%s)", vname, vname)
 		}
 	case IDENT:
-		d.p.printf("\nerr = %s.DecodeMsg(dc)", vname)
+		d.p.printf("\nerr = %s.%sDecodeMsg(dc)", vname, d.cfg.MethodPrefix)
 	case Ext:
 		d.p.printf("\n if !dc.IsNil() {")
 		d.p.printf("\nerr = dc.ReadExtension(%s)\n} else { err = dc.ReadNil() }\n", vname)
@@ -371,7 +375,7 @@ func (d *decodeGen) gPtr(p *Ptr) {
 				`
                 if %s != nil {
 				dc.PushAlwaysNil()
-				err = %s.DecodeMsg(dc)
+				err = %s.%sDecodeMsg(dc)
 				if err != nil {
 					return
 				}
@@ -379,7 +383,7 @@ func (d *decodeGen) gPtr(p *Ptr) {
               }
             } else {
                // not Nil, we have something to read
-`, vname, vname)
+`, vname, vname, d.cfg.MethodPrefix)
 		case Ext:
 			d.p.printf("\n // we have an base.Value of Ext: replace the Ext iff already allocated")
 			d.p.printf("\nif %s != nil {\n  %s = new(msgp.RawExtension) } \n"+
