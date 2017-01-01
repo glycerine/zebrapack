@@ -34,7 +34,7 @@ func PrintFile(
 		return err
 	}
 
-	if !cfg.NoEmbeddedSchema {
+	if !cfg.NoEmbeddedSchema && !cfg.UseMsgp2 {
 		// add the serialized msgpack2 zebra schema
 		tr, err := parse.TranslateToZebraSchema(pathToGoSource, f)
 		if err != nil {
