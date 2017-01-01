@@ -189,7 +189,7 @@ type A struct {
 ```
 benchmark                                       iter           time/iter         bytes alloc       allocs
 ---------                                       ----           ---------         -----------       ------
-BenchmarkZebraPackUnmarshal-4            	10000000	       227 ns/op	 258.78 MB/s	       0 B/op	       0 allocs/op
+BenchmarkZebraPackUnmarshal-4            	10000000	       227 ns/op	       0 B/op	       0 allocs/op
 BenchmarkGencodeUnmarshal-4              	10000000	       229 ns/op	     112 B/op	       3 allocs/op
 BenchmarkFlatBuffersUnmarshal-4          	10000000	       232 ns/op	      32 B/op	       2 allocs/op
 BenchmarkGogoprotobufUnmarshal-4         	10000000	       232 ns/op	      96 B/op	       3 allocs/op
@@ -216,7 +216,7 @@ BenchmarkJsonUnmarshal-4                 	  200000	      5576 ns/op	     495 B/o
 ```
 benchmark                                       iter           time/iter          bytes alloc      allocs
 ---------                                       ----           ---------          -----------      ------
-BenchmarkZebraPackMarshal-4              	10000000	       115 ns/op	 510.58 MB/s	       0 B/op	       0 allocs/op
+BenchmarkZebraPackMarshal-4              	10000000	       115 ns/op	       0 B/op	       0 allocs/op
 BenchmarkGogoprotobufMarshal-4           	10000000	       148 ns/op	      64 B/op	       1 allocs/op
 BenchmarkMsgpMarshal-4                   	10000000	       161 ns/op	     128 B/op	       1 allocs/op
 BenchmarkGencodeMarshal-4                	10000000	       176 ns/op	      80 B/op	       2 allocs/op
