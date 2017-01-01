@@ -7,7 +7,7 @@ you wish to serialize. The Go file schema is then compiled
 in a format we'll call `compiled-schema` format.
 
 The `compiled-schema` is thus type checked upon generation,
- and other languages need not parse Go (only msgpack2
+and other languages need not parse Go (only msgpack2
 or JSON) in order the read and use the compiled
 schema to undertand the types on the wire. The
 types below desribe those found in
