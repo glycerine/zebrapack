@@ -169,7 +169,9 @@ type Field struct {
 	//
 	// Therefore this ironclad rule: never delete a field or Zid number,
 	// just mark it as deprecated with the `deprecated:"true"`
-	// tag, and change its Go type to struct{}.
+	// tag. Change its Go type to struct{} as soon as
+	// possible so that it becomes skipped; then the Go
+	// compiler can help you detect and prevent unwanted use.
 	//
 	Zid int64
 
