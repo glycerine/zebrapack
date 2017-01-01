@@ -3,145 +3,6 @@
     "SourcePackage": "testdata",
     "ZebraSchemaId": 1947397430155838,
     "Structs": {
-        "Tree": {
-            "StructName": "Tree",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "Chld",
-                    "FieldTagName": "Chld",
-                    "FieldTypeStr": "[]Tree",
-                    "FieldCategory": 26,
-                    "FieldFullType": {
-                        "Kind": 26,
-                        "Str": "Slice",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "Tree"
-                        }
-                    }
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "Str",
-                    "FieldTagName": "Str",
-                    "FieldTypeStr": "string",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 2,
-                    "FieldFullType": {
-                        "Kind": 2,
-                        "Str": "string"
-                    }
-                },
-                {
-                    "Zid": 2,
-                    "FieldGoName": "Par",
-                    "FieldTagName": "Par",
-                    "FieldTypeStr": "*S2",
-                    "FieldCategory": 28,
-                    "FieldFullType": {
-                        "Kind": 28,
-                        "Str": "Pointer",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "S2"
-                        }
-                    }
-                }
-            ]
-        },
-        "Big": {
-            "StructName": "Big",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "Slice",
-                    "FieldTagName": "Slice",
-                    "FieldTypeStr": "[]S2",
-                    "FieldCategory": 26,
-                    "FieldFullType": {
-                        "Kind": 26,
-                        "Str": "Slice",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "S2"
-                        }
-                    }
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "Transform",
-                    "FieldTagName": "Transform",
-                    "FieldTypeStr": "map[int]*S2",
-                    "FieldCategory": 24,
-                    "FieldFullType": {
-                        "Kind": 24,
-                        "Str": "Map",
-                        "Domain": {
-                            "Kind": 13,
-                            "Str": "int"
-                        },
-                        "Range": {
-                            "Kind": 28,
-                            "Str": "Pointer",
-                            "Domain": {
-                                "Kind": 22,
-                                "Str": "S2"
-                            }
-                        }
-                    }
-                },
-                {
-                    "Zid": 2,
-                    "FieldGoName": "Myptr",
-                    "FieldTagName": "Myptr",
-                    "FieldTypeStr": "*S2",
-                    "FieldCategory": 28,
-                    "FieldFullType": {
-                        "Kind": 28,
-                        "Str": "Pointer",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "S2"
-                        }
-                    }
-                },
-                {
-                    "Zid": 3,
-                    "FieldGoName": "Myarray",
-                    "FieldTagName": "Myarray",
-                    "FieldTypeStr": "[3]string",
-                    "FieldCategory": 27,
-                    "FieldFullType": {
-                        "Kind": 27,
-                        "Str": "Array",
-                        "Domain": {
-                            "Kind": 3,
-                            "Str": "3"
-                        },
-                        "Range": {
-                            "Kind": 2,
-                            "Str": "string"
-                        }
-                    }
-                },
-                {
-                    "Zid": 4,
-                    "FieldGoName": "MySlice",
-                    "FieldTagName": "MySlice",
-                    "FieldTypeStr": "[]string",
-                    "FieldCategory": 26,
-                    "FieldFullType": {
-                        "Kind": 26,
-                        "Str": "Slice",
-                        "Domain": {
-                            "Kind": 2,
-                            "Str": "string"
-                        }
-                    }
-                }
-            ]
-        },
         "A": {
             "StructName": "A",
             "Fields": [
@@ -346,6 +207,145 @@
                         "Domain": {
                             "Kind": 22,
                             "Str": "Tree"
+                        }
+                    }
+                }
+            ]
+        },
+        "Tree": {
+            "StructName": "Tree",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "Chld",
+                    "FieldTagName": "Chld",
+                    "FieldTypeStr": "[]Tree",
+                    "FieldCategory": 26,
+                    "FieldFullType": {
+                        "Kind": 26,
+                        "Str": "Slice",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "Tree"
+                        }
+                    }
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "Str",
+                    "FieldTagName": "Str",
+                    "FieldTypeStr": "string",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 2,
+                    "FieldFullType": {
+                        "Kind": 2,
+                        "Str": "string"
+                    }
+                },
+                {
+                    "Zid": 2,
+                    "FieldGoName": "Par",
+                    "FieldTagName": "Par",
+                    "FieldTypeStr": "*S2",
+                    "FieldCategory": 28,
+                    "FieldFullType": {
+                        "Kind": 28,
+                        "Str": "Pointer",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "S2"
+                        }
+                    }
+                }
+            ]
+        },
+        "Big": {
+            "StructName": "Big",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "Slice",
+                    "FieldTagName": "Slice",
+                    "FieldTypeStr": "[]S2",
+                    "FieldCategory": 26,
+                    "FieldFullType": {
+                        "Kind": 26,
+                        "Str": "Slice",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "S2"
+                        }
+                    }
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "Transform",
+                    "FieldTagName": "Transform",
+                    "FieldTypeStr": "map[int]*S2",
+                    "FieldCategory": 24,
+                    "FieldFullType": {
+                        "Kind": 24,
+                        "Str": "Map",
+                        "Domain": {
+                            "Kind": 13,
+                            "Str": "int"
+                        },
+                        "Range": {
+                            "Kind": 28,
+                            "Str": "Pointer",
+                            "Domain": {
+                                "Kind": 22,
+                                "Str": "S2"
+                            }
+                        }
+                    }
+                },
+                {
+                    "Zid": 2,
+                    "FieldGoName": "Myptr",
+                    "FieldTagName": "Myptr",
+                    "FieldTypeStr": "*S2",
+                    "FieldCategory": 28,
+                    "FieldFullType": {
+                        "Kind": 28,
+                        "Str": "Pointer",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "S2"
+                        }
+                    }
+                },
+                {
+                    "Zid": 3,
+                    "FieldGoName": "Myarray",
+                    "FieldTagName": "Myarray",
+                    "FieldTypeStr": "[3]string",
+                    "FieldCategory": 27,
+                    "FieldFullType": {
+                        "Kind": 27,
+                        "Str": "Array",
+                        "Domain": {
+                            "Kind": 3,
+                            "Str": "3"
+                        },
+                        "Range": {
+                            "Kind": 2,
+                            "Str": "string"
+                        }
+                    }
+                },
+                {
+                    "Zid": 4,
+                    "FieldGoName": "MySlice",
+                    "FieldTagName": "MySlice",
+                    "FieldTypeStr": "[]string",
+                    "FieldCategory": 26,
+                    "FieldFullType": {
+                        "Kind": 26,
+                        "Str": "Slice",
+                        "Domain": {
+                            "Kind": 2,
+                            "Str": "string"
                         }
                     }
                 }

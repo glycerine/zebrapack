@@ -7,7 +7,7 @@ by running `zebrapack` into msgpack2 (with optional JSON)
 in a format we'll call `compiled-schema` format. If
 one is not starting in Go, simply write a standalone Go
 file that describes your types. See the examples
-in the testdata/ directory.
+in `../testdata/my.go`.
 
 The `compiled-schema` is thus type checked upon generation,
 and other languages need not parse Go (only msgpack2
