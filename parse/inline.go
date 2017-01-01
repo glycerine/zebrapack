@@ -118,12 +118,6 @@ func (f *FileSet) nextInline(ref *gen.Elem, root string) {
 		typ := el.TypeName()
 		if el.Value == gen.IDENT && typ != root {
 			if node, ok := f.Identities[typ]; ok && node.Complexity() < maxComplex {
-				// detect infinite loop:
-				if node.TypeName() == typ {
-					infof("detected recursive type, not inlining %s\n", typ)
-					return
-				}
-
 				infof("inlining %s\n", typ)
 
 				// This should never happen; it will cause

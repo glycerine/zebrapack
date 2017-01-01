@@ -30,6 +30,7 @@ type S2 struct {
 type Tree struct {
 	Chld []Tree `zid:"0"`
 	Str  string `zid:"1"`
+	Par  *S2    `zid:"2"`
 }
 
 type Big struct {
