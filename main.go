@@ -42,6 +42,13 @@
 //   -marshal
 //     	create Marshal and Unmarshal methods (default true)
 //
+//  -method-prefix string
+//    	(optional) prefix that will be pre-prended to
+//      the front of generated method names; useful when
+//      you need to avoid namespace collisions, but the
+//      generated tests will break/the msgp package
+//      interfaces won't be satisfied.
+//
 //  -no-embedded-schema
 //      don't embed the schema in the generated files
 //
