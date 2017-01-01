@@ -4,7 +4,10 @@ Instead of an IDL file, the ZebraPack schema is described
 using the same Go source file that holds the Go structs
 you wish to serialize. The Go file schema is then compiled
 by running `zebrapack` into msgpack2 (with optional JSON)
-in a format we'll call `compiled-schema` format.
+in a format we'll call `compiled-schema` format. If
+one is not starting in Go, simply write a standalone Go
+file that describes your types. See the examples
+in the testdata/ directory.
 
 The `compiled-schema` is thus type checked upon generation,
 and other languages need not parse Go (only msgpack2
