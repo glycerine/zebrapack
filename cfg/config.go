@@ -19,10 +19,10 @@ type ZebraConfig struct {
 	// encoders instead of ZebraPack
 	UseMsgp2 bool
 
-	ReadStringsFast  bool
-	SchemaToGo       string
-	NoEmbeddedSchema bool
-	NoRTTI           bool
+	ReadStringsFast       bool
+	SchemaToGo            string
+	NoEmbeddedSchema      bool
+	NoEmbeddedStructNames bool
 }
 
 // call DefineFlags before myflags.Parse()
@@ -40,7 +40,7 @@ func (c *ZebraConfig) DefineFlags(fs *flag.FlagSet) {
 	fs.BoolVar(&c.ReadStringsFast, "fast-strings", false, "for speed when reading a string in a message that won't be reused, this flag means we'll use unsafe to cast the string header and avoid allocation.")
 	fs.StringVar(&c.SchemaToGo, "schema-to-go", "", "(standalone functionality) path to schema in msgpack2 format; we will convert it to Go, write the Go on stdout, and exit immediately")
 	fs.BoolVar(&c.NoEmbeddedSchema, "no-embedded-schema", false, "don't embed the schema in the generated files")
-	fs.BoolVar(&c.NoRTTI, "no-rtti", false, "don't embed the name of the struct in the serialized zebrapack. Skipping this one part of the run-time-type-information saves space and time just as in protocol buffers/thrift/capnproto, so you must know the type on the wire you expect; or embed a type tag in one universal wrapper struct.")
+	fs.BoolVar(&c.NoEmbeddedStructNames, "no-structnames-onwire", false, "don't embed the name of the struct in the serialized zebrapack. Skipping the embedded struct names saves time and space and matches what protocol buffers/thrift/capnproto/msgpack do. You must know the type on the wire you expect; or embed a type tag in one universal wrapper struct. Embedded struct names are a feature of ZebraPack to help with dynamic language bindings.")
 }
 
 // call c.ValidateConfig() after myflags.Parse()

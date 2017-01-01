@@ -112,7 +112,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		m.p.printf("\n\n// honor the omitempty tags\n")
 		m.p.printf("var empty [%d]bool\n", len(s.Fields))
 		m.p.printf("fieldsInUse := %s.fieldsNotEmpty(empty[:])\n", s.vname)
-		if fast && !m.cfg.NoRTTI {
+		if fast && !m.cfg.NoEmbeddedStructNames {
 			// fieldsInUse+1 accounts for the -1:structName type-identifier.
 			m.p.printf("	o = msgp.AppendMapHeader(o, fieldsInUse+1)\n")
 		} else {
@@ -124,7 +124,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 		m.Fuse(data)
 	}
 
-	if fast && !m.cfg.NoRTTI {
+	if fast && !m.cfg.NoEmbeddedStructNames {
 		// record the struct name under integer key -1
 		recv := s.TypeName() // imutMethodReceiver(s)
 		m.p.printf("\n// runtime struct type identification for '%s'\n", recv)

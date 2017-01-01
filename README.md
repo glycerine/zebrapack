@@ -169,7 +169,7 @@ must be respected.
 
 # benchmarking
 
-Based on the implementation now available in https://github.com/glycerine/zebrapack, we measure read and write speed with the `-fast-strings -no-rtti` optimizations on. Benchmarks from https://github.com/glycerine/go_serialization_benchmarks of this struct:
+Based on the implementation now available in https://github.com/glycerine/zebrapack, we measure read and write speed with the `-fast-strings -no-structnames-onwire` optimizations on. Benchmarks from https://github.com/glycerine/go_serialization_benchmarks of this struct:
 
 ```
 type A struct {
@@ -184,7 +184,7 @@ type A struct {
 
 ## read performance
 
-`zebrapack -fast-strings -no-rtti` jockeys for the top position with go-capnproto-version-1, Gencode, FlatBuffers, and gogoprotobuf. In the sampling below it comes out fastest, but this varies occassionally run-by-run. Nonetheless, we see a very strong showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are distinct advantages. Competitors like Gencode have no data evolution capability, grabbing speed but sacrificing backwards compatible data changes; it is also Go-only. FlatBuffers is limited by it's 16-bit offsets as to the size of data it can support, and has a separate schema; its Go bindings are untuned and not well supported. Capnproto is nice but has an undocumented layout algorithm and requires C++ to compile the idl-compiler and a separate schema file to be maintained in parallel; it has very limited language support (Java support was never finished for example). Gogoprotobufs generates mirror Go structs rather than using your original Go structs, and turns `omitempty` fields into pointer fields that are less cache friendly. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
+`zebrapack -fast-strings -no-structnames-onwire` jockeys for the top position with go-capnproto-version-1, Gencode, FlatBuffers, and gogoprotobuf. In the sampling below it comes out fastest, but this varies occassionally run-by-run. Nonetheless, we see a very strong showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are distinct advantages. Competitors like Gencode have no data evolution capability, grabbing speed but sacrificing backwards compatible data changes; it is also Go-only. FlatBuffers is limited by it's 16-bit offsets as to the size of data it can support, and has a separate schema; its Go bindings are untuned and not well supported. Capnproto is nice but has an undocumented layout algorithm and requires C++ to compile the idl-compiler and a separate schema file to be maintained in parallel; it has very limited language support (Java support was never finished for example). Gogoprotobufs generates mirror Go structs rather than using your original Go structs, and turns `omitempty` fields into pointer fields that are less cache friendly. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
 
 ```
 benchmark                                       iter           time/iter         bytes alloc       allocs
@@ -211,7 +211,7 @@ BenchmarkJsonUnmarshal-4                 	  200000	      5576 ns/op	     495 B/o
 
 ## write performance
 
-`zebrapack -fast-strings -no-rtti` consistently dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
+`zebrapack -fast-strings -no-structnames-onwire` consistently dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
 
 ```
 benchmark                                       iter           time/iter          bytes alloc      allocs
@@ -423,14 +423,16 @@ command line flags
   -no-embedded-schema
     	don't embed the schema in the generated files
 
-  -no-rtti
-    	don't embed the name of the struct in the serialized
-        zebrapack. Skipping this one part of the
-        run-time-type-information saves space and
-        time just as in protocol buffers/thrift/
-        capnproto, so you must know the type on the wire
-        you expect; or embed a type tag in one universal
-        wrapper struct.
+  -no-structnames-onwire
+      don't embed the name of the struct in the
+      serialized zebrapack. Skipping the embedded
+      struct names saves time and space and matches
+      what protocol buffers/thrift/capnproto/msgpack do.
+      You must know the type on the wire you expect;
+      or embed a type tag in one universal wrapper
+      struct. Embedded struct names are a feature
+      of ZebraPack to help with dynamic language
+      bindings.
 
   -o string
     	output file (default is {input_file}_gen.go

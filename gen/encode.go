@@ -135,7 +135,7 @@ func (e *encodeGen) structmap(s *Struct) {
 		e.Fuse(data)
 	}
 
-	if fast && !e.cfg.NoRTTI {
+	if fast && !e.cfg.NoEmbeddedStructNames {
 		// record the struct name under integer key -1
 		recv := s.TypeName() // imutMethodReceiver(s)
 		e.p.printf("\n// runtime struct type identification for '%s'\n", recv)

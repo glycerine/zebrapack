@@ -45,6 +45,17 @@
 //  -no-embedded-schema
 //      don't embed the schema in the generated files
 //
+//  -no-structnames-onwire
+//    	don't embed the name of the struct in the
+//      serialized zebrapack. Skipping the embedded
+//      struct names saves time and space and matches
+//      what protocol buffers/thrift/capnproto/msgpack do.
+//      You must know the type on the wire you expect;
+//      or embed a type tag in one universal wrapper
+//      struct. Embedded struct names are a feature
+//      of ZebraPack to help with dynamic language
+//      bindings.
+//
 //   -o string
 //     	output file (default is {input_file}_gen.go
 //
