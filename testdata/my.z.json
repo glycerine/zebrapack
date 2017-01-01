@@ -3,6 +3,119 @@
     "SourcePackage": "testdata",
     "ZebraSchemaId": 1947397430155838,
     "Structs": {
+        "S2": {
+            "StructName": "S2",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "A",
+                    "FieldTagName": "alpha",
+                    "Skip": true
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "B",
+                    "FieldTagName": "beta",
+                    "FieldTypeStr": "string",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 2,
+                    "FieldFullType": {
+                        "Kind": 2,
+                        "Str": "string"
+                    }
+                },
+                {
+                    "Zid": 2,
+                    "FieldGoName": "R",
+                    "FieldTagName": "ralph",
+                    "FieldTypeStr": "map[string]uint8",
+                    "FieldCategory": 24,
+                    "FieldFullType": {
+                        "Kind": 24,
+                        "Str": "Map",
+                        "Domain": {
+                            "Kind": 2,
+                            "Str": "string"
+                        },
+                        "Range": {
+                            "Kind": 8,
+                            "Str": "uint8"
+                        }
+                    }
+                },
+                {
+                    "Zid": 3,
+                    "FieldGoName": "P",
+                    "FieldTagName": "P",
+                    "FieldTypeStr": "uint16",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 9,
+                    "FieldFullType": {
+                        "Kind": 9,
+                        "Str": "uint16"
+                    },
+                    "Deprecated": true
+                },
+                {
+                    "Zid": 4,
+                    "FieldGoName": "Q",
+                    "FieldTagName": "Q",
+                    "FieldTypeStr": "uint32",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 10,
+                    "FieldFullType": {
+                        "Kind": 10,
+                        "Str": "uint32"
+                    }
+                },
+                {
+                    "Zid": 5,
+                    "FieldGoName": "T",
+                    "FieldTagName": "T",
+                    "FieldTypeStr": "int64",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 17,
+                    "FieldFullType": {
+                        "Kind": 17,
+                        "Str": "int64"
+                    }
+                },
+                {
+                    "Zid": 6,
+                    "FieldGoName": "Arr",
+                    "FieldTagName": "arr",
+                    "FieldTypeStr": "[msgp.ExtensionPrefixSize]float64",
+                    "FieldCategory": 27,
+                    "FieldFullType": {
+                        "Kind": 27,
+                        "Str": "Array",
+                        "Domain": {
+                            "Kind": 6,
+                            "Str": "msgp.ExtensionPrefixSize"
+                        },
+                        "Range": {
+                            "Kind": 4,
+                            "Str": "float64"
+                        }
+                    }
+                },
+                {
+                    "Zid": 7,
+                    "FieldGoName": "MyTree",
+                    "FieldTagName": "MyTree",
+                    "FieldTypeStr": "*Tree",
+                    "FieldCategory": 28,
+                    "FieldFullType": {
+                        "Kind": 28,
+                        "Str": "Pointer",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "Tree"
+                        }
+                    }
+                }
+            ]
+        },
         "Tree": {
             "StructName": "Tree",
             "Fields": [
@@ -219,119 +332,6 @@
                     "FieldFullType": {
                         "Kind": 19,
                         "Str": "Intf"
-                    }
-                }
-            ]
-        },
-        "S2": {
-            "StructName": "S2",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "A",
-                    "FieldTagName": "alpha",
-                    "Skip": true
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "B",
-                    "FieldTagName": "beta",
-                    "FieldTypeStr": "string",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 2,
-                    "FieldFullType": {
-                        "Kind": 2,
-                        "Str": "string"
-                    }
-                },
-                {
-                    "Zid": 2,
-                    "FieldGoName": "R",
-                    "FieldTagName": "ralph",
-                    "FieldTypeStr": "map[string]uint8",
-                    "FieldCategory": 24,
-                    "FieldFullType": {
-                        "Kind": 24,
-                        "Str": "Map",
-                        "Domain": {
-                            "Kind": 2,
-                            "Str": "string"
-                        },
-                        "Range": {
-                            "Kind": 8,
-                            "Str": "uint8"
-                        }
-                    }
-                },
-                {
-                    "Zid": 3,
-                    "FieldGoName": "P",
-                    "FieldTagName": "P",
-                    "FieldTypeStr": "uint16",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 9,
-                    "FieldFullType": {
-                        "Kind": 9,
-                        "Str": "uint16"
-                    },
-                    "Deprecated": true
-                },
-                {
-                    "Zid": 4,
-                    "FieldGoName": "Q",
-                    "FieldTagName": "Q",
-                    "FieldTypeStr": "uint32",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 10,
-                    "FieldFullType": {
-                        "Kind": 10,
-                        "Str": "uint32"
-                    }
-                },
-                {
-                    "Zid": 5,
-                    "FieldGoName": "T",
-                    "FieldTagName": "T",
-                    "FieldTypeStr": "int64",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 17,
-                    "FieldFullType": {
-                        "Kind": 17,
-                        "Str": "int64"
-                    }
-                },
-                {
-                    "Zid": 6,
-                    "FieldGoName": "Arr",
-                    "FieldTagName": "arr",
-                    "FieldTypeStr": "[msgp.ExtensionPrefixSize]float64",
-                    "FieldCategory": 27,
-                    "FieldFullType": {
-                        "Kind": 27,
-                        "Str": "Array",
-                        "Domain": {
-                            "Kind": 6,
-                            "Str": "msgp.ExtensionPrefixSize"
-                        },
-                        "Range": {
-                            "Kind": 4,
-                            "Str": "float64"
-                        }
-                    }
-                },
-                {
-                    "Zid": 7,
-                    "FieldGoName": "MyTree",
-                    "FieldTagName": "MyTree",
-                    "FieldTypeStr": "*Tree",
-                    "FieldCategory": 28,
-                    "FieldFullType": {
-                        "Kind": 28,
-                        "Str": "Pointer",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "Tree"
-                        }
                     }
                 }
             ]

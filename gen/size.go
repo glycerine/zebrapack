@@ -120,7 +120,7 @@ func (s *sizeGen) gStruct(st *Struct) {
 				continue
 			}
 			data = data[:0]
-			if fast {
+			if fast && !s.cfg.NoRTTI {
 				data = msgp.AppendInt64(data, st.Fields[i].ZebraId)
 
 				// account for the -1:structName

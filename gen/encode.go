@@ -135,7 +135,7 @@ func (e *encodeGen) structmap(s *Struct) {
 		e.Fuse(data)
 	}
 
-	if fast {
+	if fast && !e.cfg.NoRTTI {
 		// record the struct name under integer key -1
 		recv := s.TypeName() // imutMethodReceiver(s)
 		e.p.printf("\n// runtime struct type identification for '%s'\n", recv)
@@ -143,11 +143,11 @@ func (e *encodeGen) structmap(s *Struct) {
 		for i := range recv {
 			hexname += fmt.Sprintf("0x%x,", recv[i])
 		}
-		e.p.printf("err = en.Append(0xe1)\n")
+		e.p.printf("err = en.Append(0xff)\n")
 		e.p.printf("	if err != nil {\n")
 		e.p.printf("		return err\n}\n")
 
-		e.p.printf("err = en.Append([]byte{%s}...)\n", hexname)
+		e.p.printf("err = en.WriteStringFromBytes([]byte{%s})\n", hexname)
 		e.p.printf("	if err != nil {\n")
 		e.p.printf("		return err\n}\n")
 	}
