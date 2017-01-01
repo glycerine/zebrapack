@@ -184,7 +184,7 @@ type A struct {
 
 ## read performance
 
-`zebrapack -fast-strings -no-rtti` is very competitive with go-capnproto-version-1, Gencode, and gogoprotobuf. A strong showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
+`zebrapack -fast-strings -no-rtti` jockeys for the top position with go-capnproto-version-1, Gencode, FlatBuffers, and gogoprotobuf. In the sampling below it comes out fastest, but this varies occassionally run-by-run. Nonetheless, we see a very strong showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
 
 ```
 benchmark                                       iter           time/iter         bytes alloc       allocs
@@ -211,7 +211,7 @@ BenchmarkJsonUnmarshal-4                 	  200000	      5576 ns/op	     495 B/o
 
 ## write performance
 
-`zebrapack -fast-strings -no-rtti` dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
+`zebrapack -fast-strings -no-rtti` consistently dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
 
 ```
 benchmark                                       iter           time/iter          bytes alloc      allocs
