@@ -1,8 +1,17 @@
 /*
 package zebra specifies the ZebraPack serialization format.
-To bootstrap, the ZebraPack schema is itself stored
-in msgpack2 (with optional JSON) format with embedded
-strings for field names.
+Instead of an IDL file, the ZebraPack schema is described
+using the same Go source file that holds the Go structs
+you wish to serialize. The Go file schema is then compiled
+(by running `zebrapack` into msgpack2 (with optional JSON)
+in a format we'll call `compiled-schema` format.
+
+The `compiled-schema` is thus type checked upon generation,
+ and other languages need not parse Go (only msgpack2
+or JSON) in order the read and use the compiled
+schema to undertand the types on the wire. The
+types below desribe those found in
+the compiled ZebraPack schema files.
 */
 package zebra
 
