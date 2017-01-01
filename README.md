@@ -184,56 +184,56 @@ type A struct {
 
 ## read performance
 
-`zebrapack -fast-strings` comes in 4th; behind go-capnproto-version-1, Gencode, and 2 nanoseconds behind gogoprotobuf. This is a very competitive showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
+`zebrapack -fast-strings -no-rtti` is very competitive with go-capnproto-version-1, Gencode, and gogoprotobuf. A strong showing amongst strong company. Moreover, our zero allocation profile and serialization directly to and from Go structs are advantages. As is typical for binary formats, ZebraPack is about 20x faster than Go's JSON handling.
 
 ```
 benchmark                                       iter           time/iter         bytes alloc       allocs
 ---------                                       ----           ---------         -----------       ------
-  BenchmarkCapNProtoUnmarshal-4            	10000000	       216 ns/op	       0 B/op	       0 allocs/op
-  BenchmarkGencodeUnmarshal-4              	 5000000	       250 ns/op	     112 B/op	       3 allocs/op
-  BenchmarkGogoprotobufUnmarshal-4         	 5000000	       269 ns/op	     112 B/op	       3 allocs/op
-* BenchmarkZebraPackUnmarshal-4            	10000000	       271 ns/op	     0 B/op	       0 allocs/op
-  BenchmarkFlatBuffersUnmarshal-4          	 5000000	       274 ns/op	     112 B/op	       3 allocs/op
-  BenchmarkMsgpUnmarshal-4                 	 3000000	       463 ns/op	      32 B/op	       2 allocs/op
-  BenchmarkProtobufUnmarshal-4             	 2000000	       812 ns/op	     192 B/op	      10 allocs/op
-  BenchmarkGobUnmarshal-4                  	 2000000	       894 ns/op	     112 B/op	       3 allocs/op
-  BenchmarkGoprotobufUnmarshal-4           	 2000000	      1019 ns/op	     432 B/op	       9 allocs/op
-  BenchmarkHproseUnmarshal-4               	 1000000	      1327 ns/op	     320 B/op	      10 allocs/op
-  BenchmarkCapNProto2Unmarshal-4           	 1000000	      1346 ns/op	     608 B/op	      12 allocs/op
-  BenchmarkBinaryUnmarshal-4               	 1000000	      1535 ns/op	     335 B/op	      22 allocs/op
-  BenchmarkXdrUnmarshal-4                  	 1000000	      1598 ns/op	     239 B/op	      11 allocs/op
-  BenchmarkVmihailencoMsgpackUnmarshal-4   	 1000000	      2051 ns/op	     384 B/op	      13 allocs/op
-  BenchmarkUgorjiCodecMsgpackUnmarshal-4   	  500000	      2689 ns/op	    3008 B/op	       6 allocs/op
-  BenchmarkUgorjiCodecBincUnmarshal-4      	  500000	      2736 ns/op	    3168 B/op	       9 allocs/op
-  BenchmarkSerealUnmarshal-4               	  500000	      3237 ns/op	    1008 B/op	      34 allocs/op
-  BenchmarkJsonUnmarshal-4                 	  300000	      4288 ns/op	     495 B/op	       8 allocs/op
+BenchmarkZebraPackUnmarshal-4            	10000000	       227 ns/op	 258.78 MB/s	       0 B/op	       0 allocs/op
+BenchmarkGencodeUnmarshal-4              	10000000	       229 ns/op	     112 B/op	       3 allocs/op
+BenchmarkFlatBuffersUnmarshal-4          	10000000	       232 ns/op	      32 B/op	       2 allocs/op
+BenchmarkGogoprotobufUnmarshal-4         	10000000	       232 ns/op	      96 B/op	       3 allocs/op
+BenchmarkCapNProtoUnmarshal-4            	10000000	       258 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMsgpUnmarshal-4                 	 5000000	       296 ns/op	      32 B/op	       2 allocs/op
+BenchmarkGoprotobufUnmarshal-4           	 2000000	       688 ns/op	     432 B/op	       9 allocs/op
+BenchmarkProtobufUnmarshal-4             	 2000000	       707 ns/op	     192 B/op	      10 allocs/op
+BenchmarkGobUnmarshal-4                  	 2000000	       886 ns/op	     112 B/op	       3 allocs/op
+BenchmarkHproseUnmarshal-4               	 1000000	      1045 ns/op	     320 B/op	      10 allocs/op
+BenchmarkCapNProto2Unmarshal-4           	 1000000	      1359 ns/op	     608 B/op	      12 allocs/op
+BenchmarkXdrUnmarshal-4                  	 1000000	      1659 ns/op	     239 B/op	      11 allocs/op
+BenchmarkBinaryUnmarshal-4               	 1000000	      1907 ns/op	     336 B/op	      22 allocs/op
+BenchmarkVmihailencoMsgpackUnmarshal-4   	 1000000	      2085 ns/op	     384 B/op	      13 allocs/op
+BenchmarkUgorjiCodecMsgpackUnmarshal-4   	  500000	      2620 ns/op	    3008 B/op	       6 allocs/op
+BenchmarkUgorjiCodecBincUnmarshal-4      	  500000	      2795 ns/op	    3168 B/op	       9 allocs/op
+BenchmarkSerealUnmarshal-4               	  500000	      3271 ns/op	    1008 B/op	      34 allocs/op
+BenchmarkJsonUnmarshal-4                 	  200000	      5576 ns/op	     495 B/op	       8 allocs/op
   ```
 
 ## write performance
 
-`zebrapack -fast-strings` dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
+`zebrapack -fast-strings -no-rtti` dominates the field. This is mostly due to the use of the highly tuned https://github.com/tinylib/msgp library (in 3rd place here), which is then sped up further by using integer keys instead of strings.
 
 ```
 benchmark                                       iter           time/iter          bytes alloc      allocs
 ---------                                       ----           ---------          -----------      ------
-* BenchmarkZebraPackMarshal-4              	10000000	       177 ns/op	      0 B/op	       0 allocs/op
-  BenchmarkGencodeMarshal-4                	10000000	       209 ns/op	      80 B/op	       2 allocs/op
-  BenchmarkMsgpMarshal-4                   	10000000	       219 ns/op	     128 B/op	       1 allocs/op
-  BenchmarkGogoprotobufMarshal-4           	 5000000	       222 ns/op	      64 B/op	       1 allocs/op
-  BenchmarkFlatbuffersMarshal-4            	 5000000	       354 ns/op	       0 B/op	       0 allocs/op
-  BenchmarkCapNProtoMarshal-4              	 3000000	       515 ns/op	      56 B/op	       2 allocs/op
-  BenchmarkGoprotobufMarshal-4             	 2000000	       826 ns/op	     312 B/op	       4 allocs/op
-  BenchmarkProtobufMarshal-4               	 2000000	       959 ns/op	     200 B/op	       7 allocs/op
-  BenchmarkGobMarshal-4                    	 2000000	      1019 ns/op	      48 B/op	       2 allocs/op
-  BenchmarkCapNProto2Marshal-4             	 1000000	      1031 ns/op	     436 B/op	       7 allocs/op
-  BenchmarkHproseMarshal-4                 	 1000000	      1051 ns/op	     479 B/op	       8 allocs/op
-  BenchmarkBinaryMarshal-4                 	 1000000	      1389 ns/op	     256 B/op	      16 allocs/op
-  BenchmarkVmihailencoMsgpackMarshal-4     	 1000000	      1782 ns/op	     368 B/op	       6 allocs/op
-  BenchmarkXdrMarshal-4                    	 1000000	      1796 ns/op	     455 B/op	      20 allocs/op
-  BenchmarkJsonMarshal-4                   	  500000	      2274 ns/op	     536 B/op	       6 allocs/op
-  BenchmarkUgorjiCodecMsgpackMarshal-4     	  500000	      2447 ns/op	    2752 B/op	       8 allocs/op
-  BenchmarkSerealMarshal-4                 	  500000	      2729 ns/op	     912 B/op	      21 allocs/op
-  BenchmarkUgorjiCodecBincMarshal-4        	  500000	      3190 ns/op	    2784 B/op	       8 allocs/op
+BenchmarkZebraPackMarshal-4              	10000000	       115 ns/op	 510.58 MB/s	       0 B/op	       0 allocs/op
+BenchmarkGogoprotobufMarshal-4           	10000000	       148 ns/op	      64 B/op	       1 allocs/op
+BenchmarkMsgpMarshal-4                   	10000000	       161 ns/op	     128 B/op	       1 allocs/op
+BenchmarkGencodeMarshal-4                	10000000	       176 ns/op	      80 B/op	       2 allocs/op
+BenchmarkFlatBufferMarshal-4             	 5000000	       347 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCapNProtoMarshal-4              	 3000000	       506 ns/op	      56 B/op	       2 allocs/op
+BenchmarkGoprotobufMarshal-4             	 3000000	       617 ns/op	     312 B/op	       4 allocs/op
+BenchmarkGobMarshal-4                    	 2000000	       887 ns/op	      48 B/op	       2 allocs/op
+BenchmarkProtobufMarshal-4               	 2000000	       912 ns/op	     200 B/op	       7 allocs/op
+BenchmarkHproseMarshal-4                 	 1000000	      1052 ns/op	     473 B/op	       8 allocs/op
+BenchmarkCapNProto2Marshal-4             	 1000000	      1214 ns/op	     436 B/op	       7 allocs/op
+BenchmarkBinaryMarshal-4                 	 1000000	      1427 ns/op	     256 B/op	      16 allocs/op
+BenchmarkVmihailencoMsgpackMarshal-4     	 1000000	      1772 ns/op	     368 B/op	       6 allocs/op
+BenchmarkXdrMarshal-4                    	 1000000	      1802 ns/op	     455 B/op	      20 allocs/op
+BenchmarkJsonMarshal-4                   	 1000000	      2500 ns/op	     536 B/op	       6 allocs/op
+BenchmarkUgorjiCodecBincMarshal-4        	  500000	      2514 ns/op	    2784 B/op	       8 allocs/op
+BenchmarkSerealMarshal-4                 	  500000	      2729 ns/op	     912 B/op	      21 allocs/op
+BenchmarkUgorjiCodecMsgpackMarshal-4     	  500000	      3274 ns/op	    2752 B/op	       8 allocs/op
 ```
 
 deprecating fields
