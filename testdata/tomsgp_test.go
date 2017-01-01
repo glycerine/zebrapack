@@ -34,6 +34,23 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
 		panicOn(err)
 		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"beta":"hello","P":43,"arr":[0,0,0,0,0,0]}`)
+
+		// and test the recursive conversion with MyTree
+		e.MyTree = &Tree{
+			Str:  "root",
+			Chld: []Tree{Tree{Str: "mid", Chld: []Tree{{Str: "leaf"}}}},
+		}
+
+		data, err = e.MarshalMsg(nil)
+		panicOn(err)
+
+		m2, _, err = zSchema.ZebraToMsgp2(data)
+		panicOn(err)
+		json.Reset()
+		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
+		panicOn(err)
+		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"beta":"hello","P":43,"arr":[0,0,0,0,0,0],"MyTree":{"Chld":[{"Chld":[{"Str":"leaf"}],"Str":"mid"}],"Str":"root"}}`)
+
 	})
 }
 

@@ -23,6 +23,13 @@ type S2 struct {
 
 	// test const array and *ast.SelectorExpr as array size
 	Arr [msgp.ExtensionPrefixSize]float64 `zid:"6" msg:"arr"`
+
+	MyTree *Tree `zid:"7"`
+}
+
+type Tree struct {
+	Chld []Tree `zid:"0"`
+	Str  string `zid:"1"`
 }
 
 type Big struct {
