@@ -1,12 +1,11 @@
-addzid: automatically add `zid:"0"`, `zid:"1"`, ... tags to your Go structs
+addzid
 ======
+
+Summary: addzid automatically adds `zid:"0"`, `zid:"1"`, ... tags to your Go structs.
 
 Given a set of golang (Go) source files, addzid will tag the public
 struct fields with sequential zid tags. This prepares your source
 so that it can be fed to the `zebrapack` codegen tool.
-
-prereqs
--------
 
 
 to install: *run make*. This lets us record version info.
