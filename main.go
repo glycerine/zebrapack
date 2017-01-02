@@ -120,7 +120,7 @@ func main() {
 		n := binary.LittleEndian.Uint64(by[:])
 		n &= 0x0001ffffffffffff // restrict to 53 bits so R and js work
 		fmt.Printf("\n// This crypto-randomly generated zebraSchemaId64 is a 53-bit\n"+
-			"// positive integer that identifies your namespace.\n"+
+			"// integer that identifies your namespace.\n"+
 			"// Paste it into your Go source.\n"+
 			"  const zebraSchemaId64 int64 = 0x%x // %v\n\n", n, n)
 		os.Exit(0)
