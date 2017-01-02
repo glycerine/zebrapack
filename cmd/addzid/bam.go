@@ -539,10 +539,12 @@ func (x *Extractor) WriteToSchema(w io.Writer) (n int64, err error) {
 
 	for _, s := range sortedStructs {
 
-		m, err = fmt.Fprintf(w, "%sstruct %s { %s", x.fieldSuffix, s.capName, x.fieldSuffix)
-		n += int64(m)
-		if err != nil {
-			return
+		if w != nil {
+			m, err = fmt.Fprintf(w, "%sstruct %s { %s", x.fieldSuffix, s.capName, x.fieldSuffix)
+			n += int64(m)
+			if err != nil {
+				return
+			}
 		}
 
 		s.computeFinalOrder()
@@ -563,19 +565,22 @@ func (x *Extractor) WriteToSchema(w io.Writer) (n int64, err error) {
 				VPrintf("\n\n debug: already = true, capType = '%s'   fld.capType = %v\n", capType, fld.capType)
 			}
 
-			m, err = fmt.Fprintf(w, "%s%s  %s@%d: %s%s; %s", x.fieldPrefix, fld.capname, spaces, fld.finalOrder, ExtraSpaces(i), fld.capType, x.fieldSuffix)
-			//m, err = fmt.Fprintf(w, "%s%s  %s@%d: %s%s; %s", x.fieldPrefix, fld.capname, spaces, fld.finalOrder, ExtraSpaces(i), capType, x.fieldSuffix)
+			if w != nil {
+				m, err = fmt.Fprintf(w, "%s%s  %s@%d: %s%s; %s", x.fieldPrefix, fld.capname, spaces, fld.finalOrder, ExtraSpaces(i), fld.capType, x.fieldSuffix)
+				//m, err = fmt.Fprintf(w, "%s%s  %s@%d: %s%s; %s", x.fieldPrefix, fld.capname, spaces, fld.finalOrder, ExtraSpaces(i), capType, x.fieldSuffix)
+				n += int64(m)
+				if err != nil {
+					return
+				}
+			}
+		} // end field loop
+
+		if w != nil {
+			m, err = fmt.Fprintf(w, "} %s", x.fieldSuffix)
 			n += int64(m)
 			if err != nil {
 				return
 			}
-
-		} // end field loop
-
-		m, err = fmt.Fprintf(w, "} %s", x.fieldSuffix)
-		n += int64(m)
-		if err != nil {
-			return
 		}
 
 	} // end loop over structs
@@ -594,6 +599,7 @@ func (x *Extractor) GenZidTag(f *Field) string {
 	curTag := f.astField.Tag.Value
 
 	if hasZidTag(curTag) {
+		p("has current zid tag, returning early")
 		return curTag
 	}
 	p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
@@ -630,9 +636,9 @@ func (x *Extractor) CopySourceFilesAddZidTag(w io.Writer) error {
 	for _, s := range x.srs {
 		for _, f := range s.fld {
 
-			VPrintf("\n\n\n ********** before  f.astField.Tag = %#v\n", f.astField.Tag)
+			fmt.Printf("\n\n\n ********** before  f.astField.Tag = %#v\n", f.astField.Tag)
 			f.astField.Tag.Value = x.GenZidTag(f)
-			VPrintf("\n\n\n ********** AFTER:  f.astField.Tag = %#v\n", f.astField.Tag)
+			fmt.Printf("\n\n\n ********** AFTER:  f.astField.Tag = %#v\n", f.astField.Tag)
 		}
 	}
 
