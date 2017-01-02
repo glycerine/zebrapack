@@ -137,7 +137,12 @@ this update conflict, and flag the human
 to resolve the conflict before proceeding.
 
 * All fields optional. Just as in msgpack2,
-all fields are optional.
+Cap'nProto, Gobs, and Flatbuffers, all fields
+are optional. Most everyone, after experience
+and time with ProtocolBuffers, has come to the
+conclusion that required fields are a misfeature
+that hurt the ability to evolve data gracefully
+and maintain efficiency.
 
 Design:
 
