@@ -487,6 +487,15 @@ This continues to hold true, and missing fields on the wire will zero the field 
 
 NB: Under tuple encoding (https://github.com/tinylib/msgp/wiki/Preprocessor-Directives), for example `//msgp:tuple Hedgehog`, then all fields are always serialized and the omitempty tag is ignored.
 
+## `addzid` utility
+
+The `addzid` utility (in the cmd/addzid subdir) can help you
+get started. Running `addzid mysource.go` on a .go source file
+will add the `zid:"0"`... fields automatically. This makes adding ZebraPack
+serialization to existing Go projects easy.
+See https://github.com/glycerine/zebrapack/blob/master/cmd/addzid/README.md
+for more detail.
+
 notices
 -------
 
