@@ -599,10 +599,10 @@ func (x *Extractor) GenZidTag(f *Field) string {
 	curTag := f.astField.Tag.Value
 
 	if hasZidTag(curTag) {
-		p("has current zid tag, returning early")
+		//p("has current zid tag, returning early")
 		return curTag
 	}
-	p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
+	//p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
 	// else add one
 	addme := fmt.Sprintf(`zid:"%d"`, f.finalOrder)
 	if curTag == "" || curTag == "``" {
@@ -636,9 +636,9 @@ func (x *Extractor) CopySourceFilesAddZidTag(w io.Writer) error {
 	for _, s := range x.srs {
 		for _, f := range s.fld {
 
-			fmt.Printf("\n\n\n ********** before  f.astField.Tag = %#v\n", f.astField.Tag)
+			VPrintf("\n\n\n ********** before  f.astField.Tag = %#v\n", f.astField.Tag)
 			f.astField.Tag.Value = x.GenZidTag(f)
-			fmt.Printf("\n\n\n ********** AFTER:  f.astField.Tag = %#v\n", f.astField.Tag)
+			VPrintf("\n\n\n ********** AFTER:  f.astField.Tag = %#v\n", f.astField.Tag)
 		}
 	}
 
