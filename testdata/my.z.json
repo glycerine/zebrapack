@@ -180,7 +180,8 @@
                             "Kind": 22,
                             "Str": "S2"
                         }
-                    }
+                    },
+                    "ShowZero": true
                 },
                 {
                     "Zid": 1,
@@ -203,7 +204,8 @@
                                 "Str": "S2"
                             }
                         }
-                    }
+                    },
+                    "ShowZero": true
                 },
                 {
                     "Zid": 2,
@@ -218,7 +220,8 @@
                             "Kind": 22,
                             "Str": "S2"
                         }
-                    }
+                    },
+                    "ShowZero": true
                 },
                 {
                     "Zid": 3,
@@ -237,7 +240,8 @@
                             "Kind": 2,
                             "Str": "string"
                         }
-                    }
+                    },
+                    "ShowZero": true
                 },
                 {
                     "Zid": 4,
@@ -252,7 +256,8 @@
                             "Kind": 2,
                             "Str": "string"
                         }
-                    }
+                    },
+                    "ShowZero": true
                 }
             ]
         },

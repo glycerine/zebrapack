@@ -35,11 +35,11 @@ type Tree struct {
 }
 
 type Big struct {
-	Slice     []S2        `zid:"0"`
-	Transform map[int]*S2 `zid:"1"`
-	Myptr     *S2         `zid:"2"`
-	Myarray   [3]string   `zid:"3"`
-	MySlice   []string    `zid:"4"`
+	Slice     []S2        `zid:"0"  msg:",showzero"`
+	Transform map[int]*S2 `zid:"1"  msg:",showzero"`
+	Myptr     *S2         `zid:"2"  msg:",showzero"`
+	Myarray   [3]string   `zid:"3"  msg:",showzero"`
+	MySlice   []string    `zid:"4"  msg:",showzero"`
 }
 
 type A struct {

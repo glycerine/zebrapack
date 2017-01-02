@@ -327,6 +327,7 @@ findMinusOneLoop:
 
 	// put a header in front of the newMap pairs... now that we know
 	// how many fields we have seen, so we can.
+	//p("at end of ZebraToMsgp2, numFieldsSeen = %v", numFieldsSeen)
 	out = msgp.AppendMapHeader(out, uint32(numFieldsSeen))
 	out = append(out, newMap...)
 
