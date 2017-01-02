@@ -583,6 +583,7 @@ type StructField struct {
 	OmitEmpty  bool   // if the tag `msg:",omitempty"` was found
 	Deprecated bool   // if the tag `deprecated:"true"` was found
 	Skip       bool   // if msg:"-" or field is type struct{}
+	ShowZero   bool   // if msg:",showzero" tag was found.
 
 	// ZebraId defaults to -1, meaning not-tagged with a zebra id.
 	// if ZebraId >= 0, then the tag `zebra:"N"` was found, with ZebraId == N.

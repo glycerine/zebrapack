@@ -39,7 +39,7 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 		var json bytes.Buffer
 		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
 		panicOn(err)
-		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"beta":"hello","P":43,"arr":[0,0,0,0,0,0]}`)
+		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"beta":"hello","P":43,"T":0,"arr":[0,0,0,0,0,0]}`)
 
 		// and test the recursive conversion with MyTree
 		e.MyTree = &Tree{
@@ -55,7 +55,7 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 		json.Reset()
 		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
 		panicOn(err)
-		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"beta":"hello","P":43,"arr":[0,0,0,0,0,0],"MyTree":{"Chld":[{"Chld":[{"Str":"leaf"}],"Str":"mid"}],"Str":"root"}}`)
+		cv.So(string(json.Bytes()), cv.ShouldEqual, `{"beta":"hello","P":43,"T":0,"arr":[0,0,0,0,0,0],"MyTree":{"Chld":[{"Chld":[{"Str":"leaf"}],"Str":"mid"}],"Str":"root"}}`)
 
 		// confirm that Encode works the same as MarshalMsg
 		var encbuf2 bytes.Buffer

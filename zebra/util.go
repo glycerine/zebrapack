@@ -208,6 +208,16 @@ var ErrNoStructNameFound = fmt.Errorf("error: no -1:struct-name field:value foun
 
 func (sch *Schema) ZebraToMsgp2(bts []byte, ignoreMissingStructName bool) (out []byte, left []byte, err error) {
 
+	// write key:value pairs to newMap. At then end,
+	// once we know how many pairs we have, then
+	// we can write a map header to out and append
+	// newMap after.
+	//
+	// We don't know the size of {the union
+	// of fields present and fields absent but marked
+	// showZero} until we've scanned the full bts.
+	var newMap []byte
+
 	// get the -1 key out of the map.
 	var n uint32
 	var nbs msgp.NilBitsStack
@@ -251,17 +261,28 @@ findMinusOneLoop:
 	if !found {
 		foundMinusOne = false
 	}
+	// tr can be nil if we have no Schema, for example.
+
+	// we might have more fields after adding the
+	// showzero fields. write the new header after
+	// we'vre the struct.
+	numFieldsSeen := 0
 
 	// translate to msgpack2
-	out = msgp.AppendMapHeader(out, n-1)
+	//out = msgp.AppendMapHeader(out, n-1)
+
+	// track found fields, do showzero
+	nextFieldExpected := 0
 
 	// re-read
 	bts = origMapFields
 	for i := uint32(0); i < n; i++ {
+		//p("i = %v", i)
 		fnum, bts, err = nbs.ReadIntBytes(bts)
 		if err != nil {
 			panic(err)
 		}
+		//p("fnum = %v", fnum)
 		if fnum == -1 {
 			bts, err = msgp.Skip(bts)
 			if err != nil {
@@ -269,21 +290,40 @@ findMinusOneLoop:
 			}
 			continue
 		}
+
 		if foundMinusOne {
+
+			// PRE: fields must arrive in sorted ascending order, in sequence,
+			// monotonically increasing.
+			newMap, nextFieldExpected, numFieldsSeen = zeroUpTo(tr, fnum, newMap, nextFieldExpected, numFieldsSeen)
 			// encode fnum-> string translation for field name, then the field following
-			out = msgp.AppendString(out, tr.Fields[fnum].FieldTagName)
+			newMap = msgp.AppendString(newMap, tr.Fields[fnum].FieldTagName)
+			nextFieldExpected = fnum + 1
+			numFieldsSeen++
 		} else {
 			// compensate with a fallback when no schema present:
 			// just stringify the zid number so it shows up in the json.
-			out = msgp.AppendString(out, fmt.Sprintf("%v", fnum))
+			newMap = msgp.AppendString(newMap, fmt.Sprintf("%v", fnum))
+			numFieldsSeen++
 		}
 
 		// arrays and maps need to be recursively decoded.
-		out, bts, err = sch.zebraToMsgp2helper(bts, out, ignoreMissingStructName)
+		newMap, bts, err = sch.zebraToMsgp2helper(bts, newMap, ignoreMissingStructName)
 		if err != nil {
 			panic(err)
 		}
 	}
+
+	if foundMinusOne {
+		// done with available fields, are any remaining in the schema?
+		newMap, _, numFieldsSeen = zeroUpTo(tr, len(tr.Fields), newMap, nextFieldExpected, numFieldsSeen)
+	}
+
+	// put a header in front of the newMap pairs... now that we know
+	// how many fields we have seen, so we can.
+	out = msgp.AppendMapHeader(out, uint32(numFieldsSeen))
+	out = append(out, newMap...)
+
 	return out, bts, nil
 }
 
@@ -328,4 +368,81 @@ func (sch *Schema) zebraToMsgp2helper(bts []byte, startOut []byte,
 	}
 
 	return out, bts, nil
+}
+
+func writeZeroMsgpValueFor(fld *Field, out []byte) []byte {
+	switch fld.FieldCategory {
+	case BaseElemCat:
+		switch fld.FieldPrimitive {
+		case Invalid:
+			panic("invalid type")
+		case Bytes:
+			return msgp.AppendBytes(out, []byte{})
+		case String:
+			return msgp.AppendString(out, "")
+		case Float32, Float64, Complex64, Complex128,
+			Uint, Uint8, Uint16, Uint32, Uint64,
+			Byte, Int, Int8, Int16, Int32, Int64:
+			return append(out, 0)
+		case Bool:
+			return msgp.AppendBool(out, false)
+		case Intf:
+			return msgp.AppendNil(out)
+		case Time:
+			return append(out, 0)
+		case Ext:
+			return msgp.AppendNil(out)
+			// IDENT means an unrecognized identifier;
+			// it typically means a named struct type.
+			// The Str field in the Ztype will hold the
+			// name of the struct.
+		case IDENT:
+			return msgp.AppendNil(out)
+		}
+	case MapCat:
+		return msgp.AppendNil(out)
+	case StructCat:
+		return msgp.AppendNil(out)
+	case SliceCat:
+		return msgp.AppendNil(out)
+	case ArrayCat:
+		return msgp.AppendNil(out)
+	case PointerCat:
+		return msgp.AppendNil(out)
+	}
+	return msgp.AppendNil(out)
+}
+
+// zeroUpTo() starts from k and stops after stayBelow -1;
+// it does nothing if k >= stayBelow. Otherwise, for
+// each field, it handles the ShowZero flag: if
+// the field is missing and marked ShowZero, then
+// we write the field name and a zero type to
+// the msgpack bytes, appending to `out`.
+//
+// tr cannot be nil.
+func zeroUpTo(tr *Struct, stayBelow int, out []byte, k, numFieldsSeen int) (newOut []byte, newNextFieldExpected int, newFieldsSeen int) {
+	//p("zeroUpTo called with k = %v, stayBelow = %v, tr = %#v", k, stayBelow, tr)
+	for k < stayBelow {
+		//p("k is now %v", k)
+		if tr.Fields[k].Skip {
+			//p("skipping field k=%v", k)
+			k++
+			continue
+		}
+		//p("tr.Fields[k] = '%#v'", tr.Fields[k])
+		// fill in missing fields that are showzero
+		if tr.Fields[k].ShowZero {
+			numFieldsSeen++
+			//p("found showzero field at k = %v", k)
+			out = msgp.AppendString(out, tr.Fields[k].FieldTagName)
+			out = writeZeroMsgpValueFor(&(tr.Fields[k]), out)
+		}
+		k++
+	}
+	return out, k, numFieldsSeen
+}
+
+func p(format string, args ...interface{}) {
+	fmt.Printf("\n"+format+"\n", args...)
 }

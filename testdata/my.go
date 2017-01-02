@@ -20,7 +20,7 @@ type S2 struct {
 	R map[string]uint8 `zid:"2" msg:"ralph"`
 	P uint16           `zid:"3" deprecated:"true"`
 	Q uint32           `zid:"4"`
-	T int64            `zid:"5"`
+	T int64            `zid:"5" msg:",showzero"`
 
 	// test const array and *ast.SelectorExpr as array size
 	Arr [msgp.ExtensionPrefixSize]float64 `zid:"6" msg:"arr"`

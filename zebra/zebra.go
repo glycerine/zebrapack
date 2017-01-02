@@ -221,10 +221,17 @@ type Field struct {
 	// when reading.
 	Skip bool `msg:",omitempty"`
 
-	// Deprecated means tagged with `deprecated:"true"`.
+	// Deprecated means tagged with `deprecated:"true"`,
+	// or `msg:",deprecated"`.
 	// Compilers/libraries should discourage and warn
 	// users away from writing to such fields, while
 	// not making it impossible to either read or write
 	// the field.
 	Deprecated bool `msg:",omitempty"`
+
+	// ShowZero means display the field even if
+	// it has the zero value. Showzero has no impact
+	// on what is transmitted on the wire. Zero
+	// valued fields are never transmitted.
+	ShowZero bool `msg:",omitempty"`
 }

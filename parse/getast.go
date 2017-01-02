@@ -460,6 +460,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 
 	var skip bool
 	var deprecated bool
+	var showzero bool
 	var zebraId int64 = -1
 
 	// parse tag; otherwise field name is field tag
@@ -475,6 +476,12 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		// with any alt name, which always comes first.
 		if len(tags) > 1 && anyMatches(tags[1:], "omitempty") {
 			omitempty = true
+		}
+		if len(tags) > 1 && anyMatches(tags[1:], "deprecated") {
+			deprecated = true
+		}
+		if len(tags) > 1 && anyMatches(tags[1:], "showzero") {
+			showzero = true
 		}
 		// ignore "-" fields
 		if tags[0] == "-" {
@@ -537,6 +544,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 	sf[0].OmitEmpty = omitempty
 	sf[0].ZebraId = zebraId
 	sf[0].Skip = skip
+	sf[0].ShowZero = showzero
 
 	// parse field name
 	switch len(f.Names) {
