@@ -1144,8 +1144,8 @@ func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix st
 			match2 := regexZid.FindStringSubmatch(tag.Value)
 			if match2 != nil {
 				if len(match2) == 2 {
-					if match2[1] == "skip" {
-						VPrintf("skipping field '%s' marked with zid:\"skip\"", loweredName)
+					if match2[1] == "skip" || match2[1] == "-" {
+						VPrintf("skipping field '%s' marked with zid:\"%s\"", loweredName, match2[1])
 						return nil
 					}
 					VPrintf("matched, applying zid tag '%s' for field '%s'\n", match2[1], loweredName)
