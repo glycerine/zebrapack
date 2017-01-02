@@ -44,7 +44,7 @@ func MainArgs(args []string) {
 	outdir := flag.String("o", "odir", "specify output directory")
 	pkg := flag.String("p", "main", "specify package for generated code")
 	privs := flag.Bool("X", false, "export private as well as public struct fields")
-	overwrite := flag.Bool("OVERWRITE", false, "replace named .go files with capid tagged versions.")
+	overwrite := flag.Bool("OVERWRITE", false, "replace named .go files with zid tagged versions.")
 	flag.Parse()
 
 	if debug != nil {
@@ -110,55 +110,5 @@ func MainArgs(args []string) {
 
 	x.compileDir.DirPath = *outdir
 
-	/*
-			x.pkgName = *pkg
-
-			schemaFN := x.compileDir.DirPath + "/schema.capnp"
-			schemaFile, err := os.Create(schemaFN)
-			if err != nil {
-				panic(err)
-			}
-			defer schemaFile.Close()
-
-			by := x.GenCapnpHeader()
-			schemaFile.Write(by.Bytes())
-
-			_, err = x.WriteToSchema(schemaFile)
-			if err != nil {
-				panic(err)
-			}
-
-			fmt.Fprintf(schemaFile, "\n")
-			fmt.Fprintf(schemaFile, "##compile with:\n\n##\n##\n##   capnp compile -ogo %s\n\n", schemaFN)
-
-			// translator library of go functions is separate from the schema
-
-			translateFn := x.compileDir.DirPath + "/translateCapn.go"
-			translatorFile, err := os.Create(translateFn)
-			if err != nil {
-				panic(err)
-			}
-			defer translatorFile.Close()
-			fmt.Fprintf(translatorFile, `package %s
-
-		import (
-		  capn "github.com/glycerine/go-capnproto"
-		  "io"
-		)
-
-		`, x.pkgName)
-
-			_, err = x.WriteToTranslators(translatorFile)
-			if err != nil {
-				panic(err)
-			}
-
-			err = x.CopySourceFilesAddCapidTag()
-			if err != nil {
-				panic(err)
-			}
-
-			exec.Command("cp", "-p", "go.capnp", x.compileDir.DirPath).Run()
-	*/
 	fmt.Printf("generated files in '%s'\n", x.compileDir.DirPath)
 }

@@ -49,9 +49,9 @@ type Extractor struct {
 	srcFiles   []*SrcFile
 	overwrite  bool
 
-	// fields for testing capid tagging
-	PubABC int `capid:"1"`
-	PubYXZ int `capid:"0"`
+	// fields for testing zid tagging
+	PubABC int `zid:"1"`
+	PubYXZ int `zid:"0"`
 	PubDEF int
 }
 
@@ -97,7 +97,7 @@ type Field struct {
 
 	tagValue                   string
 	isList                     bool
-	capIdFromTag               int
+	zidFromTag                 int
 	orderOfAppearance          int
 	finalOrder                 int
 	embedded                   bool
@@ -116,7 +116,7 @@ type Struct struct {
 	fld                  []*Field
 	longestField         int
 	comment              string
-	capIdMap             map[int]*Field
+	zidMap               map[int]*Field
 	firstNonTextListSeen bool
 	listNum              int
 }
@@ -133,8 +133,8 @@ func (s *Struct) computeFinalOrder() {
 	max := len(s.fld) - 1
 	// check for out of bounds requests
 	for _, f := range s.fld {
-		if f.capIdFromTag > max {
-			err := fmt.Errorf(`problem in capid tag '%s' on field '%s' in struct '%s': number '%d' is beyond the count of fields we have, largest available is %d`, f.tagValue, f.goName, s.goName, f.capIdFromTag, max)
+		if f.zidFromTag > max {
+			err := fmt.Errorf(`problem in zid tag '%s' on field '%s' in struct '%s': number '%d' is beyond the count of fields we have, largest available is %d`, f.tagValue, f.goName, s.goName, f.zidFromTag, max)
 			panic(err)
 		}
 	}
@@ -154,9 +154,9 @@ func (s *Struct) computeFinalOrder() {
 	final := make([]*Field, len(s.fld))
 
 	// assign from map
-	for _, v := range s.capIdMap {
-		v.finalOrder = v.capIdFromTag
-		final[v.capIdFromTag] = v
+	for _, v := range s.zidMap {
+		v.finalOrder = v.zidFromTag
+		final[v.zidFromTag] = v
 	}
 
 	appear := make([]*Field, len(s.fld))
@@ -195,10 +195,10 @@ func advanceWrite(pw *int, final []*Field) bool {
 
 func NewStruct(capName, goName string) *Struct {
 	return &Struct{
-		capName:  capName,
-		goName:   goName,
-		fld:      []*Field{},
-		capIdMap: map[int]*Field{},
+		capName: capName,
+		goName:  goName,
+		fld:     []*Field{},
+		zidMap:  map[int]*Field{},
 	}
 }
 
@@ -583,7 +583,7 @@ func (x *Extractor) WriteToSchema(w io.Writer) (n int64, err error) {
 	return
 }
 
-func (x *Extractor) GenCapidTag(f *Field) string {
+func (x *Extractor) GenZidTag(f *Field) string {
 	if f.astField == nil {
 		f.astField = &ast.Field{}
 	}
@@ -593,19 +593,19 @@ func (x *Extractor) GenCapidTag(f *Field) string {
 
 	curTag := f.astField.Tag.Value
 
-	if hasCapidTag(curTag) {
+	if hasZidTag(curTag) {
 		return curTag
 	}
 	// else add one
-	addme := fmt.Sprintf(`capid:"%d"`, f.finalOrder)
+	addme := fmt.Sprintf(`zid:"%d"`, f.finalOrder)
 	if curTag == "" || curTag == "``" {
 		return fmt.Sprintf("`%s`", addme)
 	}
 	return fmt.Sprintf("`%s %s`", stripBackticks(curTag), addme)
 }
 
-func hasCapidTag(s string) bool {
-	return strings.Contains(s, "capid")
+func hasZidTag(s string) bool {
+	return strings.Contains(s, "zid")
 }
 
 func stripBackticks(s string) string {
@@ -623,14 +623,14 @@ func stripBackticks(s string) string {
 	return string(r)
 }
 
-func (x *Extractor) CopySourceFilesAddCapidTag() error {
+func (x *Extractor) CopySourceFilesAddZidTag() error {
 
 	// run through struct fields, adding tags
 	for _, s := range x.srs {
 		for _, f := range s.fld {
 
 			VPrintf("\n\n\n ********** before  f.astField.Tag = %#v\n", f.astField.Tag)
-			f.astField.Tag.Value = x.GenCapidTag(f)
+			f.astField.Tag.Value = x.GenZidTag(f)
 			VPrintf("\n\n\n ********** AFTER:  f.astField.Tag = %#v\n", f.astField.Tag)
 		}
 	}
@@ -789,7 +789,7 @@ func ExtractString2String(src string) string {
 
 	//goon.Dump(x.srs)
 
-	// final write, this time accounting for capid tag ordering
+	// final write, this time accounting for zid tag ordering
 	var buf bytes.Buffer
 	_, err = x.WriteToSchema(&buf)
 	if err != nil {
@@ -987,7 +987,7 @@ func (x *Extractor) NoteTypedef(goNewTypeName string, goTargetTypeName string) {
 
 var regexCapname = regexp.MustCompile(`capname:[ \t]*\"([^\"]+)\"`)
 
-var regexCapid = regexp.MustCompile(`capid:[ \t]*\"([^\"]+)\"`)
+var regexZid = regexp.MustCompile(`zid:[ \t]*\"([^\"]+)\"`)
 
 func GoType2CapnType(gotypeName string) string {
 	return UppercaseFirstLetter(gotypeName) + "Capn"
@@ -1113,34 +1113,34 @@ func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix st
 				}
 			}
 
-			// capid tag
-			match2 := regexCapid.FindStringSubmatch(tag.Value)
+			// zid tag
+			match2 := regexZid.FindStringSubmatch(tag.Value)
 			if match2 != nil {
 				if len(match2) == 2 {
 					if match2[1] == "skip" {
-						VPrintf("skipping field '%s' marked with capid:\"skip\"", loweredName)
+						VPrintf("skipping field '%s' marked with zid:\"skip\"", loweredName)
 						return nil
 					}
-					VPrintf("matched, applying capid tag '%s' for field '%s'\n", match2[1], loweredName)
+					VPrintf("matched, applying zid tag '%s' for field '%s'\n", match2[1], loweredName)
 					n, err := strconv.Atoi(match2[1])
 					if err != nil {
-						err := fmt.Errorf(`problem in capid tag '%s' on field '%s' in struct '%s': could not convert to number, error: '%s'`, match2[1], goFieldName, x.curStruct.goName, err)
+						err := fmt.Errorf(`problem in zid tag '%s' on field '%s' in struct '%s': could not convert to number, error: '%s'`, match2[1], goFieldName, x.curStruct.goName, err)
 						panic(err)
 						return err
 					}
 					if n < 0 {
-						VPrintf("skipping field '%s' marked with negative capid:\"%d\"", loweredName, n)
+						VPrintf("skipping field '%s' marked with negative zid:\"%d\"", loweredName, n)
 						return nil
 					}
-					fld, already := x.curStruct.capIdMap[n]
+					fld, already := x.curStruct.zidMap[n]
 					if already {
-						err := fmt.Errorf(`problem in capid tag '%s' on field '%s' in struct '%s': number '%d' is already taken by field '%s'`, match2[1], goFieldName, x.curStruct.goName, n, fld.goName)
+						err := fmt.Errorf(`problem in zid tag '%s' on field '%s' in struct '%s': number '%d' is already taken by field '%s'`, match2[1], goFieldName, x.curStruct.goName, n, fld.goName)
 						panic(err)
 						return err
 
 					} else {
-						x.curStruct.capIdMap[n] = curField
-						curField.capIdFromTag = n
+						x.curStruct.zidMap[n] = curField
+						curField.zidFromTag = n
 					}
 				}
 			}

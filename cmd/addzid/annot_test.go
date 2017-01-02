@@ -40,12 +40,12 @@ func TestTagAnnotationWorks(t *testing.T) {
 	})
 }
 
-func TestTagCapidWorks(t *testing.T) {
+func TestTagZidWorks(t *testing.T) {
 
 	cv.Convey("Given the desire to preserve the field numbering in the generated Capnproto schema,", t, func() {
-		cv.Convey("when we add the tag: capid:\"1\", then the field should be numbered @1.", func() {
+		cv.Convey("when we add the tag: zid:\"1\", then the field should be numbered @1.", func() {
 			cv.Convey("and if there are fewer than 2 (numbered 0, 1) fields then we error out.", func() {
-				ex0 := "type S struct { A string `capid:\"1\"`; B string \n}"
+				ex0 := "type S struct { A string `zid:\"1\"`; B string \n}"
 				cv.So(ExtractString2String(ex0), ShouldStartWithModuloWhiteSpace, `struct SCapn { b  @0:   Text; a  @1:   Text; } `)
 			})
 		})
