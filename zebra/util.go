@@ -165,7 +165,8 @@ func (s *Schema) WriteToGo(w io.Writer, path string, pkg string) (err error) {
 		fmt.Fprintf(w, ")\n\n")
 	}
 
-	fmt.Fprintf(w, "const zebraSchemaId64 = 0x%x\n\n", s.ZebraSchemaId)
+	fmt.Fprintf(w, "const zebraSchemaId64 = 0x%x // %v\n\n",
+		s.ZebraSchemaId, s.ZebraSchemaId)
 
 	for i := range s.Structs {
 		err = s.Structs[i].WriteToGo(w)
@@ -190,11 +191,16 @@ func (s *Struct) WriteToGo(w io.Writer) (err error) {
 			msg += ",omitempty"
 			needMsg = true
 		}
-		if needMsg {
-			zid += " " + msg + "\""
+		if f.ShowZero {
+			msg += ",showzero"
+			needMsg = true
 		}
 		if f.Deprecated {
-			zid += ` deprecated:"true"`
+			msg += ",deprecated"
+			needMsg = true
+		}
+		if needMsg {
+			zid += " " + msg + "\""
 		}
 		fmt.Fprintf(w, "    %s %s %s`\n", f.FieldGoName, f.FieldTypeStr, zid)
 	}

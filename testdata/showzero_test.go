@@ -2,7 +2,7 @@ package testdata
 
 import (
 	"bytes"
-	"fmt"
+	//"fmt"
 	"testing"
 
 	"github.com/glycerine/zebrapack/msgp"
@@ -29,17 +29,17 @@ func Test080ShowZero(t *testing.T) {
 		// turn it into msgpack2 and display as json
 		m2, _, err := zSchema.ZebraToMsgp2(data, false)
 		/*
-				fmt.Printf("m2 = raw(")
-		    	for i := range m2 {
-					fmt.Printf("0x%x,", m2[i])
-				}
+					fmt.Printf("m2 = raw(")
+			    	for i := range m2 {
+						fmt.Printf("0x%x,", m2[i])
+					}
 		*/
 		panicOn(err)
 		var json bytes.Buffer
 		_, err = msgp.CopyToJSON(&json, bytes.NewBuffer(m2))
 		panicOn(err)
 		s := string(json.Bytes())
-		fmt.Printf("s = '%v'\n", s)
+		//fmt.Printf("s = '%v'\n", s)
 		cv.So(s, cv.ShouldEqual, `{"T":0,"arr":[0,0,0,0,0,0]}`)
 	})
 }

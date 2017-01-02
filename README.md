@@ -37,7 +37,7 @@ type A struct {
   Bday     time.Time   `zid:"1"`
   Phone    string      `zid:"2"`
   Sibs     int         `zid:"3"`
-  GPA      float64     `zid:"4" deprecated:"true"` // a deprecated field.
+  GPA      float64     `zid:"4" msg:",deprecated"` // a deprecated field.
   Friend   bool        `zid:"5"`
 }
 
@@ -127,9 +127,9 @@ Cap'nProto. How it works: Additions are always
 made by incrementing by one the largest number available
 prior to the addition. No gaps in numbering are
 allowed, and no numbers are ever deleted.
-To get the effect of deletion, use the `deprecated` tag
-(effectively a tombstone) instead.
-This allows the tools to help detect
+To get the effect of deletion, add the `deprecated` value
+in `msg` tag. This is an effective tombstone.
+It allows the tools to help detect
 merge conflicts as soon as possible. If
 two people try to merge schemas where the same
 struct or field number is re-used, a
@@ -239,14 +239,14 @@ BenchmarkUgorjiCodecMsgpackMarshal-4     	  500000	      3274 ns/op	    2752 B/o
 deprecating fields
 ------------------
 
-to actually deprecate a field, you start by adding the deprecated:"true" tag:
+to actually deprecate a field, you start by adding the `,deprecated` value to the `msg` tag key:
 ```
 type A struct {
   Name     string      `zid:"0"`
   Bday     time.Time   `zid:"1"`
   Phone    string      `zid:"2"`
   Sibs     int         `zid:"3"`
-  GPA      float64     `zid:"4" deprecated:"true"` // a deprecated field.
+  GPA      float64     `zid:"4" msg:",deprecated"` // a deprecated field.
   Friend   bool        `zid:"5"`
 }
 ```
@@ -258,7 +258,7 @@ type A struct {
   Bday     time.Time   `zid:"1"`
   Phone    string      `zid:"2"`
   Sibs     int         `zid:"3"`
-  GPA      struct{}    `zid:"4" deprecated:"true"` // a deprecated field should have its type changed to struct{}, as well as being marked deprecated:"true".
+  GPA      struct{}    `zid:"4" msg:",deprecated"` // a deprecated field should have its type changed to struct{}, as well as being marked msg:",deprecated"
   Friend   bool        `zid:"5"`
 }
 ```
