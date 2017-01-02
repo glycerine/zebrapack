@@ -22,7 +22,7 @@ func use() {
 	fmt.Fprintf(os.Stderr, "     # addzid reads .go files and adds `zid` tags to struct fields.\n")
 	fmt.Fprintf(os.Stderr, "     #\n     # options:\n")
 	fmt.Fprintf(os.Stderr, "     #   -o=\"odir\" specifies the directory to write to (created if need be).\n")
-	fmt.Fprintf(os.Stderr, "     #   -X add tag to private fields of Go structs as well as public.\n")
+	fmt.Fprintf(os.Stderr, "     #   -unexported add tag to private fields of Go structs as well as public.\n")
 	fmt.Fprintf(os.Stderr, "     #   -version   shows build version with git commit hash.\n")
 	fmt.Fprintf(os.Stderr, "     #   -debug     print lots of debug info as we process.\n")
 	fmt.Fprintf(os.Stderr, "     #   -OVERWRITE modify .go files in-place, adding zid tags (by default\n     #       we write to the to -o dir).\n")
@@ -52,7 +52,7 @@ func MainArgs(args []string) {
 	verrequest := flag.Bool("version", false, "request git commit hash used to build this addzid")
 	outdir := flag.String("o", "odir", "specify output directory")
 	pkg := flag.String("p", "main", "specify package for generated code")
-	privs := flag.Bool("X", false, "export private as well as public struct fields")
+	privs := flag.Bool("unexported", false, "tag private as well as public struct fields")
 	overwrite := flag.Bool("OVERWRITE", false, "replace named .go files with zid tagged versions.")
 	flag.Parse()
 

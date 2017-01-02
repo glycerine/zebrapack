@@ -21,7 +21,7 @@ use: addzid {-o outdir} myGoSourceFile.go myGoSourceFile2.go ...
      #
      # options:
      #   -o="odir" specifies the directory to write to (created if need be).
-     #   -X add tag to private fields of Go structs as well as public.
+     #   -unexported add tag to private fields of Go structs as well as public.
      #   -version   shows build version with git commit hash.
      #   -debug     print lots of debug info as we process.
      #   -OVERWRITE modify .go files in-place, adding zid tags (by default
@@ -43,26 +43,19 @@ These new versions include zid tags on all public fields of structs. You should 
 
 If you are feeling especially bold, `addzid -OVERWRITE my.go` will replace my.go with the zid tagged version. For safety, only do this on backed-up and version controlled source files.
 
-By default only public fields (with a Capital first letter in their name) are tagged. The -X flag ignores the public/private distinction, and tags all fields.
+By default only public fields (with a Capital first letter in their name) are tagged. The -unexported flag ignores the public/private distinction, and tags all fields.
 
 The zid tags allow the ZebraPack schema evolution to function properly as you add new fields to structs.
-
-example of zid annotion use
-~~~
-type Job struct { 
-   C int `zid:"2"`  // we added C later, thus it is numbered higher.
-   A int `zid:"0"`
-   B int `zid:"1"` 
-}
-~~~
-
 
 windows build script
 ---------------------------
 see `build.cmd`. Thanks to Klaus Post (http://klauspost.com) for contributing this.
 
 -----
------
+
+TODO
+----
+cleanup internals: `addzid` was adapted from `bambam`, an earlier tool for generating CapnProto schema from Go files. Much vestigial code could be deleted as it isn't needed for `addzid`'s purposes.
 
 Copyright (c) 2016, Jason E. Aten, Ph.D.
 

@@ -23,10 +23,10 @@ BIN = $(GOBIN)/zebrapack
 dev: clean install test
 
 $(BIN): */*.go *.go
-	@go install . ./cmd/addzid
+	@go install && (cd ./cmd/addzid && make)
 
 install:
-	go install . ./cmd/addzid
+	go install  && (cd ./cmd/addzid && make)
 
 $(GGEN): ./_generated/def.go
 	go generate ./_generated
