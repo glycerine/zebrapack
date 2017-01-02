@@ -110,5 +110,9 @@ func MainArgs(args []string) {
 
 	x.compileDir.DirPath = *outdir
 
+	err := x.CopySourceFilesAddZidTag(nil)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Printf("generated files in '%s'\n", x.compileDir.DirPath)
 }

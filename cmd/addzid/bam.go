@@ -596,6 +596,7 @@ func (x *Extractor) GenZidTag(f *Field) string {
 	if hasZidTag(curTag) {
 		return curTag
 	}
+	p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
 	// else add one
 	addme := fmt.Sprintf(`zid:"%d"`, f.finalOrder)
 	if curTag == "" || curTag == "``" {
@@ -623,7 +624,7 @@ func stripBackticks(s string) string {
 	return string(r)
 }
 
-func (x *Extractor) CopySourceFilesAddZidTag() error {
+func (x *Extractor) CopySourceFilesAddZidTag(w io.Writer) error {
 
 	// run through struct fields, adding tags
 	for _, s := range x.srs {
@@ -635,12 +636,28 @@ func (x *Extractor) CopySourceFilesAddZidTag() error {
 		}
 	}
 
-	// run through files, printing
-	for _, s := range x.srcFiles {
-		if s.filename != "" {
-			err := x.PrettyPrint(s.fset, s.astFile, x.compileDir.DirPath+string(os.PathSeparator)+s.filename)
+	if w != nil {
+		// run through files, printing to w
+		for _, s := range x.srcFiles {
+			err := x.PrettyPrint(w, s.fset, s.astFile)
 			if err != nil {
 				return err
+			}
+		}
+	} else {
+
+		// run through files, printing to odir
+		for _, s := range x.srcFiles {
+			if s.filename != "" {
+
+				f, err := os.Create(x.compileDir.DirPath + string(os.PathSeparator) + s.filename)
+				if err != nil {
+					panic(err)
+				}
+				err = x.PrettyPrint(f, s.fset, s.astFile)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}
@@ -796,6 +813,10 @@ func ExtractString2String(src string) string {
 		panic(err)
 	}
 	_, err = x.WriteToTranslators(&buf)
+	if err != nil {
+		panic(err)
+	}
+	err = x.CopySourceFilesAddZidTag(&buf)
 	if err != nil {
 		panic(err)
 	}
@@ -1087,7 +1108,7 @@ func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix st
 		}
 	}
 
-	curField := &Field{orderOfAppearance: x.fieldCount, embedded: IsEmbedded, astField: astfld, goTypeSeq: goTypeSeq, capTypeSeq: []string{}}
+	curField := &Field{orderOfAppearance: x.fieldCount, embedded: IsEmbedded, astField: astfld, goTypeSeq: goTypeSeq, capTypeSeq: []string{}, zidFromTag: -1}
 
 	var tagValue string
 	loweredName := underToCamelCase(LowercaseCapnpFieldName(goFieldName))

@@ -25,3 +25,7 @@ func VPrintf(format string, a ...interface{}) {
 		TSPrintf(format, a...)
 	}
 }
+
+func p(format string, a ...interface{}) {
+	TSPrintf(format, a...)
+}
