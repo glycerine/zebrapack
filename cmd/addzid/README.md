@@ -39,13 +39,13 @@ zid tags on go structs
 
 When you run `addzid`, it will generate a modified copy of your go source files in the output directory.
 
-These new versions include zid tags on all public fields of structs. You should inspect the copy of the source file in the output directory, and then replace your original source with the tagged version.  You can also manually add zid tags to fields, if you need to manually specify a field number (e.g. you are matching an pre-existing capnproto definition).
+These new versions include zid tags on all public fields of structs. You should inspect the copy of the source file in the output directory, and then replace your original source with the tagged version.  Of course you can always manually add zid tags to fields, if you prefer. However `addzid` simplifies this chore.
 
 If you are feeling especially bold, `addzid -OVERWRITE my.go` will replace my.go with the zid tagged version. For safety, only do this on backed-up and version controlled source files.
 
 By default only public fields (with a Capital first letter in their name) are tagged. The -X flag ignores the public/private distinction, and tags all fields.
 
-The zid tags allow the ZebraPAck schema evolution to function properly as you add new fields to structs.
+The zid tags allow the ZebraPack schema evolution to function properly as you add new fields to structs.
 
 example of zid annotion use
 ~~~
