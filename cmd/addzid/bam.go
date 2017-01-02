@@ -1598,3 +1598,20 @@ func (x *Extractor) ListToSliceSetLHS_RHS(baseIsIntrinsic bool, capName string, 
 		return fmt.Sprintf("%sToGo(p.At(i), &v[i])", capName)
 	}
 }
+
+func (x *Extractor) SetFinalFieldOrder() {
+
+	// sort structs alphabetically to get a stable (testable) ordering.
+	sortedStructs := ByGoName(make([]*Struct, 0, len(x.srs)))
+	for _, strct := range x.srs {
+		sortedStructs = append(sortedStructs, strct)
+	}
+	sort.Sort(ByGoName(sortedStructs))
+
+	for _, s := range sortedStructs {
+		s.computeFinalOrder()
+		sort.Sort(ByFinalOrder(s.fld))
+	} // end loop over structs
+
+	return
+}

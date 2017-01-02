@@ -110,13 +110,9 @@ func MainArgs(args []string) {
 
 	x.compileDir.DirPath = *outdir
 
-	// need side effect of this, setting finalOrder on fields
-	_, err := x.WriteToSchema(nil)
-	if err != nil {
-		panic(err)
-	}
+	x.SetFinalFieldOrder()
 
-	err = x.CopySourceFilesAddZidTag(nil)
+	err := x.CopySourceFilesAddZidTag(nil)
 	if err != nil {
 		panic(err)
 	}
