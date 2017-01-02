@@ -504,17 +504,29 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		// check zebra
 		zebra := alltags.Get("zid")
 		if zebra != "" {
-			// must be a non-negative number
-			id, err := strconv.Atoi(zebra)
-			if err != nil || id < 0 {
-				where := ""
-				if len(f.Names) > 0 {
-					where = " on '" + f.Names[0].Name + "'"
+			// must be a non-negative number. "-" or negative
+			// are marked as skipped.
+			z := strings.Trim(zebra, " \t")
+			if len(z) > 0 && z[0] == '-' {
+				skip = true
+			} else {
+				id, err := strconv.Atoi(zebra)
+				if err != nil {
+					where := ""
+					if len(f.Names) > 0 {
+						where = " on '" + f.Names[0].Name + "'"
+					}
+					err2 := fmt.Errorf("bad `zid` tag%s, could not convert"+
+						" '%v' to non-zero integer: %v", where, zebra, err)
+					fatalf(err2.Error())
+					return nil, err2
 				}
-				err2 := fmt.Errorf("bad `zid` tag%s, could not convert"+
-					" '%v' to non-zero integer: %v", where, zebra, err)
-				fatalf(err2.Error())
-				return nil, err2
+				if id < 0 {
+					skip = true
+				} else {
+					zebraId = int64(id)
+					//fmt.Printf("\n we see zebraId: %v\n", zebraId)
+				}
 			}
 			if len(f.Names) > 1 {
 				// we can't have one zid for two fields.
@@ -522,8 +534,6 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 				fatalf(err2.Error())
 				return nil, err2
 			}
-			zebraId = int64(id)
-			//fmt.Printf("\n we see zebraId: %v\n", zebraId)
 		}
 
 	}

@@ -30,13 +30,13 @@ func Test001DuplicateOrMissingGapZidFieldsNotAllowed(t *testing.T) {
 			"}\n"
 		cv.So(testCode(s, nil), cv.ShouldNotBeNil)
 
-		fmt.Printf("\n  negative zid not allowed\n")
+		fmt.Printf("\n  negative zid mean skipped fields\n")
 		s = "\npackage fred\n\n" +
 			"type Flint struct {\n" +
 			"   Barney string `zid:\"0\"`\n" +
 			"   Wilma  string `zid:\"-1\"`\n" +
 			"}\n"
-		cv.So(testCode(s, nil), cv.ShouldNotBeNil)
+		cv.So(testCode(s, nil), cv.ShouldBeNil)
 
 		fmt.Printf("\n  0, 1 should be fine and not error\n")
 		s = "\npackage fred\n\n" +
