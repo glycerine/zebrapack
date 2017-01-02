@@ -19,7 +19,6 @@ Full credit: the code here descends from the fantastic msgpack2 code generator h
 
 By default we generate ZebraPack format encoders and decoders when the `zebrapack` tool is run. Note that we continue to offer straight msgpack2 serialization and deserialization with the `-msgp` flag to `zebrapack`.
 
-At this time it is feature complete and production ready.
 
 
 # background and motivation
