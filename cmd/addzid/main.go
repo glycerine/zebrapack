@@ -1,3 +1,12 @@
+/*
+addzid automatically adds `zid:"0"`, `zid:"1"`, ... tags to your Go structs.
+
+Given a set of golang (Go) source files, addzid will tag the public
+struct fields with sequential zid tags. This prepares your source
+so that it can be fed to the `zebrapack` codegen tool.
+
+`addzid` was dervied from the author's `bambam` tool to support ZebraPack.
+*/
 package main
 
 import (
