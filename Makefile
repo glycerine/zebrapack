@@ -23,10 +23,10 @@ BIN = $(GOBIN)/zebrapack
 dev: clean install test
 
 $(BIN): */*.go *.go
-	@go install ./...
+	@go install . ./cmd/addzid
 
 install:
-	go install ./...
+	go install . ./cmd/addzid
 
 $(GGEN): ./_generated/def.go
 	go generate ./_generated
@@ -48,7 +48,8 @@ test: all
 	./zebrapack -file testdata/my.go && go test -v ./testdata/my_gen_test.go ./testdata/my.go ./testdata/my_gen.go
 	./zebrapack -file testdata/my.go -msgp -o testdata/my_msgp_gen.go -method-prefix=MSGP -tests=false -io=false # test the -method-prefix flag
 	./zebrapack -schema-to-go testdata/my.z > /tmp/remy.go && echo "func main() {}" >> /tmp/remy.go && go run /tmp/remy.go && rm /tmp/remy.go
-
+	# and test addzid
+	go test -v ./cmd/addzid
 
 bench: all
 	go test -bench . ./msgp
