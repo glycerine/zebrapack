@@ -56,11 +56,6 @@ type Job struct {
 }
 ~~~
 
-other tags
-----------
-
-Also available tags: `zid:"skip"` or `zid:"-1"` (any negative number): this field will be skipped and not serialized or written to the schema.
-
 
 windows build script
 ---------------------------
