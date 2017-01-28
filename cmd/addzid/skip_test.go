@@ -9,7 +9,7 @@ import (
 func TestZidSkip(t *testing.T) {
 
 	cv.Convey("Given go: type Hi struct { A int `zid:\"skip\"`; B int  } ", t, func() {
-		cv.Convey("then bambam should skip the A field and any negative numbered zid tags", func() {
+		cv.Convey("then addzid should skip the A field and any negative numbered zid tags", func() {
 
 			in1 := " type Hi struct { A int `zid:\"skip\"`; B int; C int `zid:\"-1\"`; D int `zid:\"-2\"`  } "
 

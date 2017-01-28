@@ -643,14 +643,17 @@ func (x *Extractor) CopySourceFilesAddZidTag(w io.Writer) error {
 	}
 
 	if w != nil {
+		//p("w was not nil... len(x.srcFiles)=%v", len(x.srcFiles))
 		// run through files, printing to w
 		for _, s := range x.srcFiles {
+			//p("calling x.PrettyPrint...")
 			err := x.PrettyPrint(w, s.fset, s.astFile)
 			if err != nil {
 				return err
 			}
 		}
 	} else {
+		//p("w was nil... printing to odir, len(x.srcFiles)=%v", len(x.srcFiles))
 
 		// run through files, printing to odir
 		for _, s := range x.srcFiles {
@@ -869,7 +872,7 @@ func ExtractStructs(fname string, src interface{}, x *Extractor) ([]byte, error)
 }
 
 func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]byte, error) {
-
+	//p("starting ExtractStructsFromOneFile(fname='%s')", fname)
 	fset := token.NewFileSet() // positions are relative to fset
 
 	f, err := parser.ParseFile(fset, fname, src, parser.ParseComments)
@@ -878,6 +881,7 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 	}
 
 	if fname != "" {
+		//p("adding fname='%s' to x.srcFiles...", fname)
 		x.srcFiles = append(x.srcFiles, &SrcFile{filename: fname, fset: fset, astFile: f})
 	}
 
@@ -1095,6 +1099,8 @@ const YesEmbedded = true
 
 func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix string, goFieldTypeName string, astfld *ast.Field, isList bool, tag *ast.BasicLit, IsEmbedded bool, goTypeSeq []string) error {
 
+	//p("in GenerateStructField(): goFieldName = '%s'.  goFieldTypeName='%s'.",goFieldName, goFieldTypeName)
+
 	if goFieldTypeName == "" {
 		return nil
 	}
@@ -1181,24 +1187,24 @@ func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix st
 		err := fmt.Errorf(`after lowercasing the first letter, field '%s' becomes '%s' but this is a reserved capnp word, so please use a struct field tag (e.g. capname:"capnpName") to rename it`, goFieldName, loweredName)
 		return err
 	}
+	/*
+			var capnTypeDisplayed string
+			curField.capTypeSeq, capnTypeDisplayed = x.GoTypeToCapnpType(curField, goTypeSeq)
 
-	var capnTypeDisplayed string
-	curField.capTypeSeq, capnTypeDisplayed = x.GoTypeToCapnpType(curField, goTypeSeq)
+			VPrintf("\n\n\n DEBUG:  '%s' '%s' @%d: %s; %s\n\n", x.fieldPrefix, loweredName, x.fieldCount, capnTypeDisplayed, x.fieldSuffix)
 
-	VPrintf("\n\n\n DEBUG:  '%s' '%s' @%d: %s; %s\n\n", x.fieldPrefix, loweredName, x.fieldCount, capnTypeDisplayed, x.fieldSuffix)
+			sz := len(loweredName)
+			if sz > x.curStruct.longestField {
+				x.curStruct.longestField = sz
+			}
 
-	sz := len(loweredName)
-	if sz > x.curStruct.longestField {
-		x.curStruct.longestField = sz
-	}
+			curField.capname = loweredName
 
-	curField.capname = loweredName
+			curField.goCapGoName = UppercaseFirstLetter(loweredName)
 
-	curField.goCapGoName = UppercaseFirstLetter(loweredName)
-
-	curField.goCapGoTypeSeq, curField.goCapGoType = x.CapnTypeToGoType(curField.capTypeSeq)
-
-	curField.capType = capnTypeDisplayed
+			curField.goCapGoTypeSeq, curField.goCapGoType = x.CapnTypeToGoType(curField.capTypeSeq)
+		curField.capType = capnTypeDisplayed
+	*/
 	curField.goName = goFieldName
 	curField.goType = goFieldTypeName
 	if len(curField.capTypeSeq) > 0 && curField.capTypeSeq[0] == "List" {
@@ -1614,4 +1620,29 @@ func (x *Extractor) SetFinalFieldOrder() {
 	} // end loop over structs
 
 	return
+}
+
+func ExtractStringAddZid(src string) string {
+
+	x := NewExtractor()
+	defer x.Cleanup()
+	_, err := ExtractStructs("ExtractStringAddZid", "package main; "+src, x)
+	if err != nil {
+		panic(err)
+	}
+
+	//goon.Dump(x.srs)
+
+	x.SetFinalFieldOrder()
+
+	// final write, this time accounting for zid tag ordering
+	var buf bytes.Buffer
+	err = x.CopySourceFilesAddZidTag(&buf)
+	if err != nil {
+		panic(err)
+	}
+
+	ans := string(buf.Bytes())
+	//p("returning ans='%s'", ans)
+	return ans
 }

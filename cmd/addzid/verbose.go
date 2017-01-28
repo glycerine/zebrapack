@@ -27,5 +27,5 @@ func VPrintf(format string, a ...interface{}) {
 }
 
 func p(format string, a ...interface{}) {
-	TSPrintf(format, a...)
+	TSPrintf("\n"+format+"\n", a...)
 }
