@@ -12,12 +12,25 @@ import (
 // PreSave will be called before EncodeMsg/MarshalMsg
 // if you struct implements it.
 type PreSave interface {
+
+	// PreSaveHook is called before msgp.MarshalMsg
+	// and msgp.EncodeMsg. It allows you to prep
+	// the struct for serialization. See
+	// PostLoadHook for the complimentary hook
+	// called after deserialization.
 	PreSaveHook()
 }
 
 // PostLoad will be called after DecodeMsg/UnmarshalMsg,
 // if you struct implements it.
 type PostLoad interface {
+
+	// PostLoadHook is called after
+	// msgp.UnmarshalMsg and msgp.DecodeMsg.
+	// The opposite of PreSaveHook, it allows
+	// one to add a custom finishing step
+	// after basic deserialization has
+	// completed.
 	PostLoadHook()
 }
 
