@@ -2,9 +2,15 @@ package main
 
 import (
 	"testing"
+	"time"
 
 	cv "github.com/glycerine/goconvey/convey"
 )
+
+// run 'addzid -unexported' to see zid being added.
+type unused struct {
+	tm time.Time
+}
 
 func Test909TimeFieldsAddZid(t *testing.T) {
 
