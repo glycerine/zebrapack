@@ -753,9 +753,13 @@ func (fs *FileSet) parseExpr(e ast.Expr) (gen.Elem, error) {
 					found := false
 					selPkg, found = fs.QuickPack[y.Name]
 					if !found {
-						panic(fmt.Errorf("could not find package "+
-							"named '%s' for selector '%s'",
-							y.Name, stringify(s)))
+						fmt.Fprintf(os.Stderr, "%v",
+							fmt.Errorf("\nparse/getast.go:parseExpr() fatal "+
+								"error: could not find package "+
+								"named '%s' for selector '%s'. Try "+
+								"omitting the -no-load flag if it is in use.\n",
+								y.Name, stringify(s)))
+						os.Exit(1)
 					}
 				default:
 					// ignore, no package

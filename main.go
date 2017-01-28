@@ -172,7 +172,13 @@ func Run(mode gen.Method, c *cfg.ZebraConfig) error {
 	}
 	fmt.Println("======== ZebraPack Code Generator  =======")
 	fmt.Printf(">>> Input: \"%s\"\n", c.GoFile)
-	fs, err := parse.File(c)
+	var fs *parse.FileSet
+	var err error
+	if c.NoLoad {
+		fs, err = parse.FileNoLoad(c)
+	} else {
+		fs, err = parse.File(c)
+	}
 	if err != nil {
 		return err
 	}
