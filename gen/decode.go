@@ -2,10 +2,11 @@ package gen
 
 import (
 	"fmt"
-	"github.com/glycerine/zebrapack/cfg"
 	"io"
 	"strconv"
 	"strings"
+
+	"github.com/glycerine/zebrapack/cfg"
 )
 
 func decode(w io.Writer, cfg *cfg.ZebraConfig) *decodeGen {
@@ -108,6 +109,7 @@ func (d *decodeGen) Execute(p Elem) error {
 		dc.PopAlwaysNil()
 	}
 `)
+	d.p.postLoadHook()
 	d.p.nakedReturn()
 	unsetReceiver(p)
 	d.postLines()

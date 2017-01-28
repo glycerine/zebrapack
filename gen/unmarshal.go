@@ -68,6 +68,8 @@ func (u *unmarshalGen) Execute(p Elem) error {
 	u.p.printf("\nvar nbs msgp.NilBitsStack;\nnbs.Init(cfg)\nvar sawTopNil bool\n if msgp.IsNil(bts) {\n 	sawTopNil = true\n  bts = nbs.PushAlwaysNil(bts[1:]);\n	}\n")
 	next(u, p)
 	u.p.print("\n	if sawTopNil {bts = nbs.PopAlwaysNil()}\n o = bts")
+
+	u.p.postLoadHook()
 	u.p.nakedReturn()
 	unsetReceiver(p)
 	u.postLines()

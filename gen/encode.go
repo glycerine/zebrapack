@@ -68,6 +68,7 @@ func (e *encodeGen) Execute(p Elem) error {
 	e.p.comment(fmt.Sprintf("%sEncodeMsg implements msgp.Encodable", e.cfg.MethodPrefix))
 
 	e.p.printf("\nfunc (%s %s) %sEncodeMsg(en *msgp.Writer) (err error) {", p.Varname(), imutMethodReceiver(p), e.cfg.MethodPrefix)
+	e.p.preSaveHook()
 	next(e, p)
 	e.p.nakedReturn()
 	return e.p.err

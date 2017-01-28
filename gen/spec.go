@@ -2,8 +2,9 @@ package gen
 
 import (
 	"fmt"
-	"github.com/glycerine/zebrapack/cfg"
 	"io"
+
+	"github.com/glycerine/zebrapack/cfg"
 )
 
 const (
@@ -361,6 +362,18 @@ func (p *printer) rangeBlock(idx string, iter string, t traversal, inner Elem) {
 func (p *printer) nakedReturn() {
 	if p.ok() {
 		p.print("\nreturn\n}\n")
+	}
+}
+
+func (p *printer) postLoadHook() {
+	if p.ok() {
+		p.print("\nif p, ok := interface{}(z).(msgp.PostLoad); ok { p.PostLoadHook() }\n")
+	}
+}
+
+func (p *printer) preSaveHook() {
+	if p.ok() {
+		p.print("\nif p, ok := interface{}(z).(msgp.PreSave); ok { p.PreSaveHook() }\n")
 	}
 }
 

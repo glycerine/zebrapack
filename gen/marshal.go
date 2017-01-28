@@ -53,6 +53,7 @@ func (m *marshalGen) Execute(p Elem) error {
 	c := p.Varname()
 
 	m.p.printf("\nfunc (%s %s) %sMarshalMsg(b []byte) (o []byte, err error) {", p.Varname(), imutMethodReceiver(p), m.cfg.MethodPrefix)
+	m.p.preSaveHook()
 	m.p.printf("\no = msgp.Require(b, %s.%sMsgsize())", c, m.cfg.MethodPrefix)
 	next(m, p)
 	m.p.nakedReturn()

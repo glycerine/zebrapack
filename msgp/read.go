@@ -9,6 +9,18 @@ import (
 	"github.com/philhofer/fwd"
 )
 
+// PreSave will be called before EncodeMsg/MarshalMsg
+// if you struct implements it.
+type PreSave interface {
+	PreSaveHook()
+}
+
+// PostLoad will be called after DecodeMsg/UnmarshalMsg,
+// if you struct implements it.
+type PostLoad interface {
+	PostLoadHook()
+}
+
 // where we keep old *Readers
 var readerPool = sync.Pool{New: func() interface{} { return &Reader{} }}
 
