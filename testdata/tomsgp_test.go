@@ -14,7 +14,7 @@ func Test060ConvertZebraPackToMsgpack2(t *testing.T) {
 
 	cv.Convey("ZebraPack + schema can be converted to msgpack2 via zSchema.ZebraToMsgp2()\n", t, func() {
 		// read the schema
-		msgp2schema := ZebraSchemaInMsgpack2Format()
+		msgp2schema := FileMy{}.ZebraSchemaInMsgpack2Format()
 		var zSchema zebra.Schema
 		_, err := zSchema.UnmarshalMsg(msgp2schema)
 		panicOn(err)

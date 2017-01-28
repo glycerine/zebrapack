@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"path"
 	"strings"
 
 	"github.com/glycerine/zebrapack/cfg"
@@ -48,27 +49,38 @@ func PrintFile(
 
 		pre := cfg.MethodPrefix
 
+		fn := path.Base(file)
+
+		fileStructName := fileNameToStructName(fn)
+		_, err = fmt.Fprintf(out, "\n// %s holds ZebraPack"+
+			" schema from file '%s'\n"+
+			"type %s struct{}\n",
+			fileStructName, pathToGoSource, fileStructName)
+		if err != nil {
+			return err
+		}
+
 		_, err = fmt.Fprintf(out, "\n// %sZebraSchemaInMsgpack2Format "+
 			"provides the ZebraPack Schema in msgpack2 format, length "+
-			"%v bytes\nfunc %sZebraSchemaInMsgpack2Format() []byte {return "+
-			"%szebraSchemaInMsgpack2Format}\n"+
-			"var %szebraSchemaInMsgpack2Format = []byte{",
+			"%v bytes\nfunc (%s) %sZebraSchemaInMsgpack2Format() []byte {return "+
+			" []byte{",
 			pre,
 			len(sby),
-			pre, pre, pre)
+			fileStructName,
+			pre)
 		if err != nil {
 			return err
 		}
 		for i := range sby {
-			if i%16 == 0 {
+			if i%10 == 0 {
 				fmt.Fprintf(out, "\n")
 			}
-			_, err = fmt.Fprintf(out, "0x%x,", sby[i])
+			_, err = fmt.Fprintf(out, "0x%02x,", sby[i])
 			if err != nil {
 				return err
 			}
 		}
-		_, err = fmt.Fprintf(out, "\n}\n\n")
+		_, err = fmt.Fprintf(out, "\n}}\n\n")
 		if err != nil {
 			return err
 		}
@@ -85,10 +97,9 @@ func PrintFile(
 
 		_, err = fmt.Fprintf(out, "\n// %sZebraSchemaInJsonCompact "+
 			"provides the ZebraPack Schema in compact JSON format, length "+
-			"%v bytes\nfunc %sZebraSchemaInJsonCompact() []byte {return "+
-			"%szebraSchemaInJsonCompact}\n"+
-			"var %szebraSchemaInJsonCompact = []byte(`%s`)",
-			pre, len(jby), pre, pre, pre, string(jby))
+			"%v bytes\nfunc (%s) %sZebraSchemaInJsonCompact() []byte {return "+
+			" []byte(`%s`)}",
+			pre, len(jby), fileStructName, pre, string(jby))
 		if err != nil {
 			return err
 		}
@@ -101,10 +112,9 @@ func PrintFile(
 		pby := pretty.Bytes()
 		_, err = fmt.Fprintf(out, "\n// %sZebraSchemaInJsonPretty "+
 			"provides the ZebraPack Schema in pretty JSON format, length "+
-			"%v bytes\nfunc %sZebraSchemaInJsonPretty() []byte {return "+
-			"%szebraSchemaInJsonPretty}\n"+
-			"var %szebraSchemaInJsonPretty = []byte(`%s`)",
-			pre, len(pby), pre, pre, pre, string(pby))
+			"%v bytes\nfunc (%s) %sZebraSchemaInJsonPretty() []byte {return "+
+			" []byte(`%s`)}",
+			pre, len(pby), fileStructName, pre, string(pby))
 		if err != nil {
 			return err
 		}
@@ -213,4 +223,12 @@ func writeImportHeader(b *bytes.Buffer, imports ...string) {
 		}
 	}
 	b.WriteString(")\n\n")
+}
+
+func fileNameToStructName(file string) string {
+	s := strings.TrimSuffix(file, "_gen.go")
+	s = strings.Replace(s, "-", "_", -1)
+	s = strings.Replace(s, ".", "_", -1)
+	s = "File" + strings.ToUpper(s[:1]) + s[1:]
+	return s
 }

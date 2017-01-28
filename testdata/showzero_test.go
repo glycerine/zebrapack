@@ -16,7 +16,7 @@ func Test080ShowZero(t *testing.T) {
 	cv.Convey(`Given a field tagged with msg:",showzero", when the field has a zero value in it, it should still be printed`, t, func() {
 
 		// read the schema
-		msgp2schema := ZebraSchemaInMsgpack2Format()
+		msgp2schema := FileMy{}.ZebraSchemaInMsgpack2Format()
 		var zSchema zebra.Schema
 		_, err := zSchema.UnmarshalMsg(msgp2schema)
 		panicOn(err)
@@ -49,7 +49,7 @@ func Test081ShowZeroLastField(t *testing.T) {
 	cv.Convey(`Given a field tagged with msg:",showzero" of type slice and pointer, json version should show/display the field name and null`, t, func() {
 
 		// read the schema
-		msgp2schema := ZebraSchemaInMsgpack2Format()
+		msgp2schema := FileMy{}.ZebraSchemaInMsgpack2Format()
 		var zSchema zebra.Schema
 		_, err := zSchema.UnmarshalMsg(msgp2schema)
 		panicOn(err)
