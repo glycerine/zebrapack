@@ -125,7 +125,7 @@ func (e *encodeGen) structmap(s *Struct) {
 		e.p.printf("%s := %s.fieldsNotEmpty(%s[:])\n",
 			inUse, s.vname, empty)
 		e.p.printf("\n// map header\n")
-		if fast {
+		if fast && !e.cfg.NoEmbeddedStructNames {
 			// +1 for the -1:structName type-identifier.
 			e.p.printf("	err = en.WriteMapHeader(%s+1)\n", inUse)
 		} else {
