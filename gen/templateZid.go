@@ -58,7 +58,7 @@ var templateUnmarshalMsgZid = `
 	    totalEncodedFields_, bts, err = nbs.ReadMapHeaderBytes(bts)
 	    if err != nil { 
           panic(err)
-	  	  return
+	  	  //return
 	    }
     }
 	encodedFieldsLeft_ := totalEncodedFields_
@@ -78,7 +78,7 @@ doneWithStruct_:
 			curField_, bts, err = nbs.ReadIntBytes(bts)
 			if err != nil { 
                 panic(err)
-				return
+				//return
 			}
 		} else {
 			//missing fields need handling
