@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	//errcheck    = "\nif err != nil { return }"
-	errcheck    = "\nif err != nil { panic(err) }"
+	errcheck = "\nif err != nil { return }"
+	//errcheck    = "\nif err != nil { panic(err) }"
 	lenAsUint32 = "uint32(len(%s))"
 	literalFmt  = "%s"
 	intFmt      = "%d"

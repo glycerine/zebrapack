@@ -187,7 +187,7 @@ type Field struct {
 
 	// optional wire-name designated by a
 	// `msg:"tagname"` tag on the struct field.
-	FieldTagName string
+	FieldTagName string `msg:",omitempty"`
 
 	// =======================
 	// type info

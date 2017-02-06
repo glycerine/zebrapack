@@ -70,7 +70,6 @@ var templateUnmarshalMsg = `
     if !nbs.AlwaysNil {
 	    totalEncodedFields_, bts, err = nbs.ReadMapHeaderBytes(bts)
 	    if err != nil { 
-          panic(err)
 	  	  return
 	    }
     }
@@ -90,8 +89,7 @@ doneWithStruct_:
 			encodedFieldsLeft_--
 			field, bts, err = nbs.ReadMapKeyZC(bts)
 			if err != nil { 
-                panic(err)
-				return
+                return
 			}
 			curField_ = msgp.UnsafeString(field)
 		} else {
