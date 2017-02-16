@@ -9,11 +9,20 @@ j.e.aten@gmail.com
 
 - a data description language and serialization format. Like Gobs version 2.0.
 
-- ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding.
+- remove gray areas from the language bininds. Provides for declared schemas, sane data evolution, and more compact encoding.
 
-- It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support.
+- maintain easy compatibility with all the dynamic languages that already have msgpack2 support.
 
 - a day's work to adapt an existing language binding to read zebrapack: the schema are in msgpack2, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
+
+* zebrapack: the main idea
+
+.code structdef
+
+* zebrapack: the main idea 2
+
+.code transform
+
 
 * motivation Why start with [msgpack2](http://msgpack.org)?
 
@@ -21,17 +30,20 @@ j.e.aten@gmail.com
 
 - It has an implementation in every language you've heard of, and some you haven't (some 50 libraries are available).
 
-- It has a well defined and short spec.
+- It has a simple and short spec.
 
 - msgpack2 is dynamic-language friendly because it is largely self-describing.
 
+- most significantly: the existing library github.com/tinylib/msgp is extremely well tuned, and generates Go bindings by reading your Go source.
+
 * Problems with msgpack2
 
-- poorly defined language binding
+- poorly defined language binding (signed/unsigned/bitwidth of integer?)
 
-- weak support for data evolution
+- a.k.a. insufficiently strong typing.
 
-- insufficiently strong typing.
+- weak support for data evolution. i.e. no conflict detection, no omitempty support from the prior libraries => they crash on unexpected fields.
+
 
 
 * Problem example
@@ -52,40 +64,30 @@ j.e.aten@gmail.com
 
 * Addressing the problems
 
-- for language binding: strongly define the types of fields
+- for language binding: strongly define the types of fields.
 
-- for efficiency and data evolution: adopt a new convention about how to encode the field names of structs.
+- simply parse from the Go source. No separate IDL, your Go code is your one source of truth.
+
+- For efficiency and data evolution: adopt a new convention about how to encode the field names of structs. Use small integer fields.
 
 * Addressing the problems II
-
-- for language binding: strongly define the types of fields
-
-- for efficiency and data evolution: adopt a new convention about how to encode the field names of structs.
 
 - Structs are encoded in msgpack2 using maps, as usual.
 
 - maps that represent structs are now keyed by integers.
 
-- Rather than have string keys
+- Rather than strings as keys
 
 - these integers are associated with a field name and type in a (separable) schema.
 
 - The schema is also defined and encoded in msgpack2.
 
 
-* zebrapack: the main idea
-
-.code structdef
-
-* zebrapack: the main idea 2
-
-.code transform
-
 * Result
 
 - resulting binary encoding is very similar in style to protobufs/Thrift/Capn'Proto.
 
-- However it is much more friendly to other (dynamic) languages.
+- However it is much more friendly to dynamic languages; e.g. R, python, zygo
 
 - Also it is screaming fast.
 
@@ -104,7 +106,8 @@ j.e.aten@gmail.com
 - We borrow the idea of field deprecation from FlatBuffers
 
 - For conflicting update detection, we use CapnProto's field numbering discipline
-
+   (contiguous integers from 0..N-1).
+   
 - support for the `omitempty` tag
 
 - in ZebraPack, all fields are `omitempty`
@@ -177,5 +180,8 @@ for more detail.
 
 - microschema
 
-- declare how many follow-on objects a schema is good for
+- handle cycles in an object graph, by detecting
+  cycyles and encoding pointers as object IDs.
+
+- your idea here
 
