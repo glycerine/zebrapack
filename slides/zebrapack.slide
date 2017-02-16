@@ -111,76 +111,9 @@ j.e.aten@gmail.com
 
 - If they are empty they won't be serialized on the wire. Like FlatBuffers and Protobufs, this enables one to define a very large schema of possibilities, and then only transmit a very small (efficient) portion that is currently relevant over the wire.
 
-* Credit
+* Credit to Philip Hofer
 
 Full credit: the ZebraPack code  descends from the fantastic msgpack2 code generator https://github.com/tinylib/msgp by Philip Hofer.
-
-
-* Schema Rationale
-
-While not always necessary, a schema provides
-many benefits, both for coordinating between
-people and for machine performance.
-
-* Stronger typing: readers know what is expected, in
-both type and size of the data delivered. Writers
-know what they should be writing.
-
-* Performance and compression: replacing struct/map
-field names with numbers provides immediate space
-savings and compression.
-
-* Conflict resolution: the Cap'nProto numbering and
-update conflict resolution method is used here.
-This method originated in the ProtocolBuffers
-scheme, and was enhanced after experience in
-Cap'nProto. How it works: Additions are always
-made by incrementing by one the largest number available
-prior to the addition. No gaps in numbering are
-allowed, and no numbers are ever deleted.
-To get the effect of deletion, add the `deprecated` value
-in `msg` tag. This is an effective tombstone.
-It allows the tools to help detect
-merge conflicts as soon as possible. If
-two people try to merge schemas where the same
-struct or field number is re-used, a
-schema compiler can automatically detect
-this update conflict, and flag the human
-to resolve the conflict before proceeding.
-
-* All fields optional. Just as in msgpack2,
-Cap'nProto, Gobs, and Flatbuffers, all fields
-are optional. Most everyone, after experience
-and time with ProtocolBuffers, has come to the
-conclusion that required fields are a misfeature
-that hurt the ability to evolve data gracefully
-and maintain efficiency.
-
-* Design:
-
-- Schema language: the schema language for
-defining structs is identical to the Go
-language. Go is expressive and yet easily parsed
-by the standard library packages included
-with Go itself. There are already
-high-performance msgpack2 libraries available
-for go, https://github.com/tinylib/msgp and
-https://github.com/ugorji/go which
-make schema compilation easy.
-
-- Schema serialization: schemas are serialized using the msgpack2 encoding.
-
-- Requirement: zerbapack requires that the msgpack2 standard
-be adhered to. Strings and raw binary byte arrays
-are distinct, and must be marked distinctly; msgpack1 encoding is
-not allowed.
-
-- All language bindings must respect the declared type in
-the ZebraPack schema when writing data. For example,
-this means that signed and unsigned declarations
-must be respected.
-
-
 
 
 * deprecating fields
