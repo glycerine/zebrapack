@@ -172,3 +172,10 @@ serialization to existing Go projects easy.
 
 See https://github.com/glycerine/zebrapack/blob/master/cmd/addzid/README.md
 for more detail.
+
+* What's next. New ideas.
+
+- microschema
+
+- declare how many follow-on objects a schema is good for
+
