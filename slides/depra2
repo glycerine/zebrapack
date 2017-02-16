@@ -1,0 +1,8 @@
+type A struct {
+  Name     string      `zid:"0"`
+  Bday     time.Time   `zid:"1"`
+  Phone    string      `zid:"2"`
+  Sibs     int         `zid:"3"`
+  GPA      struct{}    `zid:"4" msg:",deprecated"` // a deprecated field should have its type changed to struct{}, as well as being marked msg:",deprecated"
+  Friend   bool        `zid:"5"`
+}

@@ -1,0 +1,93 @@
+Highlights from The State of Go
+Go 1.8 release party, 2017 February 16, GolangDFW Meetup.
+
+
+Jason E. Aten, Ph.D.
+Computer Scientist/Gopher
+j.e.aten@gmail.com
+GolangDFW Meetup
+
+* slides courtesy of
+
+The Google Go Team.
+
+The video full presentation by 
+
+Francesc Campoy
+Google Developer Advocate
+@francesc
+campoy@golang.org
+
+source:
+
+https://github.com/golang/talks
+
+and
+
+https://talks.golang.org/2017/state-of-go.slide
+
+can be viewed
+
+https://www.youtube.com/watch?v=tY4UKkgb5IY&feature=youtu.be
+
+* Highlight #1: garbage collection pause times
+
+* GC history in tweets
+
+* go 1.5
+
+.image state-of-go/img/gct1.png _ 900
+
+* go 1.6
+
+.image state-of-go/img/gct2.png _ 900
+
+* go 1.7
+
+.image state-of-go/img/gct4.png _ 900
+
+* go 1.8 (beta 1)
+
+.image state-of-go/img/gct5.png _ 700
+
+* go 1.8 (beta 1) CPU
+
+.image state-of-go/img/gctcpu.png _ 800
+
+
+* Highlight number 2: Plugins
+
+Define a plugin:
+
+.code state-of-go/stdlib/plugin/plugin.go
+
+Then build it:
+
+    go build -buildmode=plugin
+
+_Note_: This currently works only on Linux.
+
+* Plugins
+
+.code state-of-go/stdlib/plugin/main.go /plugin.Open/,/Hello/
+
+* Plugins demo
+
+Demo video: [[https://twitter.com/francesc/status/827851085943566336][twitter.com/francesc]]
+
+Source code: [[https://github.com/campoy/golang-plugins][github.com/campoy/golang-plugins]]
+
+
+* Highlight #3: Go meetups and conferences
+
+.image state-of-go/img/meetups.png _ 900
+.caption Gophers all around the world! [[http://go-meetups.appspot.com]]
+
+* Conferences:
+
+- [[https://fosdem.org/2017/][FOSDEM]], earlier this month, these slides are from F. Campoy's talk there.
+- [[http://www.gophercon.in/][GopherCon India]], Feb 25-25th
+- [[https://gophercon.com/][Gophercon Denver]], Jul 12-15th
+- [[http://golanguk.com/][Golang UK]], August 16th-18th
+- [[http://2017.dotgo.eu/][dotGo]], Nov 6th
+

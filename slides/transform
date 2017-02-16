@@ -1,0 +1,10 @@
+original(msgpack2) ->        schema(msgpack2)      +    each instance(msgpack2)
+--------                     --------------             -------------
+a := A{                      zebra.StructT{             map{
+  "Name":  "Atlanta",          0: {"Name", String},       0: "Atlanta",
+  "Bday":  tm("1990-12-20"),   1: {"Bday", Timestamp},    1: "1990-12-20",
+  "Phone": "650-555-1212",     2: {"Phone", String},      2: "650-555-1212",
+  "Sibs":  3,                  3: {"Sibs", Int64},        3: 3,
+  "GPA" :  3.95,               4: {"GPA", Float64},       4: 3.95,
+  "Friend":true,               5: {"Friend", Bool},       5: true,
+}                            }                          }

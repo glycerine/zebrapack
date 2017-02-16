@@ -1,0 +1,20 @@
+benchmark                                       iter           time/iter          bytes alloc      allocs
+---------                                       ----           ---------          -----------      ------
+BenchmarkZebraPackMarshal-4              	10000000	       115 ns/op	       0 B/op	       0 allocs/op
+BenchmarkGogoprotobufMarshal-4           	10000000	       148 ns/op	      64 B/op	       1 allocs/op
+BenchmarkMsgpMarshal-4                   	10000000	       161 ns/op	     128 B/op	       1 allocs/op
+BenchmarkGencodeMarshal-4                	10000000	       176 ns/op	      80 B/op	       2 allocs/op
+BenchmarkFlatBufferMarshal-4             	 5000000	       347 ns/op	       0 B/op	       0 allocs/op
+BenchmarkCapNProtoMarshal-4              	 3000000	       506 ns/op	      56 B/op	       2 allocs/op
+BenchmarkGoprotobufMarshal-4             	 3000000	       617 ns/op	     312 B/op	       4 allocs/op
+BenchmarkGobMarshal-4                    	 2000000	       887 ns/op	      48 B/op	       2 allocs/op
+BenchmarkProtobufMarshal-4               	 2000000	       912 ns/op	     200 B/op	       7 allocs/op
+BenchmarkHproseMarshal-4                 	 1000000	      1052 ns/op	     473 B/op	       8 allocs/op
+BenchmarkCapNProto2Marshal-4             	 1000000	      1214 ns/op	     436 B/op	       7 allocs/op
+BenchmarkBinaryMarshal-4                 	 1000000	      1427 ns/op	     256 B/op	      16 allocs/op
+BenchmarkVmihailencoMsgpackMarshal-4     	 1000000	      1772 ns/op	     368 B/op	       6 allocs/op
+BenchmarkXdrMarshal-4                    	 1000000	      1802 ns/op	     455 B/op	      20 allocs/op
+BenchmarkJsonMarshal-4                   	 1000000	      2500 ns/op	     536 B/op	       6 allocs/op
+BenchmarkUgorjiCodecBincMarshal-4        	  500000	      2514 ns/op	    2784 B/op	       8 allocs/op
+BenchmarkSerealMarshal-4                 	  500000	      2729 ns/op	     912 B/op	      21 allocs/op
+BenchmarkUgorjiCodecMsgpackMarshal-4     	  500000	      3274 ns/op	    2752 B/op	       8 allocs/op

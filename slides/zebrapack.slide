@@ -1,0 +1,241 @@
+ZebraPack: Fast, friendly serialization
+GolangDFW Meetup, 2017 February 16
+
+Jason E. Aten, Ph.D.
+Computer Scientist/Gopher
+j.e.aten@gmail.com
+
+* ZebraPack
+
+- a data description language and serialization format. Like Gobs version 2.0.
+
+- ZebraPack is a data definition language and serialization format. It removes gray areas from msgpack2 serialized data, and provides for declared schemas, sane data evolution, and more compact encoding.
+
+- It does all this while maintaining the possibility of easy compatibility with all the dynamic languages that already have msgpack2 support.
+
+- a day's work to adapt an existing language binding to read zebrapack: the schema are in msgpack2, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
+
+* motivation Why start with [msgpack2](http://msgpack.org)?
+
+- msgpack2 is simple, fast, and extremely portable.
+
+- It has an implementation in every language you've heard of, and some you haven't (some 50 libraries are available).
+
+- It has a well defined and short spec.
+
+- msgpack2 is dynamic-language friendly because it is largely self-describing.
+
+* Problems with msgpack2
+
+- poorly defined language binding
+
+- weak support for data evolution
+
+- insufficiently strong typing.
+
+
+* Problem example
+
+- the widely emulated C-encoder for msgpack chooses to encode signed positive integers as unsigned integers.
+
+- This causes crashes in readers who were expected a signed integer
+
+- which they may have originated themselves in the original struct.
+
+- the existing practice for msgpack2 language bindings allows the data types to change as they are read and re-serialized.
+
+- Simple copying of a serialized struct can change the types of data from signed to unsigned.
+
+- This is horrible.
+
+
+
+* Addressing the problems
+
+- for language binding: strongly define the types of fields
+
+- for efficiency and data evolution: adopt a new convention about how to encode the field names of structs.
+
+* Addressing the problems II
+
+- for language binding: strongly define the types of fields
+
+- for efficiency and data evolution: adopt a new convention about how to encode the field names of structs.
+
+- Structs are encoded in msgpack2 using maps, as usual.
+
+- maps that represent structs are now keyed by integers.
+
+- Rather than have string keys
+
+- these integers are associated with a field name and type in a (separable) schema.
+
+- The schema is also defined and encoded in msgpack2.
+
+
+* zebrapack: the main idea
+
+.code structdef
+
+* zebrapack: the main idea 2
+
+.code transform
+
+* Result
+
+- resulting binary encoding is very similar in style to protobufs/Thrift/Capn'Proto.
+
+- However it is much more friendly to other (dynamic) languages.
+
+- Also it is screaming fast.
+
+* Benchmarking Reads
+
+.code readperf
+
+* Benchmarking Writes
+
+.code writeperf
+
+* Advantages and advances: pulling the best ideas from other formats
+
+- Once we have a schema, we can be very strongly typed, and be very efficient.
+
+- We borrow the idea of field deprecation from FlatBuffers
+
+- For conflicting update detection, we use CapnProto's field numbering discipline
+
+- support for the `omitempty` tag
+
+- in ZebraPack, all fields are `omitempty`
+
+- If they are empty they won't be serialized on the wire. Like FlatBuffers and Protobufs, this enables one to define a very large schema of possibilities, and then only transmit a very small (efficient) portion that is currently relevant over the wire.
+
+* Credit
+
+Full credit: the ZebraPack code  descends from the fantastic msgpack2 code generator https://github.com/tinylib/msgp by Philip Hofer.
+
+
+* Schema Rationale
+
+While not always necessary, a schema provides
+many benefits, both for coordinating between
+people and for machine performance.
+
+* Stronger typing: readers know what is expected, in
+both type and size of the data delivered. Writers
+know what they should be writing.
+
+* Performance and compression: replacing struct/map
+field names with numbers provides immediate space
+savings and compression.
+
+* Conflict resolution: the Cap'nProto numbering and
+update conflict resolution method is used here.
+This method originated in the ProtocolBuffers
+scheme, and was enhanced after experience in
+Cap'nProto. How it works: Additions are always
+made by incrementing by one the largest number available
+prior to the addition. No gaps in numbering are
+allowed, and no numbers are ever deleted.
+To get the effect of deletion, add the `deprecated` value
+in `msg` tag. This is an effective tombstone.
+It allows the tools to help detect
+merge conflicts as soon as possible. If
+two people try to merge schemas where the same
+struct or field number is re-used, a
+schema compiler can automatically detect
+this update conflict, and flag the human
+to resolve the conflict before proceeding.
+
+* All fields optional. Just as in msgpack2,
+Cap'nProto, Gobs, and Flatbuffers, all fields
+are optional. Most everyone, after experience
+and time with ProtocolBuffers, has come to the
+conclusion that required fields are a misfeature
+that hurt the ability to evolve data gracefully
+and maintain efficiency.
+
+* Design:
+
+- Schema language: the schema language for
+defining structs is identical to the Go
+language. Go is expressive and yet easily parsed
+by the standard library packages included
+with Go itself. There are already
+high-performance msgpack2 libraries available
+for go, https://github.com/tinylib/msgp and
+https://github.com/ugorji/go which
+make schema compilation easy.
+
+- Schema serialization: schemas are serialized using the msgpack2 encoding.
+
+- Requirement: zerbapack requires that the msgpack2 standard
+be adhered to. Strings and raw binary byte arrays
+are distinct, and must be marked distinctly; msgpack1 encoding is
+not allowed.
+
+- All language bindings must respect the declared type in
+the ZebraPack schema when writing data. For example,
+this means that signed and unsigned declarations
+must be respected.
+
+
+
+
+* deprecating fields
+
+.code depra1
+
+* deprecating fields II
+
+.code depra2
+
+* Safety rules during data evolution
+
+- Rules for safe data changes: To preserve forwards/backwards compatible changes, you must *never remove a field* from a struct, once that field has been defined and used.
+
+- In the example above, the `zid:"4"` tag must stay in place, to prevent someone else from ever using 4 again.
+
+- This allows sane data forward evolution, without tears, fears, or crashing of servers.
+
+- The fact that `struct{}` fields take up no space also means that there is no need to worry about loss of performance when deprecating.
+
+- We retain all fields ever used for their zebra ids, and the compiled Go code wastes no extra space for the deprecated fields.
+
+* schema details
+
+- Precisely defined format
+
+- see the repo for examples and details.
+
+- https://github.com/glycerine/zebrapack
+
+*  `zebrapack -msgp` as a msgpack2 code-generator
+
+* `msg:",omitempty"` tags on struct fields
+
+If you're using `zebrapack -msgp` to generate msgpack2 serialization code, then you can use the `omitempty` tag on your struct fields.
+
+In the following example,
+
+type Hedgehog struct {
+   Furriness string `msg:",omitempty"`
+}
+
+If Furriness is the empty string, the field will not be serialized, thus saving the space of the field name on the wire.
+
+
+
+* It is safe to re-use structs even with `omitempty`
+
+
+* `addzid` utility
+
+The `addzid` utility (in the cmd/addzid subdir) can help you
+get started. Running `addzid mysource.go` on a .go source file
+will add the `zid:"0"`... fields automatically. This makes adding ZebraPack
+serialization to existing Go projects easy.
+
+See https://github.com/glycerine/zebrapack/blob/master/cmd/addzid/README.md
+for more detail.
