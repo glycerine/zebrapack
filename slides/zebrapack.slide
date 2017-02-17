@@ -9,11 +9,13 @@ j.e.aten@gmail.com
 
 - a data description language and serialization format. Like Gobs version 2.0.
 
-- remove gray areas from the language bininds. Provides for declared schemas, sane data evolution, and more compact encoding.
+- remove gray areas from the language bindings. Provides for declared schemas, sane data evolution, and more compact encoding.
 
 - maintain easy compatibility with all the dynamic languages that already have msgpack2 support.
 
 - a day's work to adapt an existing language binding to read zebrapack: the schema are in msgpack2, and then one simply keeps a hashmap to translate between small integer <-> field names/type.
+
+- MIT licensed. https://github.com/glycerine/zebrapack
 
 * zebrapack: the main idea
 
@@ -181,7 +183,10 @@ for more detail.
 - microschema
 
 - handle cycles in an object graph, by detecting
-  cycyles and encoding pointers as object IDs.
+  (large) repeated references and encoding pointers as object IDs.
 
-- your idea here
+- your idea here.
+
+- (One idea from meetup: optional bitmap to designate set/unset field, as in flatbuffers).
+
 
