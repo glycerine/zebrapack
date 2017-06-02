@@ -603,6 +603,12 @@ func (x *Extractor) GenZidTag(f *Field) string {
 		//p("has current zid tag, returning early")
 		return curTag
 	}
+
+	if hasMsgDashTag(curTag) {
+		//p("has current msg:\"-\" tag, returning early")
+		return curTag
+	}
+
 	//p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
 	// else add one
 	addme := fmt.Sprintf(`zid:"%d"`, f.finalOrder)
@@ -614,6 +620,14 @@ func (x *Extractor) GenZidTag(f *Field) string {
 
 func hasZidTag(s string) bool {
 	return strings.Contains(s, "zid")
+}
+
+// does it have msp:"-" as a tag?
+var reUnserz = regexp.MustCompile("`\\s*msg:\\s*\"-\"\\s*`")
+
+// does it have msp:"-" as a tag?
+func hasMsgDashTag(s string) bool {
+	return reUnserz.MatchString(s)
 }
 
 func stripBackticks(s string) string {
@@ -886,8 +900,8 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 		x.srcFiles = append(x.srcFiles, &SrcFile{filename: fname, fset: fset, astFile: f})
 	}
 
-	//VPrintf("parsed output f.Decls is:\n")
-	//VPrintf("len(f.Decls) = %d\n", len(f.Decls))
+	VPrintf("parsed output f.Decls is:\n")
+	VPrintf("len(f.Decls) = %d\n", len(f.Decls))
 
 	for _, v := range f.Decls {
 		switch v.(type) {
@@ -896,7 +910,7 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 			//VPrintf("dump of d, an %#v = \n", ty)
 			//goon.Dump(d)
 
-			//VPrintf("\n\n\n  detail dump of d.Specs\n")
+			VPrintf("\n\n\n  detail dump of d.Specs\n")
 			for _, spe := range d.Specs {
 				switch spe.(type) {
 				case (*ast.TypeSpec):
@@ -909,7 +923,7 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 					}
 
 					typeSpec := spe.(*ast.TypeSpec)
-					//VPrintf("\n\n *ast.TypeSpec spe = \n")
+					VPrintf("\n\n *ast.TypeSpec spe = \n")
 
 					if typeSpec.Name.Obj.Kind == ast.Typ {
 
@@ -919,13 +933,13 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 							curStructName := typeSpec.Name.Name
 							ts2 := typeSpec.Name.Obj.Decl.(*ast.TypeSpec)
 
-							//VPrintf("\n\n  in ts2 = %#v\n", ts2)
+							VPrintf("\n\n  in ts2 = %#v\n", ts2)
 							//goon.Dump(ts2)
 
 							switch ty := ts2.Type.(type) {
 							default:
 								// *ast.InterfaceType and *ast.Ident end up here.
-								//VPrintf("\n\n unrecog type ty = %#v\n", ty)
+								VPrintf("\n\n unrecog type ty = %#v\n", ty)
 							case (*ast.Ident):
 								goNewTypeName := ts2.Name.Obj.Name
 								goTargetTypeName := ty.Name
@@ -938,13 +952,13 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 								if err != nil {
 									return []byte{}, err
 								}
-								//VPrintf("\n\n stru = %#v\n", stru)
+								VPrintf("\n\n stru = %#v\n", stru)
 								//goon.Dump(stru)
 
 								if stru.Fields != nil {
 									for _, fld := range stru.Fields.List {
 										if fld != nil {
-											//VPrintf("\n\n    fld.Names = %#v\n", fld.Names) // looking for
+											VPrintf("\n\n    fld.Names = %#v\n", fld.Names) // looking for
 											//goon.Dump(fld.Names)
 
 											if len(fld.Names) == 0 {
@@ -970,11 +984,11 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 														// named field
 														fld2 := ident.Obj.Decl.(*ast.Field)
 
-														//VPrintf("\n\n    fld2 = %#v\n", fld2)
+														VPrintf("\n\n    fld2 = %#v\n", fld2)
 														//goon.Dump(fld2)
 
 														typeNamePrefix, ident4, gotypeseq := GetTypeAsString(fld2.Type, "", []string{})
-														//VPrintf("\n\n tnas = %#v, ident4 = %s\n", typeNamePrefix, ident4)
+														VPrintf("\n\n tnas = %#v, ident4 = %s\n", typeNamePrefix, ident4)
 
 														err = x.GenerateStructField(ident.Name, typeNamePrefix, ident4, fld2, IsSlice(typeNamePrefix), fld2.Tag, NotEmbedded, gotypeseq)
 														if err != nil {
@@ -988,11 +1002,11 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 									}
 								}
 
-								//VPrintf("} // end of %s \n\n", typeSpec.Name) // prod
+								VPrintf("} // end of %s \n\n", typeSpec.Name) // prod
 								x.EndStruct()
 
 								//goon.Dump(stru)
-								//VPrintf("\n =========== end stru =======\n\n\n")
+								VPrintf("\n =========== end stru =======\n\n\n")
 							}
 						}
 					}
@@ -1011,7 +1025,7 @@ func IsSlice(tnas string) bool {
 
 func (x *Extractor) NoteTypedef(goNewTypeName string, goTargetTypeName string) {
 	// we just want to preserve the mapping, without adding Capn suffix
-	//VPrintf("\n\n noting typedef: goNewTypeName: '%s', goTargetTypeName: '%s'\n", goNewTypeName, goTargetTypeName)
+	VPrintf("\n\n noting typedef: goNewTypeName: '%s', goTargetTypeName: '%s'\n", goNewTypeName, goTargetTypeName)
 	var capTypeSeq []string
 	capTypeSeq, x.goType2capTypeCache[goNewTypeName] = x.GoTypeToCapnpType(nil, []string{goTargetTypeName})
 	VPrintf("\n\n 888 noting typedef: goNewTypeName: '%s', goTargetTypeName: '%s'   x.goType2capTypeCache[goNewTypeName]: '%v'  capTypeSeq: '%v'\n", goNewTypeName, goTargetTypeName, x.goType2capTypeCache[goNewTypeName], capTypeSeq)
@@ -1031,7 +1045,7 @@ func (x *Extractor) StartStruct(goName string) error {
 	capname := GoType2CapnType(goName)
 	x.goType2capTypeCache[goName] = capname
 
-	//VPrintf("\n\n debug 777 setting x.goType2capTypeCache['%s'] = '%s'\n", goName, capname)
+	VPrintf("\n\n debug 777 setting x.goType2capTypeCache['%s'] = '%s'\n", goName, capname)
 
 	x.capType2goType[capname] = goName
 
@@ -1112,7 +1126,7 @@ func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix st
 		return nil
 	}
 
-	//VPrintf("\n\n\n GenerateStructField called with goFieldName = '%s', goFieldTypeName = '%s', astfld = %#v, tag = %#v\n\n", goFieldName, goFieldTypeName, astfld, tag)
+	VPrintf("\n\n\n GenerateStructField called with goFieldName = '%s', goFieldTypeName = '%s', astfld = %#v, tag = %#v\n\n", goFieldName, goFieldTypeName, astfld, tag)
 
 	// if we are ignoring private (lowercase first letter) fields, then stop here.
 	if !IsEmbedded {
