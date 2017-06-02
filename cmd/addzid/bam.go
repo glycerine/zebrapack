@@ -15,8 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
-
-	"github.com/shurcooL/go-goon"
+	//"github.com/shurcooL/go-goon"
 )
 
 type Extractor struct {
@@ -601,10 +600,10 @@ func (x *Extractor) GenZidTag(f *Field) string {
 	curTag := f.astField.Tag.Value
 
 	if hasZidTag(curTag) {
-		p("has current zid tag, returning early")
+		//p("has current zid tag, returning early")
 		return curTag
 	}
-	p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
+	//p("no `zid` tag found, adding a `zid` tag... for f = %#v\n", f)
 	// else add one
 	addme := fmt.Sprintf(`zid:"%d"`, f.finalOrder)
 	if curTag == "" || curTag == "``" {
@@ -887,15 +886,15 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 		x.srcFiles = append(x.srcFiles, &SrcFile{filename: fname, fset: fset, astFile: f})
 	}
 
-	VPrintf("parsed output f.Decls is:\n")
-	VPrintf("len(f.Decls) = %d\n", len(f.Decls))
+	//VPrintf("parsed output f.Decls is:\n")
+	//VPrintf("len(f.Decls) = %d\n", len(f.Decls))
 
 	for _, v := range f.Decls {
-		switch ty := v.(type) {
+		switch v.(type) {
 		case *ast.GenDecl:
 			d := v.(*ast.GenDecl)
-			VPrintf("dump of d, an %#v = \n", ty)
-			goon.Dump(d)
+			//VPrintf("dump of d, an %#v = \n", ty)
+			//goon.Dump(d)
 
 			//VPrintf("\n\n\n  detail dump of d.Specs\n")
 			for _, spe := range d.Specs {
@@ -939,14 +938,14 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 								if err != nil {
 									return []byte{}, err
 								}
-								VPrintf("\n\n stru = %#v\n", stru)
-								goon.Dump(stru)
+								//VPrintf("\n\n stru = %#v\n", stru)
+								//goon.Dump(stru)
 
 								if stru.Fields != nil {
 									for _, fld := range stru.Fields.List {
 										if fld != nil {
-											VPrintf("\n\n    fld.Names = %#v\n", fld.Names) // looking for
-											goon.Dump(fld.Names)
+											//VPrintf("\n\n    fld.Names = %#v\n", fld.Names) // looking for
+											//goon.Dump(fld.Names)
 
 											if len(fld.Names) == 0 {
 												// field without name: embedded/anonymous struct
@@ -971,11 +970,11 @@ func (x *Extractor) ExtractStructsFromOneFile(src interface{}, fname string) ([]
 														// named field
 														fld2 := ident.Obj.Decl.(*ast.Field)
 
-														VPrintf("\n\n    fld2 = %#v\n", fld2)
-														goon.Dump(fld2)
+														//VPrintf("\n\n    fld2 = %#v\n", fld2)
+														//goon.Dump(fld2)
 
 														typeNamePrefix, ident4, gotypeseq := GetTypeAsString(fld2.Type, "", []string{})
-														VPrintf("\n\n tnas = %#v, ident4 = %s\n", typeNamePrefix, ident4)
+														//VPrintf("\n\n tnas = %#v, ident4 = %s\n", typeNamePrefix, ident4)
 
 														err = x.GenerateStructField(ident.Name, typeNamePrefix, ident4, fld2, IsSlice(typeNamePrefix), fld2.Tag, NotEmbedded, gotypeseq)
 														if err != nil {
@@ -1032,7 +1031,7 @@ func (x *Extractor) StartStruct(goName string) error {
 	capname := GoType2CapnType(goName)
 	x.goType2capTypeCache[goName] = capname
 
-	VPrintf("\n\n debug 777 setting x.goType2capTypeCache['%s'] = '%s'\n", goName, capname)
+	//VPrintf("\n\n debug 777 setting x.goType2capTypeCache['%s'] = '%s'\n", goName, capname)
 
 	x.capType2goType[capname] = goName
 
@@ -1113,7 +1112,7 @@ func (x *Extractor) GenerateStructField(goFieldName string, goFieldTypePrefix st
 		return nil
 	}
 
-	VPrintf("\n\n\n GenerateStructField called with goFieldName = '%s', goFieldTypeName = '%s', astfld = %#v, tag = %#v\n\n", goFieldName, goFieldTypeName, astfld, tag)
+	//VPrintf("\n\n\n GenerateStructField called with goFieldName = '%s', goFieldTypeName = '%s', astfld = %#v, tag = %#v\n\n", goFieldName, goFieldTypeName, astfld, tag)
 
 	// if we are ignoring private (lowercase first letter) fields, then stop here.
 	if !IsEmbedded {
@@ -1633,7 +1632,7 @@ func ExtractStringAddZid(src string) string {
 		panic(err)
 	}
 
-	goon.Dump(x.srs)
+	//goon.Dump(x.srs)
 
 	x.SetFinalFieldOrder()
 

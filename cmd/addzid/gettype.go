@@ -7,7 +7,7 @@ import (
 
 // recursively extract the go type as a string
 func GetTypeAsString(ty ast.Expr, sofar string, goTypeSeq []string) (string, string, []string) {
-	p("debug: in GetTypeAsSTring, ty = %#v", ty)
+	//p("debug: in GetTypeAsSTring, ty = %#v", ty)
 	switch x := ty.(type) {
 
 	case (*ast.StarExpr):
@@ -26,13 +26,13 @@ func GetTypeAsString(ty ast.Expr, sofar string, goTypeSeq []string) (string, str
 			return sofar, ident.Name + "." + x.Sel.Name, goTypeSeq
 		}
 	case (*ast.MapType):
-		p("debug: MapType case! x.Key=%#v, x.Value=%#v", x.Key, x.Value)
+		//p("debug: MapType case! x.Key=%#v, x.Value=%#v", x.Key, x.Value)
 
 		_, k, _ := GetTypeAsString(x.Key, "", []string{})
 		_, v, _ := GetTypeAsString(x.Value, "", []string{})
 
 		m := fmt.Sprintf("map[%s]%s", k, v)
-		p("debug: constructing m='%s' from k='%s', v='%s'", m, k, v)
+		//p("debug: constructing m='%s' from k='%s', v='%s'", m, k, v)
 		return sofar, m, goTypeSeq
 	}
 
