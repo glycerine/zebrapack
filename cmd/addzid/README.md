@@ -57,5 +57,5 @@ TODO
 ----
 cleanup internals: `addzid` was adapted from `bambam`, an earlier tool for generating CapnProto schema from Go files. Much vestigial code could be deleted as it isn't needed for `addzid`'s purposes.
 
-Copyright (c) 2016, Jason E. Aten, Ph.D.
+Copyright (c) 2016, 2017 Jason E. Aten, Ph.D.
 

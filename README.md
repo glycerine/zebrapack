@@ -499,7 +499,7 @@ for more detail.
 notices
 -------
 
-Copyright (c) 2016, Jason E. Aten, Ph.D.
+Copyright (c) 2016, 2017 Jason E. Aten, Ph.D.
 
 LICENSE: MIT. See https://github.com/glycerine/zebrapack/blob/master/LICENSE
 
