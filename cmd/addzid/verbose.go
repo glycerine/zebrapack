@@ -6,7 +6,7 @@ import (
 )
 
 // for debug output
-var Verbose bool
+var Verbose bool = true
 
 // get timestamp for logging purposes
 func ts() string {
@@ -22,7 +22,7 @@ func TSPrintf(format string, a ...interface{}) {
 // print debug/status conditionally on having Verbose on
 func VPrintf(format string, a ...interface{}) {
 	if Verbose {
-		TSPrintf(format, a...)
+		TSPrintf("\n'"+format+"'\n", a...)
 	}
 }
 

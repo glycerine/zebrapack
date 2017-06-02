@@ -8,8 +8,8 @@ import (
 
 func Test910MapAddZid(t *testing.T) {
 
-	cv.Convey("Given a struct with a map[string]bool, addzid should add a zid to the map", t, func() {
-		cv.Convey("then addzid should add a zid for both the time.Time and the int field.", func() {
+	cv.Convey("Given a struct with a map[string]bool, ", t, func() {
+		cv.Convey("then addzid should add a zid for the map field.", func() {
 			in1 := "type HasMap struct {Jobid map[string]bool }"
 			ex1 := "package main type HasMap struct { Jobid map[string]bool `zid:\"0\"`}"
 			added := ExtractStringAddZid(in1)
