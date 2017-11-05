@@ -28,7 +28,11 @@ func TestReadIntf(t *testing.T) {
 		float32(9082.092),
 		int64(-40),
 		uint64(9082981),
-		time.Now(),
+		// We can't, without alot of difficulty, restore the monotone clock, and
+		// its not clear that even makes sense when deserializing on a different
+		// machine. So avoid test failing by stripping out the monotone clock part.
+		// That is what Truncate(0) will do here.
+		time.Now().Truncate(0),
 		"hello!",
 		[]byte("hello!"),
 		map[string]interface{}{
@@ -635,7 +639,7 @@ func TestTime(t *testing.T) {
 	}
 
 	// check for time.Local zone
-	if now != out {
+	if now.Truncate(0) != out {
 		t.Error("returned time.Time not set to time.Local")
 	}
 }

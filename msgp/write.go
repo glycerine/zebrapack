@@ -592,7 +592,7 @@ func (mw *Writer) WriteMapStrIntf(mp map[string]interface{}) (err error) {
 // heavily on the internal representation used by the
 // time package.)
 func (mw *Writer) WriteTime(t time.Time) error {
-	t = t.UTC()
+	t = t.UTC().Truncate(0) // strip out monotone clock
 	o, err := mw.require(15)
 	if err != nil {
 		return err
