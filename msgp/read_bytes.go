@@ -978,7 +978,7 @@ func (nbs *NilBitsStack) ReadStringBytes(b []byte) (string, []byte, error) {
 		return "", b[1:], nil
 	}
 	v, o, err := nbs.ReadStringZC(b)
-	if nbs != nil && nbs.UnsafeZeroCopy {
+	if err != nil && len(v) > 0 && nbs != nil && nbs.UnsafeZeroCopy {
 		return UnsafeString(v), o, err
 	}
 	return string(v), o, err
