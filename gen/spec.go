@@ -375,7 +375,7 @@ func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner E
 			    }
 		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
 		p.printf(`
-                %s[%s] = %s
+                %s[%s] = target_%s
                 continue
               }
         `, iter, idx, target)
@@ -409,7 +409,7 @@ func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inne
 			    }
 		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
 		p.printf(`
-                %s[%s] = %s
+                %s[%s] = target_%s
                 continue
               }
         `, iter, idx, target)
