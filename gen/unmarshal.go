@@ -234,7 +234,7 @@ func (u *unmarshalGen) gArray(a *Array) {
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.arrayCheck(a.SizeResolved, sz, "!nbs.IsNil(bts) && ")
-	u.p.rangeBlock(a.Index, a.Varname(), u, a.Els)
+	u.p.unmarshalRangeBlock(a.Index, a.Varname(), u, a.Els)
 }
 
 func (u *unmarshalGen) gSlice(s *Slice) {

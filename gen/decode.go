@@ -320,7 +320,7 @@ func (d *decodeGen) gSlice(s *Slice) {
 	d.p.declare(sz, u32)
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.resizeSlice(sz, s)
-	d.p.rangeBlock(s.Index, s.Varname(), d, s.Els)
+	d.p.decodeRangeBlock(s.Index, s.Varname(), d, s.Els)
 }
 
 func (d *decodeGen) gArray(a *Array) {
