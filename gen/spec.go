@@ -354,8 +354,34 @@ func (p *printer) closeblock() { p.print("\n}") }
 // }
 //
 func (p *printer) rangeBlock(idx string, iter string, t traversal, inner Elem) {
-	p.printf("\n for %s := range %s {", idx, iter)
-	next(t, inner)
+	if inner.IsInterface() {
+		target, concreteName := randIdent(), randIdent()
+		cfac := randIdent()
+		p.printf(`
+		// NB: we have a slice of interfaces, so we need to
+		//  fill target with the concrete implementation
+		//  before trying to DecodeMsg into it.
+		concreteName_%s := dc.NextStructName()
+        `, concreteName)
+
+		p.printf("\n for %s := range %s {\n", idx, iter)
+		p.printf("target_%s :=  %s[%s]\n", target, iter, idx)
+		p.printf(`if concreteName_%s != "" {
+				if cfac_%s, cfac_%s_OK := interface{}(z).(msgp.ConcreteFactory); cfac_%s_OK {
+					target_%s = cfac_%s.NewValueAsInterface(concreteName_%s)
+				}
+  			    err = target_%s.DecodeMsg(dc)
+			    if err != nil {
+				    return
+			    }
+                continue
+              }
+		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, target)
+		next(t, inner)
+	} else {
+		p.printf("\n for %s := range %s {", idx, iter)
+		next(t, inner)
+	}
 	p.closeblock()
 }
 

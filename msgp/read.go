@@ -34,6 +34,10 @@ type PostLoad interface {
 	PostLoadHook()
 }
 
+type ConcreteFactory interface {
+	NewValueAsInterface(typename string) interface{}
+}
+
 // where we keep old *Readers
 var readerPool = sync.Pool{New: func() interface{} { return &Reader{} }}
 
