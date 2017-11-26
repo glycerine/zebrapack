@@ -1339,3 +1339,62 @@ func getSize(b []byte) (uintptr, uintptr, error) {
 		return 0, 0, fatal
 	}
 }
+
+// NextTypeName inspects the next time, assuming it is a
+// struct (map) for its (-1: name) key-value pair, and returns the name
+// or empty string if not found. Also empty string if not
+// a map type.
+func (nbs *NilBitsStack) NextStructName(o []byte) string {
+	ty := NextType(o)
+	if ty != MapType {
+		return ""
+	}
+	if len(o) < 3 {
+		return ""
+	}
+	skip := 3
+	p := o[:skip]
+	if p[1] != 0xff {
+		return "" // not the -1 struct name
+	}
+	lead := p[2]
+	var read int
+	if isfixstr(lead) {
+		// lead is a fixstr, good
+		read = int(rfixstr(lead))
+	} else {
+		switch lead {
+		case mstr8, mbin8:
+			if len(o) < 4 {
+				return ""
+			}
+			skip = 4
+			p = o[:skip]
+			read = int(p[3])
+		case mstr16, mbin16:
+			if len(o) < 5 {
+				return ""
+			}
+			skip = 5
+			p = o[:skip]
+			read = int(big.Uint16(p[3:]))
+		case mstr32, mbin32:
+			if len(o) < 7 {
+				return ""
+			}
+			skip = 7
+			p = o[:skip]
+			read = int(big.Uint32(p[3:]))
+		default:
+			return "" // not a string
+		}
+	}
+	// read string strictly through peaking!
+	if read == 0 {
+		return ""
+	}
+	if len(o) < skip+read {
+		return ""
+	}
+	return string(p[skip : skip+read])
+}

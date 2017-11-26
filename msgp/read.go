@@ -248,7 +248,7 @@ func (m *Reader) Buffered() int { return m.R.Buffered() }
 // BufferSize returns the capacity of the read buffer.
 func (m *Reader) BufferSize() int { return m.R.BufferSize() }
 
-// NextTypeName inspects the next time, assuming it is a
+// NextStructName inspects the next time, assuming it is a
 // struct (map) for its (-1: name) key-value pair, and returns the name
 // or empty string if not found. Also empty string if not
 // a map type.
@@ -260,7 +260,8 @@ func (m *Reader) NextStructName() string {
 	if ty != MapType {
 		return ""
 	}
-	p, err := m.R.Peek(3)
+	skip := 3
+	p, err := m.R.Peek(skip)
 	if err != nil {
 		return ""
 	}
@@ -275,19 +276,22 @@ func (m *Reader) NextStructName() string {
 	} else {
 		switch lead {
 		case mstr8, mbin8:
-			p, err = m.R.Peek(4)
+			skip = 4
+			p, err = m.R.Peek(skip)
 			if err != nil {
 				return ""
 			}
 			read = int(p[3])
 		case mstr16, mbin16:
-			p, err = m.R.Peek(5)
+			skip = 5
+			p, err = m.R.Peek(skip)
 			if err != nil {
 				return ""
 			}
 			read = int(big.Uint16(p[3:]))
 		case mstr32, mbin32:
-			p, err = m.R.Peek(7)
+			skip = 7
+			p, err = m.R.Peek(skip)
 			if err != nil {
 				return ""
 			}
@@ -300,12 +304,12 @@ func (m *Reader) NextStructName() string {
 	if read == 0 {
 		return ""
 	}
-	p, err = m.R.Peek(3 + read)
+	p, err = m.R.Peek(skip + read)
 	if err != nil {
 		return ""
 	}
 
-	return string(p[3:])
+	return string(p[skip:])
 }
 
 // NextType returns the next object type to be decoded.
