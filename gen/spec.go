@@ -373,9 +373,12 @@ func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner E
 			    if err != nil {
 				    return
 			    }
+		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+		p.printf(`
+                %s[%s] = %s
                 continue
               }
-		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+        `, iter, idx, target)
 		next(t, inner)
 	} else {
 		p.printf("\n for %s := range %s {", idx, iter)
@@ -404,9 +407,13 @@ func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inne
 			    if err != nil {
 				    return
 			    }
+		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+		p.printf(`
+                %s[%s] = %s
                 continue
               }
-		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+        `, iter, idx, target)
+
 		next(t, inner)
 	} else {
 		p.printf("\n for %s := range %s {", idx, iter)

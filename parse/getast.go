@@ -594,6 +594,10 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		sf[0].FieldTag = sf[0].FieldName
 	}
 
+	//	if isIface {
+	//		fmt.Printf("\n DEBUG-ISIFACE: '%s' detected as interface\n", sf[0].FieldName)
+	//	}
+
 	// validate extension
 	if extension {
 		switch ex := ex.(type) {
