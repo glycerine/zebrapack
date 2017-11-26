@@ -320,6 +320,10 @@ func (d *decodeGen) gSlice(s *Slice) {
 	d.p.declare(sz, u32)
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.resizeSlice(sz, s)
+	if s.Els.IsInterface() {
+		fmt.Printf("\n DEBUG: we detected an interface in zebrapack/gen/decode.go: s.Els.TypeName()='%s'\n", s.Els.TypeName())
+		fmt.Printf("\n DEBUG: s.Els.GetZtype()='%#v'\n", s.Els.GetZtype())
+	}
 	d.p.rangeBlock(s.Index, s.Varname(), d, s.Els)
 }
 
