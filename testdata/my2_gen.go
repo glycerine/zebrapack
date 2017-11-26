@@ -21,149 +21,149 @@ func (z *Tr) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields0znwc = 6
+	const maxFields0zbpu = 6
 
 	// -- templateDecodeMsgZid starts here--
-	var totalEncodedFields0znwc uint32
-	totalEncodedFields0znwc, err = dc.ReadMapHeader()
+	var totalEncodedFields0zbpu uint32
+	totalEncodedFields0zbpu, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft0znwc := totalEncodedFields0znwc
-	missingFieldsLeft0znwc := maxFields0znwc - totalEncodedFields0znwc
+	encodedFieldsLeft0zbpu := totalEncodedFields0zbpu
+	missingFieldsLeft0zbpu := maxFields0zbpu - totalEncodedFields0zbpu
 
-	var nextMiss0znwc int = -1
-	var found0znwc [maxFields0znwc]bool
-	var curField0znwc int
+	var nextMiss0zbpu int = -1
+	var found0zbpu [maxFields0zbpu]bool
+	var curField0zbpu int
 
-doneWithStruct0znwc:
+doneWithStruct0zbpu:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft0znwc > 0 || missingFieldsLeft0znwc > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft0znwc, missingFieldsLeft0znwc, msgp.ShowFound(found0znwc[:]), decodeMsgFieldOrder0znwc)
-		if encodedFieldsLeft0znwc > 0 {
-			encodedFieldsLeft0znwc--
-			curField0znwc, err = dc.ReadInt()
+	for encodedFieldsLeft0zbpu > 0 || missingFieldsLeft0zbpu > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft0zbpu, missingFieldsLeft0zbpu, msgp.ShowFound(found0zbpu[:]), decodeMsgFieldOrder0zbpu)
+		if encodedFieldsLeft0zbpu > 0 {
+			encodedFieldsLeft0zbpu--
+			curField0zbpu, err = dc.ReadInt()
 			if err != nil {
 				return
 			}
 		} else {
 			//missing fields need handling
-			if nextMiss0znwc < 0 {
+			if nextMiss0zbpu < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss0znwc = 0
+				nextMiss0zbpu = 0
 			}
-			for nextMiss0znwc < maxFields0znwc && (found0znwc[nextMiss0znwc] || decodeMsgFieldSkip0znwc[nextMiss0znwc]) {
-				nextMiss0znwc++
+			for nextMiss0zbpu < maxFields0zbpu && (found0zbpu[nextMiss0zbpu] || decodeMsgFieldSkip0zbpu[nextMiss0zbpu]) {
+				nextMiss0zbpu++
 			}
-			if nextMiss0znwc == maxFields0znwc {
+			if nextMiss0zbpu == maxFields0zbpu {
 				// filled all the empty fields!
-				break doneWithStruct0znwc
+				break doneWithStruct0zbpu
 			}
-			missingFieldsLeft0znwc--
-			curField0znwc = nextMiss0znwc
+			missingFieldsLeft0zbpu--
+			curField0zbpu = nextMiss0zbpu
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField0znwc)
-		switch curField0znwc {
+		//fmt.Printf("switching on curField: '%v'\n", curField0zbpu)
+		switch curField0zbpu {
 		// -- templateDecodeMsgZid ends here --
 
 		case 0:
 			// zid 0 for "U"
-			found0znwc[0] = true
+			found0zbpu[0] = true
 			z.U, err = dc.ReadString()
 			if err != nil {
 				return
 			}
 		case 1:
 			// zid 1 for "Nt"
-			found0znwc[2] = true
+			found0zbpu[2] = true
 			z.Nt, err = dc.ReadInt()
 			if err != nil {
 				return
 			}
 		case 2:
 			// zid 2 for "Snot"
-			found0znwc[3] = true
-			var zpzl uint32
-			zpzl, err = dc.ReadMapHeader()
+			found0zbpu[3] = true
+			var zimg uint32
+			zimg, err = dc.ReadMapHeader()
 			if err != nil {
 				return
 			}
-			if z.Snot == nil && zpzl > 0 {
-				z.Snot = make(map[string]bool, zpzl)
+			if z.Snot == nil && zimg > 0 {
+				z.Snot = make(map[string]bool, zimg)
 			} else if len(z.Snot) > 0 {
 				for key, _ := range z.Snot {
 					delete(z.Snot, key)
 				}
 			}
-			for zpzl > 0 {
-				zpzl--
-				var zbwr string
-				var zqds bool
-				zbwr, err = dc.ReadString()
+			for zimg > 0 {
+				zimg--
+				var zzmn string
+				var zbep bool
+				zzmn, err = dc.ReadString()
 				if err != nil {
 					return
 				}
-				zqds, err = dc.ReadBool()
+				zbep, err = dc.ReadBool()
 				if err != nil {
 					return
 				}
-				z.Snot[zbwr] = zqds
+				z.Snot[zzmn] = zbep
 			}
 		case 3:
 			// zid 3 for "Notyet"
-			found0znwc[4] = true
-			var zxdg uint32
-			zxdg, err = dc.ReadMapHeader()
+			found0zbpu[4] = true
+			var zvnz uint32
+			zvnz, err = dc.ReadMapHeader()
 			if err != nil {
 				return
 			}
-			if z.Notyet == nil && zxdg > 0 {
-				z.Notyet = make(map[string]bool, zxdg)
+			if z.Notyet == nil && zvnz > 0 {
+				z.Notyet = make(map[string]bool, zvnz)
 			} else if len(z.Notyet) > 0 {
 				for key, _ := range z.Notyet {
 					delete(z.Notyet, key)
 				}
 			}
-			for zxdg > 0 {
-				zxdg--
-				var ztcv string
-				var zkjt bool
-				ztcv, err = dc.ReadString()
+			for zvnz > 0 {
+				zvnz--
+				var zxzu string
+				var ztfv bool
+				zxzu, err = dc.ReadString()
 				if err != nil {
 					return
 				}
-				zkjt, err = dc.ReadBool()
+				ztfv, err = dc.ReadBool()
 				if err != nil {
 					return
 				}
-				z.Notyet[ztcv] = zkjt
+				z.Notyet[zxzu] = ztfv
 			}
 		case 4:
 			// zid 4 for "Setm"
-			found0znwc[5] = true
-			var znvk uint32
-			znvk, err = dc.ReadArrayHeader()
+			found0zbpu[5] = true
+			var zrmf uint32
+			zrmf, err = dc.ReadArrayHeader()
 			if err != nil {
 				return
 			}
-			if cap(z.Setm) >= int(znvk) {
-				z.Setm = (z.Setm)[:znvk]
+			if cap(z.Setm) >= int(zrmf) {
+				z.Setm = (z.Setm)[:zrmf]
 			} else {
-				z.Setm = make([]*inn, znvk)
+				z.Setm = make([]*inn, zrmf)
 			}
-			for zzji := range z.Setm {
+			for zlct := range z.Setm {
 				if dc.IsNil() {
 					err = dc.ReadNil()
 					if err != nil {
 						return
 					}
 
-					if z.Setm[zzji] != nil {
+					if z.Setm[zlct] != nil {
 						dc.PushAlwaysNil()
-						err = z.Setm[zzji].DecodeMsg(dc)
+						err = z.Setm[zlct].DecodeMsg(dc)
 						if err != nil {
 							return
 						}
@@ -172,10 +172,10 @@ doneWithStruct0znwc:
 				} else {
 					// not Nil, we have something to read
 
-					if z.Setm[zzji] == nil {
-						z.Setm[zzji] = new(inn)
+					if z.Setm[zlct] == nil {
+						z.Setm[zlct] = new(inn)
 					}
-					err = z.Setm[zzji].DecodeMsg(dc)
+					err = z.Setm[zlct].DecodeMsg(dc)
 					if err != nil {
 						return
 					}
@@ -188,7 +188,7 @@ doneWithStruct0znwc:
 			}
 		}
 	}
-	if nextMiss0znwc != -1 {
+	if nextMiss0zbpu != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -204,9 +204,9 @@ doneWithStruct0znwc:
 }
 
 // fields of Tr
-var decodeMsgFieldOrder0znwc = []string{"U", "-", "Nt", "Snot", "Notyet", "Setm"}
+var decodeMsgFieldOrder0zbpu = []string{"U", "-", "Nt", "Snot", "Notyet", "Setm"}
 
-var decodeMsgFieldSkip0znwc = []bool{false, true, false, false, false, false}
+var decodeMsgFieldSkip0zbpu = []bool{false, true, false, false, false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *Tr) fieldsNotEmpty(isempty []bool) uint32 {
@@ -245,16 +245,16 @@ func (z *Tr) EncodeMsg(en *msgp.Writer) (err error) {
 	}
 
 	// honor the omitempty tags
-	var empty_zuqr [6]bool
-	fieldsInUse_zgof := z.fieldsNotEmpty(empty_zuqr[:])
+	var empty_ziiq [6]bool
+	fieldsInUse_zabt := z.fieldsNotEmpty(empty_ziiq[:])
 
 	// map header
-	err = en.WriteMapHeader(fieldsInUse_zgof)
+	err = en.WriteMapHeader(fieldsInUse_zabt)
 	if err != nil {
 		return err
 	}
 
-	if !empty_zuqr[0] {
+	if !empty_ziiq[0] {
 		// zid 0 for "U"
 		err = en.Append(0x0)
 		if err != nil {
@@ -266,7 +266,7 @@ func (z *Tr) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zuqr[2] {
+	if !empty_ziiq[2] {
 		// zid 1 for "Nt"
 		err = en.Append(0x1)
 		if err != nil {
@@ -278,7 +278,7 @@ func (z *Tr) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zuqr[3] {
+	if !empty_ziiq[3] {
 		// zid 2 for "Snot"
 		err = en.Append(0x2)
 		if err != nil {
@@ -288,19 +288,19 @@ func (z *Tr) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		for zbwr, zqds := range z.Snot {
-			err = en.WriteString(zbwr)
+		for zzmn, zbep := range z.Snot {
+			err = en.WriteString(zzmn)
 			if err != nil {
 				return
 			}
-			err = en.WriteBool(zqds)
+			err = en.WriteBool(zbep)
 			if err != nil {
 				return
 			}
 		}
 	}
 
-	if !empty_zuqr[4] {
+	if !empty_ziiq[4] {
 		// zid 3 for "Notyet"
 		err = en.Append(0x3)
 		if err != nil {
@@ -310,19 +310,19 @@ func (z *Tr) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		for ztcv, zkjt := range z.Notyet {
-			err = en.WriteString(ztcv)
+		for zxzu, ztfv := range z.Notyet {
+			err = en.WriteString(zxzu)
 			if err != nil {
 				return
 			}
-			err = en.WriteBool(zkjt)
+			err = en.WriteBool(ztfv)
 			if err != nil {
 				return
 			}
 		}
 	}
 
-	if !empty_zuqr[5] {
+	if !empty_ziiq[5] {
 		// zid 4 for "Setm"
 		err = en.Append(0x4)
 		if err != nil {
@@ -332,14 +332,14 @@ func (z *Tr) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		for zzji := range z.Setm {
-			if z.Setm[zzji] == nil {
+		for zlct := range z.Setm {
+			if z.Setm[zlct] == nil {
 				err = en.WriteNil()
 				if err != nil {
 					return
 				}
 			} else {
-				err = z.Setm[zzji].EncodeMsg(en)
+				err = z.Setm[zlct].EncodeMsg(en)
 				if err != nil {
 					return
 				}
@@ -379,9 +379,9 @@ func (z *Tr) MarshalMsg(b []byte) (o []byte, err error) {
 		// zid 2 for "Snot"
 		o = append(o, 0x2)
 		o = msgp.AppendMapHeader(o, uint32(len(z.Snot)))
-		for zbwr, zqds := range z.Snot {
-			o = msgp.AppendString(o, zbwr)
-			o = msgp.AppendBool(o, zqds)
+		for zzmn, zbep := range z.Snot {
+			o = msgp.AppendString(o, zzmn)
+			o = msgp.AppendBool(o, zbep)
 		}
 	}
 
@@ -389,9 +389,9 @@ func (z *Tr) MarshalMsg(b []byte) (o []byte, err error) {
 		// zid 3 for "Notyet"
 		o = append(o, 0x3)
 		o = msgp.AppendMapHeader(o, uint32(len(z.Notyet)))
-		for ztcv, zkjt := range z.Notyet {
-			o = msgp.AppendString(o, ztcv)
-			o = msgp.AppendBool(o, zkjt)
+		for zxzu, ztfv := range z.Notyet {
+			o = msgp.AppendString(o, zxzu)
+			o = msgp.AppendBool(o, ztfv)
 		}
 	}
 
@@ -399,11 +399,11 @@ func (z *Tr) MarshalMsg(b []byte) (o []byte, err error) {
 		// zid 4 for "Setm"
 		o = append(o, 0x4)
 		o = msgp.AppendArrayHeader(o, uint32(len(z.Setm)))
-		for zzji := range z.Setm {
-			if z.Setm[zzji] == nil {
+		for zlct := range z.Setm {
+			if z.Setm[zlct] == nil {
 				o = msgp.AppendNil(o)
 			} else {
-				o, err = z.Setm[zzji].MarshalMsg(o)
+				o, err = z.Setm[zlct].MarshalMsg(o)
 				if err != nil {
 					return
 				}
@@ -429,58 +429,58 @@ func (z *Tr) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []byte,
 
 	var field []byte
 	_ = field
-	const maxFields1ziyt = 6
+	const maxFields1zfgv = 6
 
 	// -- templateUnmarshalMsgZid starts here--
-	var totalEncodedFields1ziyt uint32
+	var totalEncodedFields1zfgv uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields1ziyt, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields1zfgv, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			return
 		}
 	}
-	encodedFieldsLeft1ziyt := totalEncodedFields1ziyt
-	missingFieldsLeft1ziyt := maxFields1ziyt - totalEncodedFields1ziyt
+	encodedFieldsLeft1zfgv := totalEncodedFields1zfgv
+	missingFieldsLeft1zfgv := maxFields1zfgv - totalEncodedFields1zfgv
 
-	var nextMiss1ziyt int = -1
-	var found1ziyt [maxFields1ziyt]bool
-	var curField1ziyt int
+	var nextMiss1zfgv int = -1
+	var found1zfgv [maxFields1zfgv]bool
+	var curField1zfgv int
 
-doneWithStruct1ziyt:
+doneWithStruct1zfgv:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft1ziyt > 0 || missingFieldsLeft1ziyt > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft1ziyt, missingFieldsLeft1ziyt, msgp.ShowFound(found1ziyt[:]), unmarshalMsgFieldOrder1ziyt)
-		if encodedFieldsLeft1ziyt > 0 {
-			encodedFieldsLeft1ziyt--
-			curField1ziyt, bts, err = nbs.ReadIntBytes(bts)
+	for encodedFieldsLeft1zfgv > 0 || missingFieldsLeft1zfgv > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft1zfgv, missingFieldsLeft1zfgv, msgp.ShowFound(found1zfgv[:]), unmarshalMsgFieldOrder1zfgv)
+		if encodedFieldsLeft1zfgv > 0 {
+			encodedFieldsLeft1zfgv--
+			curField1zfgv, bts, err = nbs.ReadIntBytes(bts)
 			if err != nil {
 				return
 			}
 		} else {
 			//missing fields need handling
-			if nextMiss1ziyt < 0 {
+			if nextMiss1zfgv < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss1ziyt = 0
+				nextMiss1zfgv = 0
 			}
-			for nextMiss1ziyt < maxFields1ziyt && (found1ziyt[nextMiss1ziyt] || unmarshalMsgFieldSkip1ziyt[nextMiss1ziyt]) {
-				nextMiss1ziyt++
+			for nextMiss1zfgv < maxFields1zfgv && (found1zfgv[nextMiss1zfgv] || unmarshalMsgFieldSkip1zfgv[nextMiss1zfgv]) {
+				nextMiss1zfgv++
 			}
-			if nextMiss1ziyt == maxFields1ziyt {
+			if nextMiss1zfgv == maxFields1zfgv {
 				// filled all the empty fields!
-				break doneWithStruct1ziyt
+				break doneWithStruct1zfgv
 			}
-			missingFieldsLeft1ziyt--
-			curField1ziyt = nextMiss1ziyt
+			missingFieldsLeft1zfgv--
+			curField1zfgv = nextMiss1zfgv
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField1ziyt)
-		switch curField1ziyt {
+		//fmt.Printf("switching on curField: '%v'\n", curField1zfgv)
+		switch curField1zfgv {
 		// -- templateUnmarshalMsgZid ends here --
 
 		case 0:
 			// zid 0 for "U"
-			found1ziyt[0] = true
+			found1zfgv[0] = true
 			z.U, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
@@ -488,7 +488,7 @@ doneWithStruct1ziyt:
 			}
 		case 1:
 			// zid 1 for "Nt"
-			found1ziyt[2] = true
+			found1zfgv[2] = true
 			z.Nt, bts, err = nbs.ReadIntBytes(bts)
 
 			if err != nil {
@@ -496,7 +496,7 @@ doneWithStruct1ziyt:
 			}
 		case 2:
 			// zid 2 for "Snot"
-			found1ziyt[3] = true
+			found1zfgv[3] = true
 			if nbs.AlwaysNil {
 				if len(z.Snot) > 0 {
 					for key, _ := range z.Snot {
@@ -506,37 +506,37 @@ doneWithStruct1ziyt:
 
 			} else {
 
-				var zswz uint32
-				zswz, bts, err = nbs.ReadMapHeaderBytes(bts)
+				var zrpr uint32
+				zrpr, bts, err = nbs.ReadMapHeaderBytes(bts)
 				if err != nil {
 					return
 				}
-				if z.Snot == nil && zswz > 0 {
-					z.Snot = make(map[string]bool, zswz)
+				if z.Snot == nil && zrpr > 0 {
+					z.Snot = make(map[string]bool, zrpr)
 				} else if len(z.Snot) > 0 {
 					for key, _ := range z.Snot {
 						delete(z.Snot, key)
 					}
 				}
-				for zswz > 0 {
-					var zbwr string
-					var zqds bool
-					zswz--
-					zbwr, bts, err = nbs.ReadStringBytes(bts)
+				for zrpr > 0 {
+					var zzmn string
+					var zbep bool
+					zrpr--
+					zzmn, bts, err = nbs.ReadStringBytes(bts)
 					if err != nil {
 						return
 					}
-					zqds, bts, err = nbs.ReadBoolBytes(bts)
+					zbep, bts, err = nbs.ReadBoolBytes(bts)
 
 					if err != nil {
 						return
 					}
-					z.Snot[zbwr] = zqds
+					z.Snot[zzmn] = zbep
 				}
 			}
 		case 3:
 			// zid 3 for "Notyet"
-			found1ziyt[4] = true
+			found1zfgv[4] = true
 			if nbs.AlwaysNil {
 				if len(z.Notyet) > 0 {
 					for key, _ := range z.Notyet {
@@ -546,70 +546,70 @@ doneWithStruct1ziyt:
 
 			} else {
 
-				var zrta uint32
-				zrta, bts, err = nbs.ReadMapHeaderBytes(bts)
+				var zvly uint32
+				zvly, bts, err = nbs.ReadMapHeaderBytes(bts)
 				if err != nil {
 					return
 				}
-				if z.Notyet == nil && zrta > 0 {
-					z.Notyet = make(map[string]bool, zrta)
+				if z.Notyet == nil && zvly > 0 {
+					z.Notyet = make(map[string]bool, zvly)
 				} else if len(z.Notyet) > 0 {
 					for key, _ := range z.Notyet {
 						delete(z.Notyet, key)
 					}
 				}
-				for zrta > 0 {
-					var ztcv string
-					var zkjt bool
-					zrta--
-					ztcv, bts, err = nbs.ReadStringBytes(bts)
+				for zvly > 0 {
+					var zxzu string
+					var ztfv bool
+					zvly--
+					zxzu, bts, err = nbs.ReadStringBytes(bts)
 					if err != nil {
 						return
 					}
-					zkjt, bts, err = nbs.ReadBoolBytes(bts)
+					ztfv, bts, err = nbs.ReadBoolBytes(bts)
 
 					if err != nil {
 						return
 					}
-					z.Notyet[ztcv] = zkjt
+					z.Notyet[zxzu] = ztfv
 				}
 			}
 		case 4:
 			// zid 4 for "Setm"
-			found1ziyt[5] = true
+			found1zfgv[5] = true
 			if nbs.AlwaysNil {
 				(z.Setm) = (z.Setm)[:0]
 			} else {
 
-				var zvof uint32
-				zvof, bts, err = nbs.ReadArrayHeaderBytes(bts)
+				var zkvj uint32
+				zkvj, bts, err = nbs.ReadArrayHeaderBytes(bts)
 				if err != nil {
 					return
 				}
-				if cap(z.Setm) >= int(zvof) {
-					z.Setm = (z.Setm)[:zvof]
+				if cap(z.Setm) >= int(zkvj) {
+					z.Setm = (z.Setm)[:zkvj]
 				} else {
-					z.Setm = make([]*inn, zvof)
+					z.Setm = make([]*inn, zkvj)
 				}
-				for zzji := range z.Setm {
+				for zlct := range z.Setm {
 					if nbs.AlwaysNil {
-						if z.Setm[zzji] != nil {
-							z.Setm[zzji].UnmarshalMsg(msgp.OnlyNilSlice)
+						if z.Setm[zlct] != nil {
+							z.Setm[zlct].UnmarshalMsg(msgp.OnlyNilSlice)
 						}
 					} else {
 						// not nbs.AlwaysNil
 						if msgp.IsNil(bts) {
 							bts = bts[1:]
-							if nil != z.Setm[zzji] {
-								z.Setm[zzji].UnmarshalMsg(msgp.OnlyNilSlice)
+							if nil != z.Setm[zlct] {
+								z.Setm[zlct].UnmarshalMsg(msgp.OnlyNilSlice)
 							}
 						} else {
 							// not nbs.AlwaysNil and not IsNil(bts): have something to read
 
-							if z.Setm[zzji] == nil {
-								z.Setm[zzji] = new(inn)
+							if z.Setm[zlct] == nil {
+								z.Setm[zlct] = new(inn)
 							}
-							bts, err = z.Setm[zzji].UnmarshalMsg(bts)
+							bts, err = z.Setm[zlct].UnmarshalMsg(bts)
 							if err != nil {
 								return
 							}
@@ -627,7 +627,7 @@ doneWithStruct1ziyt:
 			}
 		}
 	}
-	if nextMiss1ziyt != -1 {
+	if nextMiss1zfgv != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -643,34 +643,34 @@ doneWithStruct1ziyt:
 }
 
 // fields of Tr
-var unmarshalMsgFieldOrder1ziyt = []string{"U", "-", "Nt", "Snot", "Notyet", "Setm"}
+var unmarshalMsgFieldOrder1zfgv = []string{"U", "-", "Nt", "Snot", "Notyet", "Setm"}
 
-var unmarshalMsgFieldSkip1ziyt = []bool{false, true, false, false, false, false}
+var unmarshalMsgFieldSkip1zfgv = []bool{false, true, false, false, false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *Tr) Msgsize() (s int) {
 	s = 1 + 2 + msgp.StringPrefixSize + len(z.U) + 3 + msgp.IntSize + 5 + msgp.MapHeaderSize
 	if z.Snot != nil {
-		for zbwr, zqds := range z.Snot {
-			_ = zqds
-			_ = zbwr
-			s += msgp.StringPrefixSize + len(zbwr) + msgp.BoolSize
+		for zzmn, zbep := range z.Snot {
+			_ = zbep
+			_ = zzmn
+			s += msgp.StringPrefixSize + len(zzmn) + msgp.BoolSize
 		}
 	}
 	s += 7 + msgp.MapHeaderSize
 	if z.Notyet != nil {
-		for ztcv, zkjt := range z.Notyet {
-			_ = zkjt
-			_ = ztcv
-			s += msgp.StringPrefixSize + len(ztcv) + msgp.BoolSize
+		for zxzu, ztfv := range z.Notyet {
+			_ = ztfv
+			_ = zxzu
+			s += msgp.StringPrefixSize + len(zxzu) + msgp.BoolSize
 		}
 	}
 	s += 5 + msgp.ArrayHeaderSize
-	for zzji := range z.Setm {
-		if z.Setm[zzji] == nil {
+	for zlct := range z.Setm {
+		if z.Setm[zlct] == nil {
 			s += msgp.NilSize
 		} else {
-			s += z.Setm[zzji].Msgsize()
+			s += z.Setm[zlct].Msgsize()
 		}
 	}
 	return
@@ -691,86 +691,86 @@ func (z *inn) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields2zsjw = 2
+	const maxFields2zeyi = 2
 
 	// -- templateDecodeMsgZid starts here--
-	var totalEncodedFields2zsjw uint32
-	totalEncodedFields2zsjw, err = dc.ReadMapHeader()
+	var totalEncodedFields2zeyi uint32
+	totalEncodedFields2zeyi, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft2zsjw := totalEncodedFields2zsjw
-	missingFieldsLeft2zsjw := maxFields2zsjw - totalEncodedFields2zsjw
+	encodedFieldsLeft2zeyi := totalEncodedFields2zeyi
+	missingFieldsLeft2zeyi := maxFields2zeyi - totalEncodedFields2zeyi
 
-	var nextMiss2zsjw int = -1
-	var found2zsjw [maxFields2zsjw]bool
-	var curField2zsjw int
+	var nextMiss2zeyi int = -1
+	var found2zeyi [maxFields2zeyi]bool
+	var curField2zeyi int
 
-doneWithStruct2zsjw:
+doneWithStruct2zeyi:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft2zsjw > 0 || missingFieldsLeft2zsjw > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft2zsjw, missingFieldsLeft2zsjw, msgp.ShowFound(found2zsjw[:]), decodeMsgFieldOrder2zsjw)
-		if encodedFieldsLeft2zsjw > 0 {
-			encodedFieldsLeft2zsjw--
-			curField2zsjw, err = dc.ReadInt()
+	for encodedFieldsLeft2zeyi > 0 || missingFieldsLeft2zeyi > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft2zeyi, missingFieldsLeft2zeyi, msgp.ShowFound(found2zeyi[:]), decodeMsgFieldOrder2zeyi)
+		if encodedFieldsLeft2zeyi > 0 {
+			encodedFieldsLeft2zeyi--
+			curField2zeyi, err = dc.ReadInt()
 			if err != nil {
 				return
 			}
 		} else {
 			//missing fields need handling
-			if nextMiss2zsjw < 0 {
+			if nextMiss2zeyi < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss2zsjw = 0
+				nextMiss2zeyi = 0
 			}
-			for nextMiss2zsjw < maxFields2zsjw && (found2zsjw[nextMiss2zsjw] || decodeMsgFieldSkip2zsjw[nextMiss2zsjw]) {
-				nextMiss2zsjw++
+			for nextMiss2zeyi < maxFields2zeyi && (found2zeyi[nextMiss2zeyi] || decodeMsgFieldSkip2zeyi[nextMiss2zeyi]) {
+				nextMiss2zeyi++
 			}
-			if nextMiss2zsjw == maxFields2zsjw {
+			if nextMiss2zeyi == maxFields2zeyi {
 				// filled all the empty fields!
-				break doneWithStruct2zsjw
+				break doneWithStruct2zeyi
 			}
-			missingFieldsLeft2zsjw--
-			curField2zsjw = nextMiss2zsjw
+			missingFieldsLeft2zeyi--
+			curField2zeyi = nextMiss2zeyi
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField2zsjw)
-		switch curField2zsjw {
+		//fmt.Printf("switching on curField: '%v'\n", curField2zeyi)
+		switch curField2zeyi {
 		// -- templateDecodeMsgZid ends here --
 
 		case 0:
 			// zid 0 for "j"
-			found2zsjw[0] = true
-			var zdqu uint32
-			zdqu, err = dc.ReadMapHeader()
+			found2zeyi[0] = true
+			var zvfj uint32
+			zvfj, err = dc.ReadMapHeader()
 			if err != nil {
 				return
 			}
-			if z.j == nil && zdqu > 0 {
-				z.j = make(map[string]bool, zdqu)
+			if z.j == nil && zvfj > 0 {
+				z.j = make(map[string]bool, zvfj)
 			} else if len(z.j) > 0 {
 				for key, _ := range z.j {
 					delete(z.j, key)
 				}
 			}
-			for zdqu > 0 {
-				zdqu--
-				var zwej string
-				var zzwn bool
-				zwej, err = dc.ReadString()
+			for zvfj > 0 {
+				zvfj--
+				var zfku string
+				var zjzz bool
+				zfku, err = dc.ReadString()
 				if err != nil {
 					return
 				}
-				zzwn, err = dc.ReadBool()
+				zjzz, err = dc.ReadBool()
 				if err != nil {
 					return
 				}
-				z.j[zwej] = zzwn
+				z.j[zfku] = zjzz
 			}
 		case 1:
 			// zid 1 for "e"
-			found2zsjw[1] = true
+			found2zeyi[1] = true
 			z.e, err = dc.ReadInt64()
 			if err != nil {
 				return
@@ -782,7 +782,7 @@ doneWithStruct2zsjw:
 			}
 		}
 	}
-	if nextMiss2zsjw != -1 {
+	if nextMiss2zeyi != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -798,9 +798,9 @@ doneWithStruct2zsjw:
 }
 
 // fields of inn
-var decodeMsgFieldOrder2zsjw = []string{"j", "e"}
+var decodeMsgFieldOrder2zeyi = []string{"j", "e"}
 
-var decodeMsgFieldSkip2zsjw = []bool{false, false}
+var decodeMsgFieldSkip2zeyi = []bool{false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *inn) fieldsNotEmpty(isempty []bool) uint32 {
@@ -827,16 +827,16 @@ func (z *inn) EncodeMsg(en *msgp.Writer) (err error) {
 	}
 
 	// honor the omitempty tags
-	var empty_zaqg [2]bool
-	fieldsInUse_zekp := z.fieldsNotEmpty(empty_zaqg[:])
+	var empty_zgsr [2]bool
+	fieldsInUse_zgdo := z.fieldsNotEmpty(empty_zgsr[:])
 
 	// map header
-	err = en.WriteMapHeader(fieldsInUse_zekp)
+	err = en.WriteMapHeader(fieldsInUse_zgdo)
 	if err != nil {
 		return err
 	}
 
-	if !empty_zaqg[0] {
+	if !empty_zgsr[0] {
 		// zid 0 for "j"
 		err = en.Append(0x0)
 		if err != nil {
@@ -846,19 +846,19 @@ func (z *inn) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		for zwej, zzwn := range z.j {
-			err = en.WriteString(zwej)
+		for zfku, zjzz := range z.j {
+			err = en.WriteString(zfku)
 			if err != nil {
 				return
 			}
-			err = en.WriteBool(zzwn)
+			err = en.WriteBool(zjzz)
 			if err != nil {
 				return
 			}
 		}
 	}
 
-	if !empty_zaqg[1] {
+	if !empty_zgsr[1] {
 		// zid 1 for "e"
 		err = en.Append(0x1)
 		if err != nil {
@@ -890,9 +890,9 @@ func (z *inn) MarshalMsg(b []byte) (o []byte, err error) {
 		// zid 0 for "j"
 		o = append(o, 0x0)
 		o = msgp.AppendMapHeader(o, uint32(len(z.j)))
-		for zwej, zzwn := range z.j {
-			o = msgp.AppendString(o, zwej)
-			o = msgp.AppendBool(o, zzwn)
+		for zfku, zjzz := range z.j {
+			o = msgp.AppendString(o, zfku)
+			o = msgp.AppendBool(o, zjzz)
 		}
 	}
 
@@ -920,58 +920,58 @@ func (z *inn) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []byte
 
 	var field []byte
 	_ = field
-	const maxFields3zmbh = 2
+	const maxFields3zhlx = 2
 
 	// -- templateUnmarshalMsgZid starts here--
-	var totalEncodedFields3zmbh uint32
+	var totalEncodedFields3zhlx uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields3zmbh, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields3zhlx, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			return
 		}
 	}
-	encodedFieldsLeft3zmbh := totalEncodedFields3zmbh
-	missingFieldsLeft3zmbh := maxFields3zmbh - totalEncodedFields3zmbh
+	encodedFieldsLeft3zhlx := totalEncodedFields3zhlx
+	missingFieldsLeft3zhlx := maxFields3zhlx - totalEncodedFields3zhlx
 
-	var nextMiss3zmbh int = -1
-	var found3zmbh [maxFields3zmbh]bool
-	var curField3zmbh int
+	var nextMiss3zhlx int = -1
+	var found3zhlx [maxFields3zhlx]bool
+	var curField3zhlx int
 
-doneWithStruct3zmbh:
+doneWithStruct3zhlx:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft3zmbh > 0 || missingFieldsLeft3zmbh > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft3zmbh, missingFieldsLeft3zmbh, msgp.ShowFound(found3zmbh[:]), unmarshalMsgFieldOrder3zmbh)
-		if encodedFieldsLeft3zmbh > 0 {
-			encodedFieldsLeft3zmbh--
-			curField3zmbh, bts, err = nbs.ReadIntBytes(bts)
+	for encodedFieldsLeft3zhlx > 0 || missingFieldsLeft3zhlx > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft3zhlx, missingFieldsLeft3zhlx, msgp.ShowFound(found3zhlx[:]), unmarshalMsgFieldOrder3zhlx)
+		if encodedFieldsLeft3zhlx > 0 {
+			encodedFieldsLeft3zhlx--
+			curField3zhlx, bts, err = nbs.ReadIntBytes(bts)
 			if err != nil {
 				return
 			}
 		} else {
 			//missing fields need handling
-			if nextMiss3zmbh < 0 {
+			if nextMiss3zhlx < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss3zmbh = 0
+				nextMiss3zhlx = 0
 			}
-			for nextMiss3zmbh < maxFields3zmbh && (found3zmbh[nextMiss3zmbh] || unmarshalMsgFieldSkip3zmbh[nextMiss3zmbh]) {
-				nextMiss3zmbh++
+			for nextMiss3zhlx < maxFields3zhlx && (found3zhlx[nextMiss3zhlx] || unmarshalMsgFieldSkip3zhlx[nextMiss3zhlx]) {
+				nextMiss3zhlx++
 			}
-			if nextMiss3zmbh == maxFields3zmbh {
+			if nextMiss3zhlx == maxFields3zhlx {
 				// filled all the empty fields!
-				break doneWithStruct3zmbh
+				break doneWithStruct3zhlx
 			}
-			missingFieldsLeft3zmbh--
-			curField3zmbh = nextMiss3zmbh
+			missingFieldsLeft3zhlx--
+			curField3zhlx = nextMiss3zhlx
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField3zmbh)
-		switch curField3zmbh {
+		//fmt.Printf("switching on curField: '%v'\n", curField3zhlx)
+		switch curField3zhlx {
 		// -- templateUnmarshalMsgZid ends here --
 
 		case 0:
 			// zid 0 for "j"
-			found3zmbh[0] = true
+			found3zhlx[0] = true
 			if nbs.AlwaysNil {
 				if len(z.j) > 0 {
 					for key, _ := range z.j {
@@ -981,37 +981,37 @@ doneWithStruct3zmbh:
 
 			} else {
 
-				var zfed uint32
-				zfed, bts, err = nbs.ReadMapHeaderBytes(bts)
+				var zunr uint32
+				zunr, bts, err = nbs.ReadMapHeaderBytes(bts)
 				if err != nil {
 					return
 				}
-				if z.j == nil && zfed > 0 {
-					z.j = make(map[string]bool, zfed)
+				if z.j == nil && zunr > 0 {
+					z.j = make(map[string]bool, zunr)
 				} else if len(z.j) > 0 {
 					for key, _ := range z.j {
 						delete(z.j, key)
 					}
 				}
-				for zfed > 0 {
-					var zwej string
-					var zzwn bool
-					zfed--
-					zwej, bts, err = nbs.ReadStringBytes(bts)
+				for zunr > 0 {
+					var zfku string
+					var zjzz bool
+					zunr--
+					zfku, bts, err = nbs.ReadStringBytes(bts)
 					if err != nil {
 						return
 					}
-					zzwn, bts, err = nbs.ReadBoolBytes(bts)
+					zjzz, bts, err = nbs.ReadBoolBytes(bts)
 
 					if err != nil {
 						return
 					}
-					z.j[zwej] = zzwn
+					z.j[zfku] = zjzz
 				}
 			}
 		case 1:
 			// zid 1 for "e"
-			found3zmbh[1] = true
+			found3zhlx[1] = true
 			z.e, bts, err = nbs.ReadInt64Bytes(bts)
 
 			if err != nil {
@@ -1024,7 +1024,7 @@ doneWithStruct3zmbh:
 			}
 		}
 	}
-	if nextMiss3zmbh != -1 {
+	if nextMiss3zhlx != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -1040,18 +1040,18 @@ doneWithStruct3zmbh:
 }
 
 // fields of inn
-var unmarshalMsgFieldOrder3zmbh = []string{"j", "e"}
+var unmarshalMsgFieldOrder3zhlx = []string{"j", "e"}
 
-var unmarshalMsgFieldSkip3zmbh = []bool{false, false}
+var unmarshalMsgFieldSkip3zhlx = []bool{false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *inn) Msgsize() (s int) {
 	s = 1 + 2 + msgp.MapHeaderSize
 	if z.j != nil {
-		for zwej, zzwn := range z.j {
-			_ = zzwn
-			_ = zwej
-			s += msgp.StringPrefixSize + len(zwej) + msgp.BoolSize
+		for zfku, zjzz := range z.j {
+			_ = zjzz
+			_ = zfku
+			s += msgp.StringPrefixSize + len(zfku) + msgp.BoolSize
 		}
 	}
 	s += 2 + msgp.Int64Size
@@ -1073,74 +1073,74 @@ func (z *u) DecodeMsg(dc *msgp.Reader) (err error) {
 
 	var field []byte
 	_ = field
-	const maxFields4zgkb = 3
+	const maxFields4zjkg = 3
 
 	// -- templateDecodeMsgZid starts here--
-	var totalEncodedFields4zgkb uint32
-	totalEncodedFields4zgkb, err = dc.ReadMapHeader()
+	var totalEncodedFields4zjkg uint32
+	totalEncodedFields4zjkg, err = dc.ReadMapHeader()
 	if err != nil {
 		return
 	}
-	encodedFieldsLeft4zgkb := totalEncodedFields4zgkb
-	missingFieldsLeft4zgkb := maxFields4zgkb - totalEncodedFields4zgkb
+	encodedFieldsLeft4zjkg := totalEncodedFields4zjkg
+	missingFieldsLeft4zjkg := maxFields4zjkg - totalEncodedFields4zjkg
 
-	var nextMiss4zgkb int = -1
-	var found4zgkb [maxFields4zgkb]bool
-	var curField4zgkb int
+	var nextMiss4zjkg int = -1
+	var found4zjkg [maxFields4zjkg]bool
+	var curField4zjkg int
 
-doneWithStruct4zgkb:
+doneWithStruct4zjkg:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft4zgkb > 0 || missingFieldsLeft4zgkb > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft4zgkb, missingFieldsLeft4zgkb, msgp.ShowFound(found4zgkb[:]), decodeMsgFieldOrder4zgkb)
-		if encodedFieldsLeft4zgkb > 0 {
-			encodedFieldsLeft4zgkb--
-			curField4zgkb, err = dc.ReadInt()
+	for encodedFieldsLeft4zjkg > 0 || missingFieldsLeft4zjkg > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft4zjkg, missingFieldsLeft4zjkg, msgp.ShowFound(found4zjkg[:]), decodeMsgFieldOrder4zjkg)
+		if encodedFieldsLeft4zjkg > 0 {
+			encodedFieldsLeft4zjkg--
+			curField4zjkg, err = dc.ReadInt()
 			if err != nil {
 				return
 			}
 		} else {
 			//missing fields need handling
-			if nextMiss4zgkb < 0 {
+			if nextMiss4zjkg < 0 {
 				// tell the reader to only give us Nils
 				// until further notice.
 				dc.PushAlwaysNil()
-				nextMiss4zgkb = 0
+				nextMiss4zjkg = 0
 			}
-			for nextMiss4zgkb < maxFields4zgkb && (found4zgkb[nextMiss4zgkb] || decodeMsgFieldSkip4zgkb[nextMiss4zgkb]) {
-				nextMiss4zgkb++
+			for nextMiss4zjkg < maxFields4zjkg && (found4zjkg[nextMiss4zjkg] || decodeMsgFieldSkip4zjkg[nextMiss4zjkg]) {
+				nextMiss4zjkg++
 			}
-			if nextMiss4zgkb == maxFields4zgkb {
+			if nextMiss4zjkg == maxFields4zjkg {
 				// filled all the empty fields!
-				break doneWithStruct4zgkb
+				break doneWithStruct4zjkg
 			}
-			missingFieldsLeft4zgkb--
-			curField4zgkb = nextMiss4zgkb
+			missingFieldsLeft4zjkg--
+			curField4zjkg = nextMiss4zjkg
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField4zgkb)
-		switch curField4zgkb {
+		//fmt.Printf("switching on curField: '%v'\n", curField4zjkg)
+		switch curField4zjkg {
 		// -- templateDecodeMsgZid ends here --
 
 		case 0:
 			// zid 0 for "m"
-			found4zgkb[0] = true
-			var zbvo uint32
-			zbvo, err = dc.ReadMapHeader()
+			found4zjkg[0] = true
+			var zkoa uint32
+			zkoa, err = dc.ReadMapHeader()
 			if err != nil {
 				return
 			}
-			if z.m == nil && zbvo > 0 {
-				z.m = make(map[string]*Tr, zbvo)
+			if z.m == nil && zkoa > 0 {
+				z.m = make(map[string]*Tr, zkoa)
 			} else if len(z.m) > 0 {
 				for key, _ := range z.m {
 					delete(z.m, key)
 				}
 			}
-			for zbvo > 0 {
-				zbvo--
-				var znon string
-				var zxdr *Tr
-				znon, err = dc.ReadString()
+			for zkoa > 0 {
+				zkoa--
+				var zwpr string
+				var zldg *Tr
+				zwpr, err = dc.ReadString()
 				if err != nil {
 					return
 				}
@@ -1150,9 +1150,9 @@ doneWithStruct4zgkb:
 						return
 					}
 
-					if zxdr != nil {
+					if zldg != nil {
 						dc.PushAlwaysNil()
-						err = zxdr.DecodeMsg(dc)
+						err = zldg.DecodeMsg(dc)
 						if err != nil {
 							return
 						}
@@ -1161,26 +1161,26 @@ doneWithStruct4zgkb:
 				} else {
 					// not Nil, we have something to read
 
-					if zxdr == nil {
-						zxdr = new(Tr)
+					if zldg == nil {
+						zldg = new(Tr)
 					}
-					err = zxdr.DecodeMsg(dc)
+					err = zldg.DecodeMsg(dc)
 					if err != nil {
 						return
 					}
 				}
-				z.m[znon] = zxdr
+				z.m[zwpr] = zldg
 			}
 		case 1:
 			// zid 1 for "s"
-			found4zgkb[1] = true
+			found4zjkg[1] = true
 			z.s, err = dc.ReadString()
 			if err != nil {
 				return
 			}
 		case 2:
 			// zid 2 for "n"
-			found4zgkb[2] = true
+			found4zjkg[2] = true
 			z.n, err = dc.ReadInt64()
 			if err != nil {
 				return
@@ -1192,7 +1192,7 @@ doneWithStruct4zgkb:
 			}
 		}
 	}
-	if nextMiss4zgkb != -1 {
+	if nextMiss4zjkg != -1 {
 		dc.PopAlwaysNil()
 	}
 
@@ -1208,9 +1208,9 @@ doneWithStruct4zgkb:
 }
 
 // fields of u
-var decodeMsgFieldOrder4zgkb = []string{"m", "s", "n"}
+var decodeMsgFieldOrder4zjkg = []string{"m", "s", "n"}
 
-var decodeMsgFieldSkip4zgkb = []bool{false, false, false}
+var decodeMsgFieldSkip4zjkg = []bool{false, false, false}
 
 // fieldsNotEmpty supports omitempty tags
 func (z *u) fieldsNotEmpty(isempty []bool) uint32 {
@@ -1241,16 +1241,16 @@ func (z *u) EncodeMsg(en *msgp.Writer) (err error) {
 	}
 
 	// honor the omitempty tags
-	var empty_zrya [3]bool
-	fieldsInUse_zeus := z.fieldsNotEmpty(empty_zrya[:])
+	var empty_zwla [3]bool
+	fieldsInUse_zuzc := z.fieldsNotEmpty(empty_zwla[:])
 
 	// map header
-	err = en.WriteMapHeader(fieldsInUse_zeus)
+	err = en.WriteMapHeader(fieldsInUse_zuzc)
 	if err != nil {
 		return err
 	}
 
-	if !empty_zrya[0] {
+	if !empty_zwla[0] {
 		// zid 0 for "m"
 		err = en.Append(0x0)
 		if err != nil {
@@ -1260,18 +1260,18 @@ func (z *u) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		for znon, zxdr := range z.m {
-			err = en.WriteString(znon)
+		for zwpr, zldg := range z.m {
+			err = en.WriteString(zwpr)
 			if err != nil {
 				return
 			}
-			if zxdr == nil {
+			if zldg == nil {
 				err = en.WriteNil()
 				if err != nil {
 					return
 				}
 			} else {
-				err = zxdr.EncodeMsg(en)
+				err = zldg.EncodeMsg(en)
 				if err != nil {
 					return
 				}
@@ -1279,7 +1279,7 @@ func (z *u) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zrya[1] {
+	if !empty_zwla[1] {
 		// zid 1 for "s"
 		err = en.Append(0x1)
 		if err != nil {
@@ -1291,7 +1291,7 @@ func (z *u) EncodeMsg(en *msgp.Writer) (err error) {
 		}
 	}
 
-	if !empty_zrya[2] {
+	if !empty_zwla[2] {
 		// zid 2 for "n"
 		err = en.Append(0x2)
 		if err != nil {
@@ -1323,12 +1323,12 @@ func (z *u) MarshalMsg(b []byte) (o []byte, err error) {
 		// zid 0 for "m"
 		o = append(o, 0x0)
 		o = msgp.AppendMapHeader(o, uint32(len(z.m)))
-		for znon, zxdr := range z.m {
-			o = msgp.AppendString(o, znon)
-			if zxdr == nil {
+		for zwpr, zldg := range z.m {
+			o = msgp.AppendString(o, zwpr)
+			if zldg == nil {
 				o = msgp.AppendNil(o)
 			} else {
-				o, err = zxdr.MarshalMsg(o)
+				o, err = zldg.MarshalMsg(o)
 				if err != nil {
 					return
 				}
@@ -1366,58 +1366,58 @@ func (z *u) UnmarshalMsgWithCfg(bts []byte, cfg *msgp.RuntimeConfig) (o []byte, 
 
 	var field []byte
 	_ = field
-	const maxFields5zvwt = 3
+	const maxFields5zhax = 3
 
 	// -- templateUnmarshalMsgZid starts here--
-	var totalEncodedFields5zvwt uint32
+	var totalEncodedFields5zhax uint32
 	if !nbs.AlwaysNil {
-		totalEncodedFields5zvwt, bts, err = nbs.ReadMapHeaderBytes(bts)
+		totalEncodedFields5zhax, bts, err = nbs.ReadMapHeaderBytes(bts)
 		if err != nil {
 			return
 		}
 	}
-	encodedFieldsLeft5zvwt := totalEncodedFields5zvwt
-	missingFieldsLeft5zvwt := maxFields5zvwt - totalEncodedFields5zvwt
+	encodedFieldsLeft5zhax := totalEncodedFields5zhax
+	missingFieldsLeft5zhax := maxFields5zhax - totalEncodedFields5zhax
 
-	var nextMiss5zvwt int = -1
-	var found5zvwt [maxFields5zvwt]bool
-	var curField5zvwt int
+	var nextMiss5zhax int = -1
+	var found5zhax [maxFields5zhax]bool
+	var curField5zhax int
 
-doneWithStruct5zvwt:
+doneWithStruct5zhax:
 	// First fill all the encoded fields, then
 	// treat the remaining, missing fields, as Nil.
-	for encodedFieldsLeft5zvwt > 0 || missingFieldsLeft5zvwt > 0 {
-		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft5zvwt, missingFieldsLeft5zvwt, msgp.ShowFound(found5zvwt[:]), unmarshalMsgFieldOrder5zvwt)
-		if encodedFieldsLeft5zvwt > 0 {
-			encodedFieldsLeft5zvwt--
-			curField5zvwt, bts, err = nbs.ReadIntBytes(bts)
+	for encodedFieldsLeft5zhax > 0 || missingFieldsLeft5zhax > 0 {
+		//fmt.Printf("encodedFieldsLeft: %v, missingFieldsLeft: %v, found: '%v', fields: '%#v'\n", encodedFieldsLeft5zhax, missingFieldsLeft5zhax, msgp.ShowFound(found5zhax[:]), unmarshalMsgFieldOrder5zhax)
+		if encodedFieldsLeft5zhax > 0 {
+			encodedFieldsLeft5zhax--
+			curField5zhax, bts, err = nbs.ReadIntBytes(bts)
 			if err != nil {
 				return
 			}
 		} else {
 			//missing fields need handling
-			if nextMiss5zvwt < 0 {
+			if nextMiss5zhax < 0 {
 				// set bts to contain just mnil (0xc0)
 				bts = nbs.PushAlwaysNil(bts)
-				nextMiss5zvwt = 0
+				nextMiss5zhax = 0
 			}
-			for nextMiss5zvwt < maxFields5zvwt && (found5zvwt[nextMiss5zvwt] || unmarshalMsgFieldSkip5zvwt[nextMiss5zvwt]) {
-				nextMiss5zvwt++
+			for nextMiss5zhax < maxFields5zhax && (found5zhax[nextMiss5zhax] || unmarshalMsgFieldSkip5zhax[nextMiss5zhax]) {
+				nextMiss5zhax++
 			}
-			if nextMiss5zvwt == maxFields5zvwt {
+			if nextMiss5zhax == maxFields5zhax {
 				// filled all the empty fields!
-				break doneWithStruct5zvwt
+				break doneWithStruct5zhax
 			}
-			missingFieldsLeft5zvwt--
-			curField5zvwt = nextMiss5zvwt
+			missingFieldsLeft5zhax--
+			curField5zhax = nextMiss5zhax
 		}
-		//fmt.Printf("switching on curField: '%v'\n", curField5zvwt)
-		switch curField5zvwt {
+		//fmt.Printf("switching on curField: '%v'\n", curField5zhax)
+		switch curField5zhax {
 		// -- templateUnmarshalMsgZid ends here --
 
 		case 0:
 			// zid 0 for "m"
-			found5zvwt[0] = true
+			found5zhax[0] = true
 			if nbs.AlwaysNil {
 				if len(z.m) > 0 {
 					for key, _ := range z.m {
@@ -1427,44 +1427,44 @@ doneWithStruct5zvwt:
 
 			} else {
 
-				var zhts uint32
-				zhts, bts, err = nbs.ReadMapHeaderBytes(bts)
+				var zycs uint32
+				zycs, bts, err = nbs.ReadMapHeaderBytes(bts)
 				if err != nil {
 					return
 				}
-				if z.m == nil && zhts > 0 {
-					z.m = make(map[string]*Tr, zhts)
+				if z.m == nil && zycs > 0 {
+					z.m = make(map[string]*Tr, zycs)
 				} else if len(z.m) > 0 {
 					for key, _ := range z.m {
 						delete(z.m, key)
 					}
 				}
-				for zhts > 0 {
-					var znon string
-					var zxdr *Tr
-					zhts--
-					znon, bts, err = nbs.ReadStringBytes(bts)
+				for zycs > 0 {
+					var zwpr string
+					var zldg *Tr
+					zycs--
+					zwpr, bts, err = nbs.ReadStringBytes(bts)
 					if err != nil {
 						return
 					}
 					if nbs.AlwaysNil {
-						if zxdr != nil {
-							zxdr.UnmarshalMsg(msgp.OnlyNilSlice)
+						if zldg != nil {
+							zldg.UnmarshalMsg(msgp.OnlyNilSlice)
 						}
 					} else {
 						// not nbs.AlwaysNil
 						if msgp.IsNil(bts) {
 							bts = bts[1:]
-							if nil != zxdr {
-								zxdr.UnmarshalMsg(msgp.OnlyNilSlice)
+							if nil != zldg {
+								zldg.UnmarshalMsg(msgp.OnlyNilSlice)
 							}
 						} else {
 							// not nbs.AlwaysNil and not IsNil(bts): have something to read
 
-							if zxdr == nil {
-								zxdr = new(Tr)
+							if zldg == nil {
+								zldg = new(Tr)
 							}
-							bts, err = zxdr.UnmarshalMsg(bts)
+							bts, err = zldg.UnmarshalMsg(bts)
 							if err != nil {
 								return
 							}
@@ -1473,12 +1473,12 @@ doneWithStruct5zvwt:
 							}
 						}
 					}
-					z.m[znon] = zxdr
+					z.m[zwpr] = zldg
 				}
 			}
 		case 1:
 			// zid 1 for "s"
-			found5zvwt[1] = true
+			found5zhax[1] = true
 			z.s, bts, err = nbs.ReadStringBytes(bts)
 
 			if err != nil {
@@ -1486,7 +1486,7 @@ doneWithStruct5zvwt:
 			}
 		case 2:
 			// zid 2 for "n"
-			found5zvwt[2] = true
+			found5zhax[2] = true
 			z.n, bts, err = nbs.ReadInt64Bytes(bts)
 
 			if err != nil {
@@ -1499,7 +1499,7 @@ doneWithStruct5zvwt:
 			}
 		}
 	}
-	if nextMiss5zvwt != -1 {
+	if nextMiss5zhax != -1 {
 		bts = nbs.PopAlwaysNil()
 	}
 
@@ -1515,22 +1515,22 @@ doneWithStruct5zvwt:
 }
 
 // fields of u
-var unmarshalMsgFieldOrder5zvwt = []string{"m", "s", "n"}
+var unmarshalMsgFieldOrder5zhax = []string{"m", "s", "n"}
 
-var unmarshalMsgFieldSkip5zvwt = []bool{false, false, false}
+var unmarshalMsgFieldSkip5zhax = []bool{false, false, false}
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *u) Msgsize() (s int) {
 	s = 1 + 2 + msgp.MapHeaderSize
 	if z.m != nil {
-		for znon, zxdr := range z.m {
-			_ = zxdr
-			_ = znon
-			s += msgp.StringPrefixSize + len(znon)
-			if zxdr == nil {
+		for zwpr, zldg := range z.m {
+			_ = zldg
+			_ = zwpr
+			s += msgp.StringPrefixSize + len(zwpr)
+			if zldg == nil {
 				s += msgp.NilSize
 			} else {
-				s += zxdr.Msgsize()
+				s += zldg.Msgsize()
 			}
 		}
 	}
@@ -1550,160 +1550,160 @@ func (FileMy2) ZebraSchemaInMsgpack2Format() []byte {
 		0x61, 0x67, 0x65, 0xa8, 0x74, 0x65, 0x73, 0x74, 0x64, 0x61,
 		0x74, 0x61, 0xad, 0x5a, 0x65, 0x62, 0x72, 0x61, 0x53, 0x63,
 		0x68, 0x65, 0x6d, 0x61, 0x49, 0x64, 0x00, 0xa7, 0x53, 0x74,
-		0x72, 0x75, 0x63, 0x74, 0x73, 0x83, 0xa1, 0x75, 0x82, 0xaa,
-		0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x4e, 0x61, 0x6d, 0x65,
-		0xa1, 0x75, 0xa6, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x93,
-		0x86, 0xa3, 0x5a, 0x69, 0x64, 0x00, 0xab, 0x46, 0x69, 0x65,
-		0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x6d,
-		0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e,
-		0x61, 0x6d, 0x65, 0xa1, 0x6d, 0xac, 0x46, 0x69, 0x65, 0x6c,
-		0x64, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xae, 0x6d,
-		0x61, 0x70, 0x5b, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x5d,
-		0x2a, 0x54, 0x72, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43,
-		0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x18, 0xad, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79,
-		0x70, 0x65, 0x84, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x18, 0xa3,
-		0x53, 0x74, 0x72, 0xa3, 0x4d, 0x61, 0x70, 0xa6, 0x44, 0x6f,
-		0x6d, 0x61, 0x69, 0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64,
-		0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72, 0x69,
-		0x6e, 0x67, 0xa5, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x83, 0xa4,
-		0x4b, 0x69, 0x6e, 0x64, 0x1c, 0xa3, 0x53, 0x74, 0x72, 0xa7,
-		0x50, 0x6f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0xa6, 0x44, 0x6f,
-		0x6d, 0x61, 0x69, 0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64,
-		0x16, 0xa3, 0x53, 0x74, 0x72, 0xa2, 0x54, 0x72, 0x87, 0xa3,
-		0x5a, 0x69, 0x64, 0x01, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x73, 0xac, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d,
-		0x65, 0xa1, 0x73, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54,
-		0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72,
-		0x69, 0x6e, 0x67, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43,
+		0x72, 0x75, 0x63, 0x74, 0x73, 0x83, 0xa3, 0x69, 0x6e, 0x6e,
+		0x82, 0xaa, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74, 0x4e, 0x61,
+		0x6d, 0x65, 0xa3, 0x69, 0x6e, 0x6e, 0xa6, 0x46, 0x69, 0x65,
+		0x6c, 0x64, 0x73, 0x92, 0x86, 0xa3, 0x5a, 0x69, 0x64, 0x00,
+		0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61,
+		0x6d, 0x65, 0xa1, 0x6a, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64,
+		0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x6a, 0xac,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65, 0x53,
+		0x74, 0x72, 0xaf, 0x6d, 0x61, 0x70, 0x5b, 0x73, 0x74, 0x72,
+		0x69, 0x6e, 0x67, 0x5d, 0x62, 0x6f, 0x6f, 0x6c, 0xad, 0x46,
+		0x69, 0x65, 0x6c, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f,
+		0x72, 0x79, 0x18, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46,
+		0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x84, 0xa4, 0x4b,
+		0x69, 0x6e, 0x64, 0x18, 0xa3, 0x53, 0x74, 0x72, 0xa3, 0x4d,
+		0x61, 0x70, 0xa6, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x82,
+		0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72,
+		0xa6, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0xa5, 0x52, 0x61,
+		0x6e, 0x67, 0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x12,
+		0xa3, 0x53, 0x74, 0x72, 0xa4, 0x62, 0x6f, 0x6f, 0x6c, 0x87,
+		0xa3, 0x5a, 0x69, 0x64, 0x01, 0xab, 0x46, 0x69, 0x65, 0x6c,
+		0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x65, 0xac,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61,
+		0x6d, 0x65, 0xa1, 0x65, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64,
+		0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xa5, 0x69, 0x6e,
+		0x74, 0x36, 0x34, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43,
 		0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x17, 0xae, 0x46,
 		0x69, 0x65, 0x6c, 0x64, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74,
-		0x69, 0x76, 0x65, 0x02, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64,
+		0x69, 0x76, 0x65, 0x11, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64,
 		0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x82, 0xa4,
-		0x4b, 0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6,
-		0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x87, 0xa3, 0x5a, 0x69,
-		0x64, 0x02, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f,
-		0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x6e, 0xac, 0x46, 0x69, 0x65,
-		0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa1,
-		0x6e, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70,
-		0x65, 0x53, 0x74, 0x72, 0xa5, 0x69, 0x6e, 0x74, 0x36, 0x34,
-		0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61, 0x74, 0x65,
-		0x67, 0x6f, 0x72, 0x79, 0x17, 0xae, 0x46, 0x69, 0x65, 0x6c,
-		0x64, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74, 0x69, 0x76, 0x65,
-		0x11, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c,
-		0x6c, 0x54, 0x79, 0x70, 0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e,
-		0x64, 0x11, 0xa3, 0x53, 0x74, 0x72, 0xa5, 0x69, 0x6e, 0x74,
-		0x36, 0x34, 0xa2, 0x54, 0x72, 0x82, 0xaa, 0x53, 0x74, 0x72,
-		0x75, 0x63, 0x74, 0x4e, 0x61, 0x6d, 0x65, 0xa2, 0x54, 0x72,
-		0xa6, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x96, 0x87, 0xa3,
-		0x5a, 0x69, 0x64, 0x00, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x55, 0xac, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d,
-		0x65, 0xa1, 0x55, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54,
-		0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72,
-		0x69, 0x6e, 0x67, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43,
-		0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x17, 0xae, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74,
-		0x69, 0x76, 0x65, 0x02, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x82, 0xa4,
-		0x4b, 0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6,
-		0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x85, 0xa3, 0x5a, 0x69,
-		0x64, 0xff, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f,
-		0x4e, 0x61, 0x6d, 0x65, 0xa2, 0x65, 0x74, 0xac, 0x46, 0x69,
-		0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65,
-		0xa1, 0x2d, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61,
-		0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x1c, 0xa4, 0x53, 0x6b,
-		0x69, 0x70, 0xc3, 0x87, 0xa3, 0x5a, 0x69, 0x64, 0x01, 0xab,
-		0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d,
-		0x65, 0xa2, 0x4e, 0x74, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa2, 0x4e, 0x74,
-		0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65,
-		0x53, 0x74, 0x72, 0xa3, 0x69, 0x6e, 0x74, 0xad, 0x46, 0x69,
-		0x65, 0x6c, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72,
-		0x79, 0x17, 0xae, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x50, 0x72,
-		0x69, 0x6d, 0x69, 0x74, 0x69, 0x76, 0x65, 0x0d, 0xad, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79,
-		0x70, 0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x0d, 0xa3,
-		0x53, 0x74, 0x72, 0xa3, 0x69, 0x6e, 0x74, 0x86, 0xa3, 0x5a,
-		0x69, 0x64, 0x02, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47,
-		0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa4, 0x53, 0x6e, 0x6f, 0x74,
-		0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e,
-		0x61, 0x6d, 0x65, 0xa4, 0x53, 0x6e, 0x6f, 0x74, 0xac, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74,
-		0x72, 0xaf, 0x6d, 0x61, 0x70, 0x5b, 0x73, 0x74, 0x72, 0x69,
-		0x6e, 0x67, 0x5d, 0x62, 0x6f, 0x6f, 0x6c, 0xad, 0x46, 0x69,
-		0x65, 0x6c, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72,
-		0x79, 0x18, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75,
-		0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x84, 0xa4, 0x4b, 0x69,
-		0x6e, 0x64, 0x18, 0xa3, 0x53, 0x74, 0x72, 0xa3, 0x4d, 0x61,
-		0x70, 0xa6, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x82, 0xa4,
-		0x4b, 0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6,
-		0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0xa5, 0x52, 0x61, 0x6e,
-		0x67, 0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x12, 0xa3,
-		0x53, 0x74, 0x72, 0xa4, 0x62, 0x6f, 0x6f, 0x6c, 0x86, 0xa3,
-		0x5a, 0x69, 0x64, 0x03, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa6, 0x4e, 0x6f, 0x74,
-		0x79, 0x65, 0x74, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54,
-		0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa6, 0x4e, 0x6f, 0x74,
-		0x79, 0x65, 0x74, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54,
-		0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xaf, 0x6d, 0x61, 0x70,
-		0x5b, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x5d, 0x62, 0x6f,
-		0x6f, 0x6c, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61,
+		0x4b, 0x69, 0x6e, 0x64, 0x11, 0xa3, 0x53, 0x74, 0x72, 0xa5,
+		0x69, 0x6e, 0x74, 0x36, 0x34, 0xa1, 0x75, 0x82, 0xaa, 0x53,
+		0x74, 0x72, 0x75, 0x63, 0x74, 0x4e, 0x61, 0x6d, 0x65, 0xa1,
+		0x75, 0xa6, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x93, 0x86,
+		0xa3, 0x5a, 0x69, 0x64, 0x00, 0xab, 0x46, 0x69, 0x65, 0x6c,
+		0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x6d, 0xac,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61,
+		0x6d, 0x65, 0xa1, 0x6d, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64,
+		0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xae, 0x6d, 0x61,
+		0x70, 0x5b, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x5d, 0x2a,
+		0x54, 0x72, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61,
 		0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x18, 0xad, 0x46, 0x69,
 		0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70,
 		0x65, 0x84, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x18, 0xa3, 0x53,
 		0x74, 0x72, 0xa3, 0x4d, 0x61, 0x70, 0xa6, 0x44, 0x6f, 0x6d,
 		0x61, 0x69, 0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x02,
 		0xa3, 0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72, 0x69, 0x6e,
-		0x67, 0xa5, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x82, 0xa4, 0x4b,
-		0x69, 0x6e, 0x64, 0x12, 0xa3, 0x53, 0x74, 0x72, 0xa4, 0x62,
-		0x6f, 0x6f, 0x6c, 0x86, 0xa3, 0x5a, 0x69, 0x64, 0x04, 0xab,
-		0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d,
-		0x65, 0xa4, 0x53, 0x65, 0x74, 0x6d, 0xac, 0x46, 0x69, 0x65,
-		0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa4,
-		0x53, 0x65, 0x74, 0x6d, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xa6, 0x5b, 0x5d,
-		0x2a, 0x69, 0x6e, 0x6e, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64,
-		0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x1a, 0xad,
-		0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54,
-		0x79, 0x70, 0x65, 0x83, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x1a,
-		0xa3, 0x53, 0x74, 0x72, 0xa5, 0x53, 0x6c, 0x69, 0x63, 0x65,
-		0xa6, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x83, 0xa4, 0x4b,
+		0x67, 0xa5, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x83, 0xa4, 0x4b,
 		0x69, 0x6e, 0x64, 0x1c, 0xa3, 0x53, 0x74, 0x72, 0xa7, 0x50,
 		0x6f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0xa6, 0x44, 0x6f, 0x6d,
 		0x61, 0x69, 0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x16,
-		0xa3, 0x53, 0x74, 0x72, 0xa3, 0x69, 0x6e, 0x6e, 0xa3, 0x69,
-		0x6e, 0x6e, 0x82, 0xaa, 0x53, 0x74, 0x72, 0x75, 0x63, 0x74,
-		0x4e, 0x61, 0x6d, 0x65, 0xa3, 0x69, 0x6e, 0x6e, 0xa6, 0x46,
-		0x69, 0x65, 0x6c, 0x64, 0x73, 0x92, 0x86, 0xa3, 0x5a, 0x69,
-		0x64, 0x00, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f,
-		0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x6a, 0xac, 0x46, 0x69, 0x65,
+		0xa3, 0x53, 0x74, 0x72, 0xa2, 0x54, 0x72, 0x87, 0xa3, 0x5a,
+		0x69, 0x64, 0x01, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47,
+		0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x73, 0xac, 0x46, 0x69,
+		0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65,
+		0xa1, 0x73, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79,
+		0x70, 0x65, 0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72, 0x69,
+		0x6e, 0x67, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61,
+		0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x17, 0xae, 0x46, 0x69,
+		0x65, 0x6c, 0x64, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74, 0x69,
+		0x76, 0x65, 0x02, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46,
+		0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x82, 0xa4, 0x4b,
+		0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6, 0x73,
+		0x74, 0x72, 0x69, 0x6e, 0x67, 0x87, 0xa3, 0x5a, 0x69, 0x64,
+		0x02, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e,
+		0x61, 0x6d, 0x65, 0xa1, 0x6e, 0xac, 0x46, 0x69, 0x65, 0x6c,
+		0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x6e,
+		0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65,
+		0x53, 0x74, 0x72, 0xa5, 0x69, 0x6e, 0x74, 0x36, 0x34, 0xad,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67,
+		0x6f, 0x72, 0x79, 0x17, 0xae, 0x46, 0x69, 0x65, 0x6c, 0x64,
+		0x50, 0x72, 0x69, 0x6d, 0x69, 0x74, 0x69, 0x76, 0x65, 0x11,
+		0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c,
+		0x54, 0x79, 0x70, 0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64,
+		0x11, 0xa3, 0x53, 0x74, 0x72, 0xa5, 0x69, 0x6e, 0x74, 0x36,
+		0x34, 0xa2, 0x54, 0x72, 0x82, 0xaa, 0x53, 0x74, 0x72, 0x75,
+		0x63, 0x74, 0x4e, 0x61, 0x6d, 0x65, 0xa2, 0x54, 0x72, 0xa6,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x96, 0x87, 0xa3, 0x5a,
+		0x69, 0x64, 0x00, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47,
+		0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x55, 0xac, 0x46, 0x69,
+		0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65,
+		0xa1, 0x55, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79,
+		0x70, 0x65, 0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72, 0x69,
+		0x6e, 0x67, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61,
+		0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x17, 0xae, 0x46, 0x69,
+		0x65, 0x6c, 0x64, 0x50, 0x72, 0x69, 0x6d, 0x69, 0x74, 0x69,
+		0x76, 0x65, 0x02, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46,
+		0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x82, 0xa4, 0x4b,
+		0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6, 0x73,
+		0x74, 0x72, 0x69, 0x6e, 0x67, 0x85, 0xa3, 0x5a, 0x69, 0x64,
+		0xff, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e,
+		0x61, 0x6d, 0x65, 0xa2, 0x65, 0x74, 0xac, 0x46, 0x69, 0x65,
 		0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa1,
-		0x6a, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70,
-		0x65, 0x53, 0x74, 0x72, 0xaf, 0x6d, 0x61, 0x70, 0x5b, 0x73,
-		0x74, 0x72, 0x69, 0x6e, 0x67, 0x5d, 0x62, 0x6f, 0x6f, 0x6c,
-		0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61, 0x74, 0x65,
-		0x67, 0x6f, 0x72, 0x79, 0x18, 0xad, 0x46, 0x69, 0x65, 0x6c,
-		0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x84,
-		0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x18, 0xa3, 0x53, 0x74, 0x72,
-		0xa3, 0x4d, 0x61, 0x70, 0xa6, 0x44, 0x6f, 0x6d, 0x61, 0x69,
-		0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53,
-		0x74, 0x72, 0xa6, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0xa5,
-		0x52, 0x61, 0x6e, 0x67, 0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e,
-		0x64, 0x12, 0xa3, 0x53, 0x74, 0x72, 0xa4, 0x62, 0x6f, 0x6f,
-		0x6c, 0x87, 0xa3, 0x5a, 0x69, 0x64, 0x01, 0xab, 0x46, 0x69,
-		0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa1,
-		0x65, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67,
-		0x4e, 0x61, 0x6d, 0x65, 0xa1, 0x65, 0xac, 0x46, 0x69, 0x65,
-		0x6c, 0x64, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xa5,
-		0x69, 0x6e, 0x74, 0x36, 0x34, 0xad, 0x46, 0x69, 0x65, 0x6c,
-		0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x17,
-		0xae, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x50, 0x72, 0x69, 0x6d,
-		0x69, 0x74, 0x69, 0x76, 0x65, 0x11, 0xad, 0x46, 0x69, 0x65,
+		0x2d, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61, 0x74,
+		0x65, 0x67, 0x6f, 0x72, 0x79, 0x1c, 0xa4, 0x53, 0x6b, 0x69,
+		0x70, 0xc3, 0x87, 0xa3, 0x5a, 0x69, 0x64, 0x01, 0xab, 0x46,
+		0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65,
+		0xa2, 0x4e, 0x74, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54,
+		0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa2, 0x4e, 0x74, 0xac,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65, 0x53,
+		0x74, 0x72, 0xa3, 0x69, 0x6e, 0x74, 0xad, 0x46, 0x69, 0x65,
+		0x6c, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79,
+		0x17, 0xae, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x50, 0x72, 0x69,
+		0x6d, 0x69, 0x74, 0x69, 0x76, 0x65, 0x0d, 0xad, 0x46, 0x69,
+		0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70,
+		0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x0d, 0xa3, 0x53,
+		0x74, 0x72, 0xa3, 0x69, 0x6e, 0x74, 0x86, 0xa3, 0x5a, 0x69,
+		0x64, 0x02, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f,
+		0x4e, 0x61, 0x6d, 0x65, 0xa4, 0x53, 0x6e, 0x6f, 0x74, 0xac,
+		0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61, 0x67, 0x4e, 0x61,
+		0x6d, 0x65, 0xa4, 0x53, 0x6e, 0x6f, 0x74, 0xac, 0x46, 0x69,
+		0x65, 0x6c, 0x64, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72,
+		0xaf, 0x6d, 0x61, 0x70, 0x5b, 0x73, 0x74, 0x72, 0x69, 0x6e,
+		0x67, 0x5d, 0x62, 0x6f, 0x6f, 0x6c, 0xad, 0x46, 0x69, 0x65,
+		0x6c, 0x64, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79,
+		0x18, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c,
+		0x6c, 0x54, 0x79, 0x70, 0x65, 0x84, 0xa4, 0x4b, 0x69, 0x6e,
+		0x64, 0x18, 0xa3, 0x53, 0x74, 0x72, 0xa3, 0x4d, 0x61, 0x70,
+		0xa6, 0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x82, 0xa4, 0x4b,
+		0x69, 0x6e, 0x64, 0x02, 0xa3, 0x53, 0x74, 0x72, 0xa6, 0x73,
+		0x74, 0x72, 0x69, 0x6e, 0x67, 0xa5, 0x52, 0x61, 0x6e, 0x67,
+		0x65, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x12, 0xa3, 0x53,
+		0x74, 0x72, 0xa4, 0x62, 0x6f, 0x6f, 0x6c, 0x86, 0xa3, 0x5a,
+		0x69, 0x64, 0x03, 0xab, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x47,
+		0x6f, 0x4e, 0x61, 0x6d, 0x65, 0xa6, 0x4e, 0x6f, 0x74, 0x79,
+		0x65, 0x74, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x61,
+		0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa6, 0x4e, 0x6f, 0x74, 0x79,
+		0x65, 0x74, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54, 0x79,
+		0x70, 0x65, 0x53, 0x74, 0x72, 0xaf, 0x6d, 0x61, 0x70, 0x5b,
+		0x73, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x5d, 0x62, 0x6f, 0x6f,
+		0x6c, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43, 0x61, 0x74,
+		0x65, 0x67, 0x6f, 0x72, 0x79, 0x18, 0xad, 0x46, 0x69, 0x65,
 		0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65,
-		0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x11, 0xa3, 0x53, 0x74,
-		0x72, 0xa5, 0x69, 0x6e, 0x74, 0x36, 0x34, 0xa7, 0x49, 0x6d,
+		0x84, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x18, 0xa3, 0x53, 0x74,
+		0x72, 0xa3, 0x4d, 0x61, 0x70, 0xa6, 0x44, 0x6f, 0x6d, 0x61,
+		0x69, 0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x02, 0xa3,
+		0x53, 0x74, 0x72, 0xa6, 0x73, 0x74, 0x72, 0x69, 0x6e, 0x67,
+		0xa5, 0x52, 0x61, 0x6e, 0x67, 0x65, 0x82, 0xa4, 0x4b, 0x69,
+		0x6e, 0x64, 0x12, 0xa3, 0x53, 0x74, 0x72, 0xa4, 0x62, 0x6f,
+		0x6f, 0x6c, 0x86, 0xa3, 0x5a, 0x69, 0x64, 0x04, 0xab, 0x46,
+		0x69, 0x65, 0x6c, 0x64, 0x47, 0x6f, 0x4e, 0x61, 0x6d, 0x65,
+		0xa4, 0x53, 0x65, 0x74, 0x6d, 0xac, 0x46, 0x69, 0x65, 0x6c,
+		0x64, 0x54, 0x61, 0x67, 0x4e, 0x61, 0x6d, 0x65, 0xa4, 0x53,
+		0x65, 0x74, 0x6d, 0xac, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x54,
+		0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0xa6, 0x5b, 0x5d, 0x2a,
+		0x69, 0x6e, 0x6e, 0xad, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x43,
+		0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x1a, 0xad, 0x46,
+		0x69, 0x65, 0x6c, 0x64, 0x46, 0x75, 0x6c, 0x6c, 0x54, 0x79,
+		0x70, 0x65, 0x83, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x1a, 0xa3,
+		0x53, 0x74, 0x72, 0xa5, 0x53, 0x6c, 0x69, 0x63, 0x65, 0xa6,
+		0x44, 0x6f, 0x6d, 0x61, 0x69, 0x6e, 0x83, 0xa4, 0x4b, 0x69,
+		0x6e, 0x64, 0x1c, 0xa3, 0x53, 0x74, 0x72, 0xa7, 0x50, 0x6f,
+		0x69, 0x6e, 0x74, 0x65, 0x72, 0xa6, 0x44, 0x6f, 0x6d, 0x61,
+		0x69, 0x6e, 0x82, 0xa4, 0x4b, 0x69, 0x6e, 0x64, 0x16, 0xa3,
+		0x53, 0x74, 0x72, 0xa3, 0x69, 0x6e, 0x6e, 0xa7, 0x49, 0x6d,
 		0x70, 0x6f, 0x72, 0x74, 0x73, 0x91, 0xbd, 0x22, 0x67, 0x69,
 		0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x67,
 		0x6c, 0x79, 0x63, 0x65, 0x72, 0x69, 0x6e, 0x65, 0x2f, 0x72,
@@ -1713,7 +1713,7 @@ func (FileMy2) ZebraSchemaInMsgpack2Format() []byte {
 
 // ZebraSchemaInJsonCompact provides the ZebraPack Schema in compact JSON format, length 2153 bytes
 func (FileMy2) ZebraSchemaInJsonCompact() []byte {
-	return []byte(`{"SourcePath":"my2.go","SourcePackage":"testdata","ZebraSchemaId":0,"Structs":{"u":{"StructName":"u","Fields":[{"Zid":0,"FieldGoName":"m","FieldTagName":"m","FieldTypeStr":"map[string]*Tr","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":28,"Str":"Pointer","Domain":{"Kind":22,"Str":"Tr"}}}},{"Zid":1,"FieldGoName":"s","FieldTagName":"s","FieldTypeStr":"string","FieldCategory":23,"FieldPrimitive":2,"FieldFullType":{"Kind":2,"Str":"string"}},{"Zid":2,"FieldGoName":"n","FieldTagName":"n","FieldTypeStr":"int64","FieldCategory":23,"FieldPrimitive":17,"FieldFullType":{"Kind":17,"Str":"int64"}}]},"Tr":{"StructName":"Tr","Fields":[{"Zid":0,"FieldGoName":"U","FieldTagName":"U","FieldTypeStr":"string","FieldCategory":23,"FieldPrimitive":2,"FieldFullType":{"Kind":2,"Str":"string"}},{"Zid":-1,"FieldGoName":"et","FieldTagName":"-","FieldCategory":28,"Skip":true},{"Zid":1,"FieldGoName":"Nt","FieldTagName":"Nt","FieldTypeStr":"int","FieldCategory":23,"FieldPrimitive":13,"FieldFullType":{"Kind":13,"Str":"int"}},{"Zid":2,"FieldGoName":"Snot","FieldTagName":"Snot","FieldTypeStr":"map[string]bool","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":18,"Str":"bool"}}},{"Zid":3,"FieldGoName":"Notyet","FieldTagName":"Notyet","FieldTypeStr":"map[string]bool","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":18,"Str":"bool"}}},{"Zid":4,"FieldGoName":"Setm","FieldTagName":"Setm","FieldTypeStr":"[]*inn","FieldCategory":26,"FieldFullType":{"Kind":26,"Str":"Slice","Domain":{"Kind":28,"Str":"Pointer","Domain":{"Kind":22,"Str":"inn"}}}}]},"inn":{"StructName":"inn","Fields":[{"Zid":0,"FieldGoName":"j","FieldTagName":"j","FieldTypeStr":"map[string]bool","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":18,"Str":"bool"}}},{"Zid":1,"FieldGoName":"e","FieldTagName":"e","FieldTypeStr":"int64","FieldCategory":23,"FieldPrimitive":17,"FieldFullType":{"Kind":17,"Str":"int64"}}]}},"Imports":["\"github.com/glycerine/rbtree\""]}`)
+	return []byte(`{"SourcePath":"my2.go","SourcePackage":"testdata","ZebraSchemaId":0,"Structs":{"inn":{"StructName":"inn","Fields":[{"Zid":0,"FieldGoName":"j","FieldTagName":"j","FieldTypeStr":"map[string]bool","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":18,"Str":"bool"}}},{"Zid":1,"FieldGoName":"e","FieldTagName":"e","FieldTypeStr":"int64","FieldCategory":23,"FieldPrimitive":17,"FieldFullType":{"Kind":17,"Str":"int64"}}]},"u":{"StructName":"u","Fields":[{"Zid":0,"FieldGoName":"m","FieldTagName":"m","FieldTypeStr":"map[string]*Tr","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":28,"Str":"Pointer","Domain":{"Kind":22,"Str":"Tr"}}}},{"Zid":1,"FieldGoName":"s","FieldTagName":"s","FieldTypeStr":"string","FieldCategory":23,"FieldPrimitive":2,"FieldFullType":{"Kind":2,"Str":"string"}},{"Zid":2,"FieldGoName":"n","FieldTagName":"n","FieldTypeStr":"int64","FieldCategory":23,"FieldPrimitive":17,"FieldFullType":{"Kind":17,"Str":"int64"}}]},"Tr":{"StructName":"Tr","Fields":[{"Zid":0,"FieldGoName":"U","FieldTagName":"U","FieldTypeStr":"string","FieldCategory":23,"FieldPrimitive":2,"FieldFullType":{"Kind":2,"Str":"string"}},{"Zid":-1,"FieldGoName":"et","FieldTagName":"-","FieldCategory":28,"Skip":true},{"Zid":1,"FieldGoName":"Nt","FieldTagName":"Nt","FieldTypeStr":"int","FieldCategory":23,"FieldPrimitive":13,"FieldFullType":{"Kind":13,"Str":"int"}},{"Zid":2,"FieldGoName":"Snot","FieldTagName":"Snot","FieldTypeStr":"map[string]bool","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":18,"Str":"bool"}}},{"Zid":3,"FieldGoName":"Notyet","FieldTagName":"Notyet","FieldTypeStr":"map[string]bool","FieldCategory":24,"FieldFullType":{"Kind":24,"Str":"Map","Domain":{"Kind":2,"Str":"string"},"Range":{"Kind":18,"Str":"bool"}}},{"Zid":4,"FieldGoName":"Setm","FieldTagName":"Setm","FieldTypeStr":"[]*inn","FieldCategory":26,"FieldFullType":{"Kind":26,"Str":"Slice","Domain":{"Kind":28,"Str":"Pointer","Domain":{"Kind":22,"Str":"inn"}}}}]}},"Imports":["\"github.com/glycerine/rbtree\""]}`)
 }
 
 // ZebraSchemaInJsonPretty provides the ZebraPack Schema in pretty JSON format, length 6280 bytes
@@ -1723,6 +1723,42 @@ func (FileMy2) ZebraSchemaInJsonPretty() []byte {
     "SourcePackage": "testdata",
     "ZebraSchemaId": 0,
     "Structs": {
+        "inn": {
+            "StructName": "inn",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "j",
+                    "FieldTagName": "j",
+                    "FieldTypeStr": "map[string]bool",
+                    "FieldCategory": 24,
+                    "FieldFullType": {
+                        "Kind": 24,
+                        "Str": "Map",
+                        "Domain": {
+                            "Kind": 2,
+                            "Str": "string"
+                        },
+                        "Range": {
+                            "Kind": 18,
+                            "Str": "bool"
+                        }
+                    }
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "e",
+                    "FieldTagName": "e",
+                    "FieldTypeStr": "int64",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 17,
+                    "FieldFullType": {
+                        "Kind": 17,
+                        "Str": "int64"
+                    }
+                }
+            ]
+        },
         "u": {
             "StructName": "u",
             "Fields": [
@@ -1864,42 +1900,6 @@ func (FileMy2) ZebraSchemaInJsonPretty() []byte {
                                 "Str": "inn"
                             }
                         }
-                    }
-                }
-            ]
-        },
-        "inn": {
-            "StructName": "inn",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "j",
-                    "FieldTagName": "j",
-                    "FieldTypeStr": "map[string]bool",
-                    "FieldCategory": 24,
-                    "FieldFullType": {
-                        "Kind": 24,
-                        "Str": "Map",
-                        "Domain": {
-                            "Kind": 2,
-                            "Str": "string"
-                        },
-                        "Range": {
-                            "Kind": 18,
-                            "Str": "bool"
-                        }
-                    }
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "e",
-                    "FieldTagName": "e",
-                    "FieldTypeStr": "int64",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 17,
-                    "FieldFullType": {
-                        "Kind": 17,
-                        "Str": "int64"
                     }
                 }
             ]
