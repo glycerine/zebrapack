@@ -244,6 +244,66 @@ func (m *Reader) Buffered() int { return m.R.Buffered() }
 // BufferSize returns the capacity of the read buffer.
 func (m *Reader) BufferSize() int { return m.R.BufferSize() }
 
+// NextTypeName inspects the next time, assuming it is a
+// struct (map) for its (-1: name) key-value pair, and returns the name
+// or empty string if not found. Also empty string if not
+// a map type.
+func (m *Reader) NextStructName() string {
+	ty, err := m.NextType()
+	if err != nil {
+		return ""
+	}
+	if ty != MapType {
+		return ""
+	}
+	p, err := m.R.Peek(3)
+	if err != nil {
+		return ""
+	}
+	if p[1] != 0xff {
+		return "" // not the -1 struct name
+	}
+	lead := p[2]
+	var read int
+	if isfixstr(lead) {
+		// lead is a fixstr, good
+		read = int(rfixstr(lead))
+	} else {
+		switch lead {
+		case mstr8, mbin8:
+			p, err = m.R.Peek(4)
+			if err != nil {
+				return ""
+			}
+			read = int(p[3])
+		case mstr16, mbin16:
+			p, err = m.R.Peek(5)
+			if err != nil {
+				return ""
+			}
+			read = int(big.Uint16(p[3:]))
+		case mstr32, mbin32:
+			p, err = m.R.Peek(7)
+			if err != nil {
+				return ""
+			}
+			read = int(big.Uint32(p[3:]))
+		default:
+			return "" // not a string
+		}
+	}
+	// read string strictly through peaking!
+	if read == 0 {
+		return ""
+	}
+	p, err = m.R.Peek(3 + read)
+	if err != nil {
+		return ""
+	}
+
+	return string(p[3:])
+}
+
 // NextType returns the next object type to be decoded.
 func (m *Reader) NextType() (Type, error) {
 	if m.AlwaysNil {
