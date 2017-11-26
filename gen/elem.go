@@ -253,7 +253,7 @@ type Elem interface {
 func Ident(id string, isIface bool) *BaseElem {
 	p, ok := primitives[id]
 	if ok {
-		return &BaseElem{Value: p}
+		return &BaseElem{Value: p, isIface: isIface}
 	}
 	be := &BaseElem{Value: IDENT, isIface: isIface}
 	be.Alias(id)
