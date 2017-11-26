@@ -394,7 +394,7 @@ func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inne
 		p.printf(`
 		// NB: we have a slice of interfaces, so we need to
 		//  fill target with the concrete implementation
-		concreteName_%s := dc.NextStructName()
+		concreteName_%s := nbs.NextStructName(bts)
         `, concreteName)
 
 		p.printf("\n for %s := range %s {\n", idx, iter)
