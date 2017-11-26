@@ -247,7 +247,7 @@ func (u *unmarshalGen) gSlice(s *Slice) {
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.resizeSlice(sz, s)
-	u.p.rangeBlock(s.Index, s.Varname(), u, s.Els)
+	u.p.unmarshalRangeBlock(s.Index, s.Varname(), u, s.Els)
 	u.p.closeblock()
 }
 

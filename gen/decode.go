@@ -350,7 +350,7 @@ func (d *decodeGen) gArray(a *Array) {
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.arrayCheck(a.SizeResolved, sz, "!dc.IsNil() && ")
 	d.p.closeblock()
-	d.p.rangeBlock(a.Index, a.Varname(), d, a.Els)
+	d.p.decodeRangeBlock(a.Index, a.Varname(), d, a.Els)
 }
 
 func (d *decodeGen) gPtr(p *Ptr) {
