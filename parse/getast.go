@@ -484,6 +484,10 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		if len(tags) > 1 && anyMatches(tags[1:], "showzero") {
 			showzero = true
 		}
+		if len(tags) > 1 && anyMatches(tags[1:], "iface") {
+			isIface = true
+		}
+
 		// ignore "-" fields
 		if tags[0] == "-" {
 			skip = true
@@ -551,7 +555,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		// so we can't return early here.
 	}
 
-	if fs != nil && fs.PackageInfo != nil &&
+	if !isIface && fs != nil && fs.PackageInfo != nil &&
 		len(fs.PackageInfo.Info.Types) > 0 {
 
 		if tv, ok := fs.PackageInfo.Info.Types[f.Type]; ok {
@@ -593,10 +597,6 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 	if sf[0].FieldTag == "" {
 		sf[0].FieldTag = sf[0].FieldName
 	}
-
-	//	if isIface {
-	//		fmt.Printf("\n DEBUG-ISIFACE: '%s' detected as interface\n", sf[0].FieldName)
-	//	}
 
 	// validate extension
 	if extension {
