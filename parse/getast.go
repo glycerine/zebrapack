@@ -812,14 +812,6 @@ func (fs *FileSet) parseExpr(e ast.Expr, isIface bool) (gen.Elem, error) {
 				default:
 					panic(fmt.Errorf("what to do with type %T here???", cnst))
 				}
-				/*
-					//fmt.Printf("\n selector using default return path...\n")
-						return &gen.Array{
-							SizeNamed:    stringify(s),
-							SizeResolved: stringify(s), // not really resolved, but don't leave it blank.
-							Els:          els,
-						}, nil
-				*/
 			default:
 				return nil, nil
 			}
@@ -862,7 +854,6 @@ func (fs *FileSet) parseExpr(e ast.Expr, isIface bool) (gen.Elem, error) {
 				isIface = types.IsInterface(tv.Type)
 			}
 		}
-
 		return gen.Ident(stringify(e), isIface), nil
 
 	case *ast.InterfaceType:

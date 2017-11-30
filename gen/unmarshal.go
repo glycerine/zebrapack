@@ -193,6 +193,8 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 		u.p.printf("\n{\nvar %s %s", refname, b.BaseType())
 	}
 
+	vname := b.Varname()
+
 	switch b.Value {
 	case Bytes:
 		u.p.printf("\n if nbs.AlwaysNil || msgp.IsNil(bts) {\n if !nbs.AlwaysNil { bts = bts[1:]  }\n  %s = %s[:0]} else { %s, bts, err = nbs.ReadBytesBytes(bts, %s)\n", refname, refname, refname, lowered)
@@ -204,8 +206,39 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 		u.p.print(errcheck)
 		u.p.closeblock()
 	case IDENT:
-		u.p.printf("\n  bts, err = %s.%sUnmarshalMsg(bts);", lowered, u.cfg.MethodPrefix)
-		u.p.print(errcheck)
+		//u.p.printf("\n  bts, err = %s.%sUnmarshalMsg(bts);", lowered, u.cfg.MethodPrefix)
+		//u.p.print(errcheck)
+		if !b.IsInInterfaceSlice() {
+			if b.IsInterface() {
+				targ, conc, fact := gensym(), gensym(), gensym()
+				u.p.printf(`
+    var conc_%s string
+	conc_%s, bts = nbs.NextStructName(bts)
+	if conc_%s != "" {
+		if cfac_%s, cfacOK_%s := interface{}(z).(msgp.ConcreteFactory); cfacOK_%s {
+			targ_%s := cfac_%s.NewValueAsInterface(conc_%s).(%s)
+			bts, err = targ_%s.UnmarshalMsg(bts)
+			if err != nil {
+				return
+			}
+            %s = targ_%s
+			continue
+		}
+	}
+    if msgp.IsNil(bts) {
+       bts = bts[1:]
+       continue
+    }
+    bts, err = %s.%sUnmarshalMsg(bts)
+	
+`, conc, conc, conc, fact, fact, fact, targ, fact, conc, b.BaseType(), targ, vname, targ, vname, u.cfg.MethodPrefix)
+
+			} else {
+
+				u.p.printf("\n  bts, err = %s.%sUnmarshalMsg(bts);", lowered, u.cfg.MethodPrefix)
+				//u.p.print(errcheck)
+			}
+		}
 	default:
 		//		u.p.printf("\n if nbs.AlwaysNil || msgp.IsNil(bts) { if !nbs.AlwaysNil { bts=bts[1:]}\n   %s \n} else {  %s, bts, err = nbs.Read%sBytes(bts)\n", b.ZeroLiteral(refname), refname, b.BaseName())
 		u.p.printf("\n %s, bts, err = nbs.Read%sBytes(bts)\n", refname, b.BaseName())

@@ -1344,20 +1344,48 @@ func getSize(b []byte) (uintptr, uintptr, error) {
 // struct (map) for its (-1: name) key-value pair, and returns the name
 // or empty string if not found. Also empty string if not
 // a map type.
-func (nbs *NilBitsStack) NextStructName(o []byte) string {
+func (nbs *NilBitsStack) NextStructName(o []byte) (nm string, by []byte) {
+	//	defer func() {
+	//		fmt.Printf("\n NextStructName returning '%s'\n", nm)
+	//	}()
 	ty := NextType(o)
 	if ty != MapType {
-		return ""
+		return "", o
 	}
 	if len(o) < 3 {
-		return ""
+		return "", o
 	}
-	skip := 3
-	p := o[:skip]
-	if p[1] != 0xff {
-		return "" // not the -1 struct name
+
+	// map header can be of varying size
+	hdsz := 1
+	p := o[:2]
+	lead := p[0]
+	if isfixmap(lead) {
+		hdsz = 1
+	} else {
+		switch lead {
+		case mmap16:
+			hdsz = 3
+		case mmap32:
+			hdsz = 5
+		default:
+			//err = badPrefix(MapType, lead)
+			return "", o
+		}
 	}
-	lead := p[2]
+
+	// now we've got the map header out of the
+	// way in hdsz bytes
+	p = o[:hdsz+3]
+	keystart := p[hdsz:]
+	if keystart[0] != 0xff {
+		return "", o // not the -1 key with value the struct name
+	}
+
+	valstart := hdsz + 1
+	valTypeBytes := 1
+	skip := valstart + valTypeBytes
+	lead = p[valstart]
 	var read int
 	if isfixstr(lead) {
 		// lead is a fixstr, good
@@ -1365,36 +1393,32 @@ func (nbs *NilBitsStack) NextStructName(o []byte) string {
 	} else {
 		switch lead {
 		case mstr8, mbin8:
-			if len(o) < 4 {
-				return ""
-			}
-			skip = 4
+			valTypeBytes = 2
+			skip = valstart + valTypeBytes
 			p = o[:skip]
-			read = int(p[3])
+			read = int(p[valstart+1])
 		case mstr16, mbin16:
-			if len(o) < 5 {
-				return ""
-			}
-			skip = 5
+			valTypeBytes = 3
+			skip = valstart + valTypeBytes
 			p = o[:skip]
-			read = int(big.Uint16(p[3:]))
+			read = int(big.Uint16(p[valstart+1:]))
 		case mstr32, mbin32:
-			if len(o) < 7 {
-				return ""
-			}
-			skip = 7
+			valTypeBytes = 5
+			skip = valstart + valTypeBytes
 			p = o[:skip]
-			read = int(big.Uint32(p[3:]))
+			read = int(big.Uint32(p[valstart+1:]))
 		default:
-			return "" // not a string
+			return "", o // not a string
 		}
 	}
 	// read string strictly through peaking!
 	if read == 0 {
-		return ""
+		return "", o
 	}
 	if len(o) < skip+read {
-		return ""
+		return "", o
 	}
-	return string(p[skip : skip+read])
+
+	//	return string(o[skip : skip+read]), o[skip+read:]
+	return string(o[skip : skip+read]), o
 }

@@ -254,7 +254,13 @@ func (m *marshalGen) gBase(b *BaseElem) {
 	switch b.Value {
 	case IDENT:
 		echeck = true
-		m.p.printf("\no, err = %s.%sMarshalMsg(o)", vname, m.cfg.MethodPrefix)
+		if b.isIface {
+			echeck = true
+			m.p.printf("\no, err = msgp.AppendIntf(o, %s) // is.iface, gen/marshal.go:259, b='%#v'", vname, b)
+		} else {
+			m.p.printf("\no, err = %s.%sMarshalMsg(o) // not is.iface, gen/marshal.go:261", vname, m.cfg.MethodPrefix)
+		}
+
 	case Intf, Ext:
 		echeck = true
 		m.p.printf("\no, err = msgp.Append%s(o, %s)", b.BaseName(), vname)

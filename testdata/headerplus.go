@@ -1,7 +1,10 @@
 package testdata
 
 import (
+	"fmt"
 	"time"
+
+	"github.com/glycerine/zebrapack/msgp"
 )
 
 //go:generate zebrapack
@@ -9,15 +12,25 @@ import (
 // interface testing
 type Familiar interface {
 	Name() string
+
+	msgp.Decodable
+	msgp.Encodable
+	msgp.Marshaler
+	msgp.Unmarshaler
+	msgp.Sizer
 }
 
-type Dog struct{}
+type Dog struct {
+	Nm string `zid:"0"`
+}
 
-func (d *Dog) Name() string { return "Rover" }
+func (d *Dog) Name() string { return d.Nm }
 
-type Owl struct{}
+type Owl struct {
+	Nm string `zid:"0"`
+}
 
-func (o *Owl) Name() string { return "Hedwig" }
+func (o *Owl) Name() string { return o.Nm }
 
 type Header struct {
 	S1 string `zid:"0"`
@@ -30,5 +43,16 @@ type Plus struct {
 	N   int64     `zid:"1"`
 	S   string    `zid:"2"`
 	F   float64   `zid:"3"`
-	Pet Familiar  `zid:"4"`
+	Pet Familiar  `msg:",iface" zid:"4"`
+}
+
+func (pl *Plus) NewValueAsInterface(typename string) interface{} {
+	fmt.Printf("\n DEBUG! NewValueAsInterface called with typename='%s'\n", typename)
+	switch typename {
+	case "Dog":
+		return &Dog{}
+	case "Owl":
+		return &Owl{}
+	}
+	panic(fmt.Sprintf("unknown "))
 }

@@ -265,7 +265,31 @@ func (d *decodeGen) gBase(b *BaseElem) {
 			d.p.printf("\n%s, err = dc.ReadBytes(%s)", vname, vname)
 		}
 	case IDENT:
-		d.p.printf("\nerr = %s.%sDecodeMsg(dc)", vname, d.cfg.MethodPrefix)
+		if !b.IsInInterfaceSlice() {
+			if b.IsInterface() {
+				targ, conc, fact := gensym(), gensym(), gensym()
+				d.p.printf(`
+	conc_%s := dc.NextStructName()
+	if conc_%s != "" {
+		if cfac_%s, cfacOK_%s := interface{}(z).(msgp.ConcreteFactory); cfacOK_%s {
+			targ_%s := cfac_%s.NewValueAsInterface(conc_%s).(%s)
+			err = targ_%s.DecodeMsg(dc)
+			if err != nil {
+				return
+			}
+            %s = targ_%s
+			continue
+		}
+	}
+    if %s != nil {
+	  err = %s.%sDecodeMsg(dc)
+    }
+`, conc, conc, fact, fact, fact, targ, fact, conc, b.BaseType(), targ, vname, targ, vname, vname, d.cfg.MethodPrefix)
+			} else {
+				d.p.printf("\nerr = %s.%sDecodeMsg(dc)", vname, d.cfg.MethodPrefix)
+			}
+		}
+
 	case Ext:
 		d.p.printf("\n if !dc.IsNil() {")
 		d.p.printf("\nerr = dc.ReadExtension(%s)\n} else { err = dc.ReadNil() }\n", vname)

@@ -355,15 +355,19 @@ func (p *printer) closeblock() { p.print("\n}") }
 //
 func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner Elem) {
 	if inner.IsInterface() {
+		inner.SetIsInInterfaceSlice()
 		target, concreteName := gensym(), gensym()
 		cfac := gensym()
 		p.printf(`
 		// NB: we have a slice of interfaces, so we need to
-		//  fill target with the concrete implementation
+		//  fill target with the concrete implementation`)
+
+		p.printf("\n for %s := range %s {\n", idx, iter)
+
+		p.printf(`
 		concreteName_%s := dc.NextStructName()
         `, concreteName)
 
-		p.printf("\n for %s := range %s {\n", idx, iter)
 		p.printf("target_%s :=  %s[%s]\n", target, iter, idx)
 		p.printf(`if concreteName_%s != "" {
 				if cfac_%s, cfac_%s_OK := interface{}(z).(msgp.ConcreteFactory); cfac_%s_OK {
@@ -379,40 +383,8 @@ func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner E
                 continue
               }
         `, iter, idx, target)
-		next(t, inner)
-	} else {
-		p.printf("\n for %s := range %s {", idx, iter)
-		next(t, inner)
-	}
-	p.closeblock()
-}
 
-func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inner Elem) {
-	if inner.IsInterface() {
-		target, concreteName := gensym(), gensym()
-		cfac := gensym()
-		p.printf(`
-		// NB: we have a slice of interfaces, so we need to
-		//  fill target with the concrete implementation
-		concreteName_%s := nbs.NextStructName(bts)
-        `, concreteName)
-
-		p.printf("\n for %s := range %s {\n", idx, iter)
-		p.printf("target_%s :=  %s[%s]\n", target, iter, idx)
-		p.printf(`if concreteName_%s != "" {
-				if cfac_%s, cfac_%s_OK := interface{}(z).(msgp.ConcreteFactory); cfac_%s_OK {
-					target_%s = cfac_%s.NewValueAsInterface(concreteName_%s).(%s)
-				}
-  			    bts, err = target_%s.UnmarshalMsg(bts)
-			    if err != nil {
-				    return
-			    }
-		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
-		p.printf(`
-                %s[%s] = target_%s
-                continue
-              }
-        `, iter, idx, target)
+		p.printf("\nerr = %s[%s].DecodeMsg(dc) // from decodeRangeBlock in spec.go:446. IsInInterfaceSlice: %v", iter, idx, inner.IsInInterfaceSlice())
 
 		next(t, inner)
 	} else {
@@ -473,4 +445,47 @@ func (p *printer) ok() bool { return p.err == nil }
 
 func tobaseConvert(b *BaseElem) string {
 	return b.ToBase() + "(" + b.Varname() + ")"
+}
+
+func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inner Elem) {
+	if inner.IsInterface() {
+		inner.SetIsInInterfaceSlice()
+
+		target, concreteName := gensym(), gensym()
+		cfac := gensym()
+		p.printf(`
+		// NB: we have a slice of interfaces, so we need to
+		//  fill target with the concrete implementation`)
+
+		p.printf("\n for %s := range %s {\n", idx, iter)
+
+		p.printf(`
+        var concreteName_%s string
+		concreteName_%s, bts = nbs.NextStructName(bts)
+        `, concreteName, concreteName)
+
+		p.printf("target_%s :=  %s[%s]\n", target, iter, idx)
+		p.printf(`if concreteName_%s != "" {
+				if cfac_%s, cfac_%s_OK := interface{}(z).(msgp.ConcreteFactory); cfac_%s_OK {
+					target_%s = cfac_%s.NewValueAsInterface(concreteName_%s).(%s)
+				}
+  			    bts, err = target_%s.UnmarshalMsg(bts)
+			    if err != nil {
+				    return
+			    }
+		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+		p.printf(`
+                %s[%s] = target_%s
+                continue
+              }
+        `, iter, idx, target)
+
+		p.printf("\nbts, err = %s[%s].UnmarshalMsg(bts) // from unmarshalRangeBlock in spec.go:486. IsInInterfaceSlice: %v", iter, idx, inner.IsInInterfaceSlice())
+
+		next(t, inner)
+	} else {
+		p.printf("\n for %s := range %s {", idx, iter)
+		next(t, inner)
+	}
+	p.closeblock()
 }

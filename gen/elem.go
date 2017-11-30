@@ -197,6 +197,9 @@ type Elem interface {
 	MethodPrefix() string
 	SetHasMethodPrefix(hmp HasMethodPrefix)
 	IsInterface() bool
+	IsInInterfaceSlice() bool
+	SetIsInInterfaceSlice()
+
 	SkipMe() bool
 
 	hidden()
@@ -225,6 +228,12 @@ type Array struct {
 func (s *Array) IsInterface() bool {
 	return false
 }
+
+func (s *Array) IsInInterfaceSlice() bool {
+	return false
+}
+
+func (s *Array) SetIsInInterfaceSlice() {}
 
 func (a *Array) ZeroLiteral(v string) string {
 	b := a.Els.ZeroLiteral(fmt.Sprintf("%s[i]", v))
@@ -296,6 +305,11 @@ func (s *Map) IsInterface() bool {
 	return false
 }
 
+func (s *Map) IsInInterfaceSlice() bool {
+	return false
+}
+func (m *Map) SetIsInInterfaceSlice() {}
+
 func (m *Map) GetZtype() (r zebra.Ztype) {
 
 	r.Kind = zebra.MapCat
@@ -360,6 +374,14 @@ func (s *Slice) IsInterface() bool {
 	return s.Els.IsInterface()
 }
 
+func (s *Slice) IsInInterfaceSlice() bool {
+	return false
+}
+
+func (s *Slice) SetIsInInterfaceSlice() {
+	s.Els.SetIsInInterfaceSlice()
+}
+
 func (a *Slice) ZeroLiteral(v string) string {
 	return fmt.Sprintf(`%s = %s[:0]`, v, v)
 }
@@ -410,6 +432,12 @@ type Ptr struct {
 func (s *Ptr) IsInterface() bool {
 	return false
 }
+
+func (s *Ptr) IsInInterfaceSlice() bool {
+	return false
+}
+
+func (s *Ptr) SetIsInInterfaceSlice() {}
 
 func (s *Ptr) GetZtype() (r zebra.Ztype) {
 	r.Kind = zebra.PointerCat
@@ -495,6 +523,12 @@ func (s *Struct) IsInterface() bool {
 	return false
 }
 
+func (s *Struct) IsInInterfaceSlice() bool {
+	return false
+}
+
+func (s *Struct) SetIsInInterfaceSlice() {}
+
 func (s *Struct) GetZtype() (r zebra.Ztype) {
 	r.Kind = zebra.StructCat
 	r.Str = r.Kind.String() // s.TypeName()
@@ -579,17 +613,26 @@ func (s *StructField) IsInterface() bool {
 // MessagePack type.
 type BaseElem struct {
 	Common
-	ShimToBase   string    // shim to base type, or empty
-	ShimFromBase string    // shim from base type, or empty
-	Value        Primitive // Type of element
-	Convert      bool      // should we do an explicit conversion?
-	mustinline   bool      // must inline; not printable
-	needsref     bool      // needs reference for shim
-	isIface      bool
+	ShimToBase     string    // shim to base type, or empty
+	ShimFromBase   string    // shim from base type, or empty
+	Value          Primitive // Type of element
+	Convert        bool      // should we do an explicit conversion?
+	mustinline     bool      // must inline; not printable
+	needsref       bool      // needs reference for shim
+	isIface        bool
+	isInIfaceSlice bool
 }
 
 func (s *BaseElem) IsInterface() bool {
 	return s.isIface
+}
+
+func (s *BaseElem) IsInInterfaceSlice() bool {
+	return s.isInIfaceSlice
+}
+
+func (s *BaseElem) SetIsInInterfaceSlice() {
+	s.isInIfaceSlice = true
 }
 
 func (s *BaseElem) GetZtype() (r zebra.Ztype) {

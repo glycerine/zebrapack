@@ -290,6 +290,10 @@ func basesizeExpr(b *BaseElem, s *sizeGen) string {
 	if b.Convert {
 		vname = tobaseConvert(b)
 	}
+	if b.isIface {
+		return "msgp.GuessSize(" + vname + ")"
+	}
+
 	switch b.Value {
 	case Ext:
 		return "msgp.ExtensionPrefixSize + " + stripRef(vname) + ".Len()"
