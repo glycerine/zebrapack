@@ -402,23 +402,25 @@ func (p zidSetSlice) Len() int           { return len(p) }
 func (p zidSetSlice) Less(i, j int) bool { return p[i].zid < p[j].zid }
 func (p zidSetSlice) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
 
-func (fs *FileSet) parseFieldList(fl *ast.FieldList) ([]gen.StructField, error) {
+func (fs *FileSet) parseFieldList(fl *ast.FieldList) (out []gen.StructField, missingZid bool, err error) {
 	if fl == nil || fl.NumFields() == 0 {
-		return nil, nil
+		return nil, false, nil
 	}
-	out := make([]gen.StructField, 0, fl.NumFields())
+	out = make([]gen.StructField, 0, fl.NumFields())
 	var zidSet []zid
 	for _, field := range fl.List {
 		pushstate(fieldName(field))
 		fds, err := fs.getField(field)
 		if err != nil {
 			fatalf(err.Error())
-			return nil, err
+			return nil, missingZid, err
 		}
 		for _, x := range fds {
 			//fmt.Printf("\n on field '%#v'\n", x)
 			if x.ZebraId >= 0 {
 				zidSet = append(zidSet, zid{zid: x.ZebraId, fieldName: x.FieldName})
+			} else {
+				missingZid = true
 			}
 		}
 		if len(fds) > 0 {
@@ -432,15 +434,15 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) ([]gen.StructField, error) 
 	if len(zidSet) > 0 {
 		sort.Sort(zidSetSlice(zidSet))
 		if zidSet[0].zid != 0 {
-			return nil, fmt.Errorf("zid (zebra id tags on struct fields) must start at 0; lowest zid was '%v' at field '%v'", zidSet[0].zid, zidSet[0].fieldName)
+			return nil, missingZid, fmt.Errorf("zid (zebra id tags on struct fields) must start at 0; lowest zid was '%v' at field '%v'", zidSet[0].zid, zidSet[0].fieldName)
 		}
 		for i := range zidSet {
 			if zidSet[i].zid != int64(i) {
-				return nil, fmt.Errorf("zid sequence interrupted - commit conflict possible! gap or duplicate in zid sequence (saw %v; expected %v), near field '%v'", zidSet[i].zid, i, zidSet[i].fieldName)
+				return nil, missingZid, fmt.Errorf("zid sequence interrupted - commit conflict possible! gap or duplicate in zid sequence (saw %v; expected %v), near field '%v'", zidSet[i].zid, i, zidSet[i].fieldName)
 			}
 		}
 	}
-	return out, nil
+	return out, missingZid, nil
 }
 
 func anyMatches(haystack []string, needle string) bool {
@@ -463,7 +465,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 	var skip bool
 	var deprecated bool
 	var showzero bool
-	var zebraId int64 = -1
+	var zebraId int64 = -2 // means NA. Use -1 for struct name if need be.
 	var isIface bool
 
 	// parse tag; otherwise field name is field tag
@@ -829,7 +831,7 @@ func (fs *FileSet) parseExpr(e ast.Expr, isIface bool) (gen.Elem, error) {
 		return nil, nil
 
 	case *ast.StructType:
-		fields, err := fs.parseFieldList(e.Fields)
+		fields, missingZid, err := fs.parseFieldList(e.Fields)
 		if err != nil {
 			return nil, err
 		}
@@ -840,7 +842,9 @@ func (fs *FileSet) parseExpr(e ast.Expr, isIface bool) (gen.Elem, error) {
 			}
 		}
 		if len(fields) > 0 {
-			return &gen.Struct{Fields: fields, SkipCount: skipN}, nil
+			if fs.Cfg.UseMsgp2 || !missingZid {
+				return &gen.Struct{Fields: fields, SkipCount: skipN}, nil
+			}
 		}
 		return nil, nil
 

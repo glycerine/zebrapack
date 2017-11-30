@@ -172,7 +172,7 @@ func (e *encodeGen) structmap(s *Struct) {
 			// sanity check
 			if s.Fields[i].ZebraId < 0 {
 				fmt.Fprintf(os.Stderr, "\nzebrapack warning: field '%s' is missing a zid number; cannot generate zebrapack code for '%s'\n", s.Fields[i].FieldTag, s.alias)
-				s.skip = true
+				s.Skip = true
 				return
 			}
 			// proceed

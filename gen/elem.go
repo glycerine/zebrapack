@@ -116,31 +116,31 @@ var builtins = map[string]struct{}{
 	"msgp.Number": struct{}{},
 }
 
-// common data/methods for every Elem
-type common struct {
+// Common data/methods for every Elem
+type Common struct {
 	vname string
 	alias string
 
 	hmp  HasMethodPrefix
-	skip bool
+	Skip bool
 }
 
 type HasMethodPrefix interface {
 	MethodPrefix() string
 }
 
-func (c *common) SkipMe() bool        { return c.skip }
-func (c *common) SetVarname(s string) { c.vname = s }
-func (c *common) Varname() string     { return c.vname }
-func (c *common) Alias(typ string)    { c.alias = typ }
-func (c *common) hidden()             {}
-func (c *common) MethodPrefix() string {
+func (c *Common) SkipMe() bool        { return c.Skip }
+func (c *Common) SetVarname(s string) { c.vname = s }
+func (c *Common) Varname() string     { return c.vname }
+func (c *Common) Alias(typ string)    { c.alias = typ }
+func (c *Common) hidden()             {}
+func (c *Common) MethodPrefix() string {
 	if c.hmp == nil {
 		return ""
 	}
 	return c.hmp.MethodPrefix()
 }
-func (c *common) SetHasMethodPrefix(hmp HasMethodPrefix) {
+func (c *Common) SetHasMethodPrefix(hmp HasMethodPrefix) {
 	c.hmp = hmp
 }
 
@@ -215,7 +215,7 @@ func Ident(id string, isIface bool) *BaseElem {
 }
 
 type Array struct {
-	common
+	Common
 	Index        string // index variable name
 	SizeNamed    string // array size
 	SizeResolved string // array size
@@ -232,7 +232,7 @@ func (a *Array) ZeroLiteral(v string) string {
 }
 
 func (a *Array) SetVarname(s string) {
-	a.common.SetVarname(s)
+	a.Common.SetVarname(s)
 ridx:
 	a.Index = gensym()
 
@@ -246,11 +246,11 @@ ridx:
 }
 
 func (a *Array) TypeName() string {
-	if a.common.alias != "" {
-		return a.common.alias
+	if a.Common.alias != "" {
+		return a.Common.alias
 	}
-	a.common.Alias(fmt.Sprintf("[%s]%s", a.SizeNamed, a.Els.TypeName()))
-	return a.common.alias
+	a.Common.Alias(fmt.Sprintf("[%s]%s", a.SizeNamed, a.Els.TypeName()))
+	return a.Common.alias
 }
 
 func (a *Array) GetZtype() (r zebra.Ztype) {
@@ -283,7 +283,7 @@ func (a *Array) Complexity() int { return 1 + a.Els.Complexity() }
 
 // Map is a map[string]Elem
 type Map struct {
-	common
+	Common
 	Keyidx string // key variable name
 	Validx string // value variable name
 	Value  Elem   // value element
@@ -321,7 +321,7 @@ func (m *Map) ZeroLiteral(v string) string {
 }
 
 func (m *Map) SetVarname(s string) {
-	m.common.SetVarname(s)
+	m.Common.SetVarname(s)
 ridx:
 	m.Keyidx = gensym()
 	m.Validx = gensym()
@@ -335,11 +335,11 @@ ridx:
 }
 
 func (m *Map) TypeName() string {
-	if m.common.alias != "" {
-		return m.common.alias
+	if m.Common.alias != "" {
+		return m.Common.alias
 	}
-	m.common.Alias("map[" + m.KeyDeclTyp + "]" + m.Value.TypeName())
-	return m.common.alias
+	m.Common.Alias("map[" + m.KeyDeclTyp + "]" + m.Value.TypeName())
+	return m.Common.alias
 }
 
 func (m *Map) Copy() Elem {
@@ -351,7 +351,7 @@ func (m *Map) Copy() Elem {
 func (m *Map) Complexity() int { return 2 + m.Value.Complexity() }
 
 type Slice struct {
-	common
+	Common
 	Index string
 	Els   Elem // The type of each element
 }
@@ -365,7 +365,7 @@ func (a *Slice) ZeroLiteral(v string) string {
 }
 
 func (s *Slice) SetVarname(a string) {
-	s.common.SetVarname(a)
+	s.Common.SetVarname(a)
 	s.Index = gensym()
 	varName := s.Varname()
 	if varName[0] == '*' {
@@ -385,11 +385,11 @@ func (s *Slice) GetZtype() (r zebra.Ztype) {
 }
 
 func (s *Slice) TypeName() string {
-	if s.common.alias != "" {
-		return s.common.alias
+	if s.Common.alias != "" {
+		return s.Common.alias
 	}
-	s.common.Alias("[]" + s.Els.TypeName())
-	return s.common.alias
+	s.Common.Alias("[]" + s.Els.TypeName())
+	return s.Common.alias
 }
 
 func (s *Slice) Copy() Elem {
@@ -403,7 +403,7 @@ func (s *Slice) Complexity() int {
 }
 
 type Ptr struct {
-	common
+	Common
 	Value Elem
 }
 
@@ -423,7 +423,7 @@ func (s *Ptr) GetZtype() (r zebra.Ztype) {
 func (s *Ptr) ZeroLiteral(v string) string {
 	switch x := s.Value.(type) {
 	case *Struct:
-		if x.common.alias != "" {
+		if x.Common.alias != "" {
 			return fmt.Sprintf(" _, err = %v.UnmarshalMsg(msgp.OnlyNilSlice); if err != nil { return };\n", v) // , s.TypeName())
 		} else {
 			return fmt.Sprintf("\n// what Ptr.ZeroLiteral(v='%v') goes here?????\n", v)
@@ -433,7 +433,7 @@ func (s *Ptr) ZeroLiteral(v string) string {
 }
 
 func (s *Ptr) SetVarname(a string) {
-	s.common.SetVarname(a)
+	s.Common.SetVarname(a)
 
 	// struct fields are dereferenced
 	// automatically...
@@ -459,11 +459,11 @@ func (s *Ptr) SetVarname(a string) {
 }
 
 func (s *Ptr) TypeName() string {
-	if s.common.alias != "" {
-		return s.common.alias
+	if s.Common.alias != "" {
+		return s.Common.alias
 	}
-	s.common.Alias("*" + s.Value.TypeName())
-	return s.common.alias
+	s.Common.Alias("*" + s.Value.TypeName())
+	return s.Common.alias
 }
 
 func (s *Ptr) Copy() Elem {
@@ -482,7 +482,7 @@ func (s *Ptr) Needsinit() bool {
 }
 
 type Struct struct {
-	common
+	Common
 	Fields           []StructField // field list
 	AsTuple          bool          // write as an array instead of a map
 	hasOmitEmptyTags bool
@@ -506,8 +506,8 @@ func (s *Struct) ZeroLiteral(v string) string {
 }
 
 func (s *Struct) TypeName() string {
-	if s.common.alias != "" {
-		return s.common.alias
+	if s.Common.alias != "" {
+		return s.Common.alias
 	}
 	str := "struct{\n"
 	for i := range s.Fields {
@@ -517,12 +517,12 @@ func (s *Struct) TypeName() string {
 		str += s.Fields[i].FieldName + " " + s.Fields[i].FieldElem.TypeName() + ";\n"
 	}
 	str += "}"
-	s.common.Alias(str)
-	return s.common.alias
+	s.Common.Alias(str)
+	return s.Common.alias
 }
 
 func (s *Struct) SetVarname(a string) {
-	s.common.SetVarname(a)
+	s.Common.SetVarname(a)
 	writeStructFields(s.Fields, a)
 }
 
@@ -578,7 +578,7 @@ func (s *StructField) IsInterface() bool {
 // can be represented by a primitive
 // MessagePack type.
 type BaseElem struct {
-	common
+	Common
 	ShimToBase   string    // shim to base type, or empty
 	ShimFromBase string    // shim from base type, or empty
 	Value        Primitive // Type of element
@@ -605,7 +605,7 @@ func (s *BaseElem) GetZtype() (r zebra.Ztype) {
 func (s *BaseElem) Printable() bool { return !s.mustinline }
 
 func (s *BaseElem) Alias(typ string) {
-	s.common.Alias(typ)
+	s.Common.Alias(typ)
 	if s.Value != IDENT {
 		s.Convert = true
 	}
@@ -620,24 +620,24 @@ func (s *BaseElem) SetVarname(a string) {
 	// be explicitly referenced
 	if s.Value == Ext || s.needsref {
 		if strings.HasPrefix(a, "*") {
-			s.common.SetVarname(a[1:])
+			s.Common.SetVarname(a[1:])
 			return
 		}
-		s.common.SetVarname("&" + a)
+		s.Common.SetVarname("&" + a)
 		return
 	}
 
-	s.common.SetVarname(a)
+	s.Common.SetVarname(a)
 }
 
 // TypeName returns the syntactically correct Go
 // type name for the base element.
 func (s *BaseElem) TypeName() string {
-	if s.common.alias != "" {
-		return s.common.alias
+	if s.Common.alias != "" {
+		return s.Common.alias
 	}
-	s.common.Alias(s.BaseType())
-	return s.common.alias
+	s.Common.Alias(s.BaseType())
+	return s.Common.alias
 }
 
 // ToBase, used if Convert==true, is used as tmp = {{ToBase}}({{Varname}})
