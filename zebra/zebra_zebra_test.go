@@ -9,18 +9,18 @@ import (
 	"github.com/glycerine/zebrapack/msgp"
 )
 
-func TestMarshalUnmarshalField(t *testing.T) {
+func TestMarshalUnmarshalFieldZebra(t *testing.T) {
 	v := Field{}
-	bts, err := v.MarshalMsg(nil)
+	bts, err := v.ZebraMarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	left, err := v.UnmarshalMsg(bts)
+	left, err := v.ZebraUnmarshalMsg(bts)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(left) > 0 {
-		t.Errorf("%d bytes left over after UnmarshalMsg(): %q", len(left), left)
+		t.Errorf("%d bytes left over after ZebraUnmarshalMsg(): %q", len(left), left)
 	}
 
 	left, err = msgp.Skip(bts)
@@ -32,49 +32,49 @@ func TestMarshalUnmarshalField(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgField(b *testing.B) {
+func BenchmarkMarshalMsgFieldZebra(b *testing.B) {
 	v := Field{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.MarshalMsg(nil)
+		v.ZebraMarshalMsg(nil)
 	}
 }
 
-func BenchmarkAppendMsgField(b *testing.B) {
+func BenchmarkAppendMsgFieldZebra(b *testing.B) {
 	v := Field{}
-	bts := make([]byte, 0, v.Msgsize())
-	bts, _ = v.MarshalMsg(bts[0:0])
+	bts := make([]byte, 0, v.ZebraMsgsize())
+	bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		bts, _ = v.MarshalMsg(bts[0:0])
+		bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	}
 }
 
-func BenchmarkUnmarshalField(b *testing.B) {
+func BenchmarkUnmarshalFieldZebra(b *testing.B) {
 	v := Field{}
-	bts, _ := v.MarshalMsg(nil)
+	bts, _ := v.ZebraMarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := v.UnmarshalMsg(bts)
+		_, err := v.ZebraUnmarshalMsg(bts)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestEncodeDecodeField(t *testing.T) {
+func TestEncodeDecodeFieldZebra(t *testing.T) {
 	v := Field{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
-	m := v.Msgsize()
+	m := v.ZebraMsgsize()
 	if buf.Len() > m {
-		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
+		t.Logf("WARNING: ZebraMsgsize() for %v is inaccurate", v)
 	}
 
 	vn := Field{}
@@ -91,7 +91,7 @@ func TestEncodeDecodeField(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeField(b *testing.B) {
+func BenchmarkEncodeFieldZebra(b *testing.B) {
 	v := Field{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -100,12 +100,12 @@ func BenchmarkEncodeField(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.EncodeMsg(en)
+		v.ZebraEncodeMsg(en)
 	}
 	en.Flush()
 }
 
-func BenchmarkDecodeField(b *testing.B) {
+func BenchmarkDecodeFieldZebra(b *testing.B) {
 	v := Field{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -115,25 +115,25 @@ func BenchmarkDecodeField(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		err := v.DecodeMsg(dc)
+		err := v.ZebraDecodeMsg(dc)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestMarshalUnmarshalSchema(t *testing.T) {
+func TestMarshalUnmarshalSchemaZebra(t *testing.T) {
 	v := Schema{}
-	bts, err := v.MarshalMsg(nil)
+	bts, err := v.ZebraMarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	left, err := v.UnmarshalMsg(bts)
+	left, err := v.ZebraUnmarshalMsg(bts)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(left) > 0 {
-		t.Errorf("%d bytes left over after UnmarshalMsg(): %q", len(left), left)
+		t.Errorf("%d bytes left over after ZebraUnmarshalMsg(): %q", len(left), left)
 	}
 
 	left, err = msgp.Skip(bts)
@@ -145,49 +145,49 @@ func TestMarshalUnmarshalSchema(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgSchema(b *testing.B) {
+func BenchmarkMarshalMsgSchemaZebra(b *testing.B) {
 	v := Schema{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.MarshalMsg(nil)
+		v.ZebraMarshalMsg(nil)
 	}
 }
 
-func BenchmarkAppendMsgSchema(b *testing.B) {
+func BenchmarkAppendMsgSchemaZebra(b *testing.B) {
 	v := Schema{}
-	bts := make([]byte, 0, v.Msgsize())
-	bts, _ = v.MarshalMsg(bts[0:0])
+	bts := make([]byte, 0, v.ZebraMsgsize())
+	bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		bts, _ = v.MarshalMsg(bts[0:0])
+		bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	}
 }
 
-func BenchmarkUnmarshalSchema(b *testing.B) {
+func BenchmarkUnmarshalSchemaZebra(b *testing.B) {
 	v := Schema{}
-	bts, _ := v.MarshalMsg(nil)
+	bts, _ := v.ZebraMarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := v.UnmarshalMsg(bts)
+		_, err := v.ZebraUnmarshalMsg(bts)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestEncodeDecodeSchema(t *testing.T) {
+func TestEncodeDecodeSchemaZebra(t *testing.T) {
 	v := Schema{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
-	m := v.Msgsize()
+	m := v.ZebraMsgsize()
 	if buf.Len() > m {
-		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
+		t.Logf("WARNING: ZebraMsgsize() for %v is inaccurate", v)
 	}
 
 	vn := Schema{}
@@ -204,7 +204,7 @@ func TestEncodeDecodeSchema(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeSchema(b *testing.B) {
+func BenchmarkEncodeSchemaZebra(b *testing.B) {
 	v := Schema{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -213,12 +213,12 @@ func BenchmarkEncodeSchema(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.EncodeMsg(en)
+		v.ZebraEncodeMsg(en)
 	}
 	en.Flush()
 }
 
-func BenchmarkDecodeSchema(b *testing.B) {
+func BenchmarkDecodeSchemaZebra(b *testing.B) {
 	v := Schema{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -228,25 +228,25 @@ func BenchmarkDecodeSchema(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		err := v.DecodeMsg(dc)
+		err := v.ZebraDecodeMsg(dc)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestMarshalUnmarshalStruct(t *testing.T) {
+func TestMarshalUnmarshalStructZebra(t *testing.T) {
 	v := Struct{}
-	bts, err := v.MarshalMsg(nil)
+	bts, err := v.ZebraMarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	left, err := v.UnmarshalMsg(bts)
+	left, err := v.ZebraUnmarshalMsg(bts)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(left) > 0 {
-		t.Errorf("%d bytes left over after UnmarshalMsg(): %q", len(left), left)
+		t.Errorf("%d bytes left over after ZebraUnmarshalMsg(): %q", len(left), left)
 	}
 
 	left, err = msgp.Skip(bts)
@@ -258,49 +258,49 @@ func TestMarshalUnmarshalStruct(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgStruct(b *testing.B) {
+func BenchmarkMarshalMsgStructZebra(b *testing.B) {
 	v := Struct{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.MarshalMsg(nil)
+		v.ZebraMarshalMsg(nil)
 	}
 }
 
-func BenchmarkAppendMsgStruct(b *testing.B) {
+func BenchmarkAppendMsgStructZebra(b *testing.B) {
 	v := Struct{}
-	bts := make([]byte, 0, v.Msgsize())
-	bts, _ = v.MarshalMsg(bts[0:0])
+	bts := make([]byte, 0, v.ZebraMsgsize())
+	bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		bts, _ = v.MarshalMsg(bts[0:0])
+		bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	}
 }
 
-func BenchmarkUnmarshalStruct(b *testing.B) {
+func BenchmarkUnmarshalStructZebra(b *testing.B) {
 	v := Struct{}
-	bts, _ := v.MarshalMsg(nil)
+	bts, _ := v.ZebraMarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := v.UnmarshalMsg(bts)
+		_, err := v.ZebraUnmarshalMsg(bts)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestEncodeDecodeStruct(t *testing.T) {
+func TestEncodeDecodeStructZebra(t *testing.T) {
 	v := Struct{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
-	m := v.Msgsize()
+	m := v.ZebraMsgsize()
 	if buf.Len() > m {
-		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
+		t.Logf("WARNING: ZebraMsgsize() for %v is inaccurate", v)
 	}
 
 	vn := Struct{}
@@ -317,7 +317,7 @@ func TestEncodeDecodeStruct(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeStruct(b *testing.B) {
+func BenchmarkEncodeStructZebra(b *testing.B) {
 	v := Struct{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -326,12 +326,12 @@ func BenchmarkEncodeStruct(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.EncodeMsg(en)
+		v.ZebraEncodeMsg(en)
 	}
 	en.Flush()
 }
 
-func BenchmarkDecodeStruct(b *testing.B) {
+func BenchmarkDecodeStructZebra(b *testing.B) {
 	v := Struct{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -341,25 +341,25 @@ func BenchmarkDecodeStruct(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		err := v.DecodeMsg(dc)
+		err := v.ZebraDecodeMsg(dc)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestMarshalUnmarshalZtype(t *testing.T) {
+func TestMarshalUnmarshalZtypeZebra(t *testing.T) {
 	v := Ztype{}
-	bts, err := v.MarshalMsg(nil)
+	bts, err := v.ZebraMarshalMsg(nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	left, err := v.UnmarshalMsg(bts)
+	left, err := v.ZebraUnmarshalMsg(bts)
 	if err != nil {
 		t.Fatal(err)
 	}
 	if len(left) > 0 {
-		t.Errorf("%d bytes left over after UnmarshalMsg(): %q", len(left), left)
+		t.Errorf("%d bytes left over after ZebraUnmarshalMsg(): %q", len(left), left)
 	}
 
 	left, err = msgp.Skip(bts)
@@ -371,49 +371,49 @@ func TestMarshalUnmarshalZtype(t *testing.T) {
 	}
 }
 
-func BenchmarkMarshalMsgZtype(b *testing.B) {
+func BenchmarkMarshalMsgZtypeZebra(b *testing.B) {
 	v := Ztype{}
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.MarshalMsg(nil)
+		v.ZebraMarshalMsg(nil)
 	}
 }
 
-func BenchmarkAppendMsgZtype(b *testing.B) {
+func BenchmarkAppendMsgZtypeZebra(b *testing.B) {
 	v := Ztype{}
-	bts := make([]byte, 0, v.Msgsize())
-	bts, _ = v.MarshalMsg(bts[0:0])
+	bts := make([]byte, 0, v.ZebraMsgsize())
+	bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	b.SetBytes(int64(len(bts)))
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		bts, _ = v.MarshalMsg(bts[0:0])
+		bts, _ = v.ZebraMarshalMsg(bts[0:0])
 	}
 }
 
-func BenchmarkUnmarshalZtype(b *testing.B) {
+func BenchmarkUnmarshalZtypeZebra(b *testing.B) {
 	v := Ztype{}
-	bts, _ := v.MarshalMsg(nil)
+	bts, _ := v.ZebraMarshalMsg(nil)
 	b.ReportAllocs()
 	b.SetBytes(int64(len(bts)))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_, err := v.UnmarshalMsg(bts)
+		_, err := v.ZebraUnmarshalMsg(bts)
 		if err != nil {
 			b.Fatal(err)
 		}
 	}
 }
 
-func TestEncodeDecodeZtype(t *testing.T) {
+func TestEncodeDecodeZtypeZebra(t *testing.T) {
 	v := Ztype{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
 
-	m := v.Msgsize()
+	m := v.ZebraMsgsize()
 	if buf.Len() > m {
-		t.Logf("WARNING: Msgsize() for %v is inaccurate", v)
+		t.Logf("WARNING: ZebraMsgsize() for %v is inaccurate", v)
 	}
 
 	vn := Ztype{}
@@ -430,7 +430,7 @@ func TestEncodeDecodeZtype(t *testing.T) {
 	}
 }
 
-func BenchmarkEncodeZtype(b *testing.B) {
+func BenchmarkEncodeZtypeZebra(b *testing.B) {
 	v := Ztype{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -439,12 +439,12 @@ func BenchmarkEncodeZtype(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v.EncodeMsg(en)
+		v.ZebraEncodeMsg(en)
 	}
 	en.Flush()
 }
 
-func BenchmarkDecodeZtype(b *testing.B) {
+func BenchmarkDecodeZtypeZebra(b *testing.B) {
 	v := Ztype{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -454,7 +454,7 @@ func BenchmarkDecodeZtype(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		err := v.DecodeMsg(dc)
+		err := v.ZebraDecodeMsg(dc)
 		if err != nil {
 			b.Fatal(err)
 		}

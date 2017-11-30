@@ -65,7 +65,7 @@ const (
 	Int32      Zkind = 16
 	Int64      Zkind = 17
 	Bool       Zkind = 18
-	Intf       Zkind = 19 // interface{}
+	Intf       Zkind = 19 // interface{}, the empty interface.
 	Time       Zkind = 20 // time.Time
 	Ext        Zkind = 21 // extension
 
@@ -83,6 +83,8 @@ const (
 	SliceCat    Zkind = 26
 	ArrayCat    Zkind = 27
 	PointerCat  Zkind = 28
+
+	IDENTiface Zkind = 29 // an identifier that is an inteface (known b/c of struct tag 'iface')
 )
 
 // Ztype describes any type, be it a BaseElem,
@@ -91,24 +93,24 @@ type Ztype struct {
 
 	// Kind gives the exact type for primitives,
 	// and the category for compound types.
-	Kind Zkind
+	Kind Zkind `zid:"0"`
 
-	// Str holds the struct name when Kind == 22 (IDENT).
+	// Str holds the struct name when Kind == 22 (IDENT) or 29 (IDENTiface).
 	// Otherwise it typically reflects Kind directly
 	// which is useful for human readability.
-	Str string `msg:",omitempty"`
+	Str string `msg:",omitempty" zid:"1"`
 
 	// Domain holds the key type for maps. For
 	// pointers and slices it holds the element type.
 	// For arrays, it holds the fixed size.
 	// Domain is null when Kind is a primitive.
-	Domain *Ztype `msg:",omitempty"`
+	Domain *Ztype `msg:",omitempty" zid:"2"`
 
 	// Range holds the value type for maps.
 	// For arrays (always a fixed size), Range holds
 	// the element type.  Otherwise Range is
 	// typically null.
-	Range *Ztype `msg:",omitempty"`
+	Range *Ztype `msg:",omitempty" zid:"3"`
 }
 
 // Schema is the top level container in ZebraPack.
@@ -118,16 +120,16 @@ type Schema struct {
 	// SourcePath gives the path to the original Go
 	// source file that was parsed to produce this
 	// compiled schema.
-	SourcePath string
+	SourcePath string `msg:",omitempty" zid:"0"`
 
 	// SourcePackage notes the original package presented
 	// by the SourcePath file.
-	SourcePackage string
+	SourcePackage string `msg:",omitempty" zid:"1"`
 
 	// ZebraSchemaId is a randomly chosen but stable
 	// 53-bit positive integer identifier (see
 	// zebrapack -genid) that can be used to distinguish schemas.
-	ZebraSchemaId int64
+	ZebraSchemaId int64 `msg:",omitempty" zid:"2"`
 
 	// Structs holds the collection of the main data
 	// descriptor, the Struct. The key is identical
@@ -136,21 +138,21 @@ type Schema struct {
 	// This a map rather than a slice in order to:
 	// a) insure there are no duplicate struct names; and
 	// b) make decoding easy and fast.
-	Structs map[string]*Struct
+	Structs map[string]*Struct `msg:",omitempty" zid:"3"`
 
 	// Imports archives the imports in the SourcePath
 	// to make it possible to understand other package
 	// type references.
-	Imports []string
+	Imports []string `msg:",omitempty" zid:"4"`
 }
 
 // Struct represents a single message or struct.
 type Struct struct {
 	// StructName is the typename of the struct in Go.
-	StructName string
+	StructName string `msg:",omitempty" zid:"0"`
 
 	// Fields hold the individual Field descriptors.
-	Fields []Field
+	Fields []Field `msg:",omitempty" zid:"1"`
 }
 
 // Field represents fields within a struct.
@@ -180,30 +182,30 @@ type Field struct {
 	// possible so that it becomes skipped; then the Go
 	// compiler can help you detect and prevent unwanted use.
 	//
-	Zid int64
+	Zid int64 `zid:"0"`
 
 	// the name of the field in the Go schema/source file.
-	FieldGoName string
+	FieldGoName string `zid:"1"`
 
 	// optional wire-name designated by a
 	// `msg:"tagname"` tag on the struct field.
-	FieldTagName string `msg:",omitempty"`
+	FieldTagName string `msg:",omitempty" zid:"2"`
 
 	// =======================
 	// type info
 	// =======================
 
 	// human readable/Go type description
-	FieldTypeStr string `msg:",omitempty"`
+	FieldTypeStr string `msg:",omitempty" zid:"3"`
 
 	// the broad category of this type. empty if Skip is true
-	FieldCategory Zkind `msg:",omitempty"`
+	FieldCategory Zkind `msg:",omitempty" zid:"4"`
 
 	// avail if FieldCategory == BaseElemCat
-	FieldPrimitive Zkind `msg:",omitempty"`
+	FieldPrimitive Zkind `msg:",omitempty" zid:"5"`
 
 	// the machine-parse-able type tree
-	FieldFullType *Ztype `msg:",omitempty"`
+	FieldFullType *Ztype `msg:",omitempty" zid:"6"`
 
 	// =======================
 	// field tag details:
@@ -211,7 +213,7 @@ type Field struct {
 
 	// if OmitEmpty then we don't serialize
 	// the field if it has its zero-value.
-	OmitEmpty bool `msg:",omitempty"`
+	OmitEmpty bool `msg:",omitempty" zid:"7"`
 
 	// Skip means either type struct{} or
 	// other unserializable type;
@@ -219,7 +221,7 @@ type Field struct {
 	// if Skip is true: do not serialize
 	// this field when writing, and ignore it
 	// when reading.
-	Skip bool `msg:",omitempty"`
+	Skip bool `msg:",omitempty" zid:"8"`
 
 	// Deprecated means tagged with `deprecated:"true"`,
 	// or `msg:",deprecated"`.
@@ -227,11 +229,11 @@ type Field struct {
 	// users away from writing to such fields, while
 	// not making it impossible to either read or write
 	// the field.
-	Deprecated bool `msg:",omitempty"`
+	Deprecated bool `msg:",omitempty" zid:"9"`
 
 	// ShowZero means display the field even if
 	// it has the zero value. Showzero has no impact
 	// on what is transmitted on the wire. Zero
 	// valued fields are never transmitted.
-	ShowZero bool `msg:",omitempty"`
+	ShowZero bool `msg:",omitempty" zid:"10"`
 }

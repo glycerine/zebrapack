@@ -37,6 +37,7 @@ $(MGEN): ./msgp/defs_test.go
 $(ZGEN): ./zebra/zebra.go
 	go install
 	go generate ./zebra
+	zebrapack -method-prefix Zebra -o zebra/zebra_zebra.go -file zebra/zebra.go
 
 test: all
 	go test -v ./parse

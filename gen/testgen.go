@@ -75,7 +75,7 @@ func (e *etestGen) Execute(p Elem) error {
 func (e *etestGen) Method() Method { return encodetest }
 
 func init() {
-	template.Must(marshalTestTempl.Parse(`func TestMarshalUnmarshal{{.TypeName}}(t *testing.T) {
+	template.Must(marshalTestTempl.Parse(`func TestMarshalUnmarshal{{.TypeName}}{{.MethodPrefix}}(t *testing.T) {
 	v := {{.TypeName}}{}
 	bts, err := v.{{.MethodPrefix}}MarshalMsg(nil)
 	if err != nil {
@@ -98,7 +98,7 @@ func init() {
 	}
 }
 
-func BenchmarkMarshalMsg{{.TypeName}}(b *testing.B) {
+func BenchmarkMarshalMsg{{.TypeName}}{{.MethodPrefix}}(b *testing.B) {
 	v := {{.TypeName}}{}
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -107,7 +107,7 @@ func BenchmarkMarshalMsg{{.TypeName}}(b *testing.B) {
 	}
 }
 
-func BenchmarkAppendMsg{{.TypeName}}(b *testing.B) {
+func BenchmarkAppendMsg{{.TypeName}}{{.MethodPrefix}}(b *testing.B) {
 	v := {{.TypeName}}{}
 	bts := make([]byte, 0, v.{{.MethodPrefix}}Msgsize())
 	bts, _ = v.{{.MethodPrefix}}MarshalMsg(bts[0:0])
@@ -119,7 +119,7 @@ func BenchmarkAppendMsg{{.TypeName}}(b *testing.B) {
 	}
 }
 
-func BenchmarkUnmarshal{{.TypeName}}(b *testing.B) {
+func BenchmarkUnmarshal{{.TypeName}}{{.MethodPrefix}}(b *testing.B) {
 	v := {{.TypeName}}{}
 	bts, _ := v.{{.MethodPrefix}}MarshalMsg(nil)
 	b.ReportAllocs()
@@ -135,7 +135,7 @@ func BenchmarkUnmarshal{{.TypeName}}(b *testing.B) {
 
 `))
 
-	template.Must(encodeTestTempl.Parse(`func TestEncodeDecode{{.TypeName}}(t *testing.T) {
+	template.Must(encodeTestTempl.Parse(`func TestEncodeDecode{{.TypeName}}{{.MethodPrefix}}(t *testing.T) {
 	v := {{.TypeName}}{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
@@ -159,7 +159,7 @@ func BenchmarkUnmarshal{{.TypeName}}(b *testing.B) {
 	}
 }
 
-func BenchmarkEncode{{.TypeName}}(b *testing.B) {
+func BenchmarkEncode{{.TypeName}}{{.MethodPrefix}}(b *testing.B) {
 	v := {{.TypeName}}{}
 	var buf bytes.Buffer 
 	msgp.Encode(&buf, &v)
@@ -173,7 +173,7 @@ func BenchmarkEncode{{.TypeName}}(b *testing.B) {
 	en.Flush()
 }
 
-func BenchmarkDecode{{.TypeName}}(b *testing.B) {
+func BenchmarkDecode{{.TypeName}}{{.MethodPrefix}}(b *testing.B) {
 	v := {{.TypeName}}{}
 	var buf bytes.Buffer
 	msgp.Encode(&buf, &v)
