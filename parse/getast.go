@@ -563,6 +563,8 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		//fmt.Printf("\n we see nil field %#v\n", f.Names[0])
 		// struct{} type fields, must track for zid checking.
 		// so we can't return early here.
+	} else {
+		ex.SetZid(zebraId)
 	}
 
 	if !isIface && fs != nil && fs.PackageInfo != nil &&

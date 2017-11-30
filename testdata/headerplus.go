@@ -47,7 +47,7 @@ type Plus struct {
 	Flock []Familiar `msg:",iface" zid:"5"`
 }
 
-func (pl *Plus) NewValueAsInterface(typename string) interface{} {
+func (pl *Plus) NewValueAsInterface(zid int64, typename string) interface{} {
 	//fmt.Printf("\n DEBUG! NewValueAsInterface called with typename='%s'\n", typename)
 	switch typename {
 	case "Dog":

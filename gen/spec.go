@@ -353,7 +353,9 @@ func (p *printer) closeblock() { p.print("\n}") }
 //     {{generate inner}}
 // }
 //
-func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner Elem) {
+func (p *printer) decodeRangeBlock(idx string, parent Elem, t traversal, inner Elem) {
+	iter := parent.Varname()
+	myzid := parent.GetZid()
 	if inner.IsInterface() {
 		inner.SetIsInInterfaceSlice()
 		target, concreteName := gensym(), gensym()
@@ -371,13 +373,13 @@ func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner E
 		p.printf("target_%s :=  %s[%s]\n", target, iter, idx)
 		p.printf(`if concreteName_%s != "" {
 				if cfac_%s, cfac_%s_OK := interface{}(z).(msgp.ConcreteFactory); cfac_%s_OK {
-					target_%s = cfac_%s.NewValueAsInterface(concreteName_%s).(%s)
+					target_%s = cfac_%s.NewValueAsInterface(%v, concreteName_%s).(%s)
 				}
   			    err = target_%s.DecodeMsg(dc)
 			    if err != nil {
 				    return
 			    }
-		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+		`, concreteName, cfac, cfac, cfac, target, cfac, myzid, concreteName, inner.TypeName(), target)
 		p.printf(`
                 %s[%s] = target_%s
                 continue
@@ -447,7 +449,9 @@ func tobaseConvert(b *BaseElem) string {
 	return b.ToBase() + "(" + b.Varname() + ")"
 }
 
-func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inner Elem) {
+func (p *printer) unmarshalRangeBlock(idx string, parent Elem, t traversal, inner Elem) {
+	iter := parent.Varname()
+	myzid := parent.GetZid()
 	if inner.IsInterface() {
 		inner.SetIsInInterfaceSlice()
 
@@ -467,13 +471,13 @@ func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inne
 		p.printf("target_%s :=  %s[%s]\n", target, iter, idx)
 		p.printf(`if concreteName_%s != "" {
 				if cfac_%s, cfac_%s_OK := interface{}(z).(msgp.ConcreteFactory); cfac_%s_OK {
-					target_%s = cfac_%s.NewValueAsInterface(concreteName_%s).(%s)
+					target_%s = cfac_%s.NewValueAsInterface(%v, concreteName_%s).(%s)
 				}
   			    bts, err = target_%s.UnmarshalMsg(bts)
 			    if err != nil {
 				    return
 			    }
-		`, concreteName, cfac, cfac, cfac, target, cfac, concreteName, inner.TypeName(), target)
+		`, concreteName, cfac, cfac, cfac, target, cfac, myzid, concreteName, inner.TypeName(), target)
 		p.printf(`
                 %s[%s] = target_%s
                 continue

@@ -216,7 +216,7 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 	conc_%s, bts = nbs.NextStructName(bts)
 	if conc_%s != "" {
 		if cfac_%s, cfacOK_%s := interface{}(z).(msgp.ConcreteFactory); cfacOK_%s {
-			targ_%s := cfac_%s.NewValueAsInterface(conc_%s).(%s)
+			targ_%s := cfac_%s.NewValueAsInterface(%v, conc_%s).(%s)
 			bts, err = targ_%s.UnmarshalMsg(bts)
 			if err != nil {
 				return
@@ -231,7 +231,7 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
     }
     bts, err = %s.%sUnmarshalMsg(bts)
 	
-`, conc, conc, conc, fact, fact, fact, targ, fact, conc, b.BaseType(), targ, vname, targ, vname, u.cfg.MethodPrefix)
+`, conc, conc, conc, fact, fact, fact, targ, fact, b.GetZid(), conc, b.BaseType(), targ, vname, targ, vname, u.cfg.MethodPrefix)
 
 			} else {
 
@@ -267,7 +267,7 @@ func (u *unmarshalGen) gArray(a *Array) {
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.arrayCheck(a.SizeResolved, sz, "!nbs.IsNil(bts) && ")
-	u.p.unmarshalRangeBlock(a.Index, a.Varname(), u, a.Els)
+	u.p.unmarshalRangeBlock(a.Index, a, u, a.Els)
 }
 
 func (u *unmarshalGen) gSlice(s *Slice) {
@@ -280,7 +280,7 @@ func (u *unmarshalGen) gSlice(s *Slice) {
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.resizeSlice(sz, s)
-	u.p.unmarshalRangeBlock(s.Index, s.Varname(), u, s.Els)
+	u.p.unmarshalRangeBlock(s.Index, s, u, s.Els)
 	u.p.closeblock()
 }
 

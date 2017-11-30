@@ -123,6 +123,14 @@ type Common struct {
 
 	hmp  HasMethodPrefix
 	Skip bool
+	zid  int64
+}
+
+func (c *Common) SetZid(zid int64) {
+	c.zid = zid
+}
+func (c *Common) GetZid() int64 {
+	return c.zid
 }
 
 type HasMethodPrefix interface {
@@ -201,6 +209,8 @@ type Elem interface {
 	SetIsInInterfaceSlice()
 
 	SkipMe() bool
+	SetZid(zid int64)
+	GetZid() int64
 
 	hidden()
 }

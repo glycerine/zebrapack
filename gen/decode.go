@@ -254,6 +254,7 @@ func (d *decodeGen) gBase(b *BaseElem) {
 
 	vname := b.Varname()  // e.g. "z.FieldOne"
 	bname := b.BaseName() // e.g. "Float64"
+	myzid := b.GetZid()
 
 	// handle special cases
 	// for object type.
@@ -272,7 +273,7 @@ func (d *decodeGen) gBase(b *BaseElem) {
 	conc_%s := dc.NextStructName()
 	if conc_%s != "" {
 		if cfac_%s, cfacOK_%s := interface{}(z).(msgp.ConcreteFactory); cfacOK_%s {
-			targ_%s := cfac_%s.NewValueAsInterface(conc_%s).(%s)
+			targ_%s := cfac_%s.NewValueAsInterface(%v, conc_%s).(%s)
 			err = targ_%s.DecodeMsg(dc)
 			if err != nil {
 				return
@@ -284,7 +285,7 @@ func (d *decodeGen) gBase(b *BaseElem) {
     if %s != nil {
 	  err = %s.%sDecodeMsg(dc)
     }
-`, conc, conc, fact, fact, fact, targ, fact, conc, b.BaseType(), targ, vname, targ, vname, vname, d.cfg.MethodPrefix)
+`, conc, conc, fact, fact, fact, targ, fact, myzid, conc, b.BaseType(), targ, vname, targ, vname, vname, d.cfg.MethodPrefix)
 			} else {
 				d.p.printf("\nerr = %s.%sDecodeMsg(dc)", vname, d.cfg.MethodPrefix)
 			}
@@ -344,7 +345,7 @@ func (d *decodeGen) gSlice(s *Slice) {
 	d.p.declare(sz, u32)
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.resizeSlice(sz, s)
-	d.p.decodeRangeBlock(s.Index, s.Varname(), d, s.Els)
+	d.p.decodeRangeBlock(s.Index, s, d, s.Els)
 }
 
 func (d *decodeGen) gArray(a *Array) {
@@ -374,7 +375,7 @@ func (d *decodeGen) gArray(a *Array) {
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.arrayCheck(a.SizeResolved, sz, "!dc.IsNil() && ")
 	d.p.closeblock()
-	d.p.decodeRangeBlock(a.Index, a.Varname(), d, a.Els)
+	d.p.decodeRangeBlock(a.Index, a, d, a.Els)
 }
 
 func (d *decodeGen) gPtr(p *Ptr) {

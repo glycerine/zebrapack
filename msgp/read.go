@@ -35,7 +35,7 @@ type PostLoad interface {
 }
 
 type ConcreteFactory interface {
-	NewValueAsInterface(typename string) interface{}
+	NewValueAsInterface(zid int64, typename string) interface{}
 }
 
 // where we keep old *Readers
