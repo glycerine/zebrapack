@@ -355,8 +355,8 @@ func (p *printer) closeblock() { p.print("\n}") }
 //
 func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner Elem) {
 	if inner.IsInterface() {
-		target, concreteName := randIdent(), randIdent()
-		cfac := randIdent()
+		target, concreteName := gensym(), gensym()
+		cfac := gensym()
 		p.printf(`
 		// NB: we have a slice of interfaces, so we need to
 		//  fill target with the concrete implementation
@@ -389,8 +389,8 @@ func (p *printer) decodeRangeBlock(idx string, iter string, t traversal, inner E
 
 func (p *printer) unmarshalRangeBlock(idx string, iter string, t traversal, inner Elem) {
 	if inner.IsInterface() {
-		target, concreteName := randIdent(), randIdent()
-		cfac := randIdent()
+		target, concreteName := gensym(), gensym()
+		cfac := gensym()
 		p.printf(`
 		// NB: we have a slice of interfaces, so we need to
 		//  fill target with the concrete implementation

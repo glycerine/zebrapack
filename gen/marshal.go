@@ -155,7 +155,9 @@ func (m *marshalGen) mapstruct(s *Struct) {
 			// sanity check
 			if s.Fields[i].ZebraId < 0 {
 				fmt.Fprintf(os.Stderr, "\nzebrapack error: field '%s' is missing a zid number; zebrapack requires field tags `zid:\"n\"`...for each field. One can use the `addzid` utility to add these automatically to your .go source files. Or, to generate msgpack code, use the -msgp flag.\n", s.Fields[i].FieldTag)
-				os.Exit(1)
+				s.skip = true
+				return
+				//os.Exit(1)
 			}
 			// proceed
 

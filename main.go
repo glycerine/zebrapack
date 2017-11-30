@@ -140,6 +140,7 @@ func main() {
 		}
 	}
 
+	gen.SetFilename(c.GoFile)
 	var mode gen.Method
 	if c.Encode {
 		mode |= (gen.Encode | gen.Decode | gen.Size | gen.FieldsEmpty)

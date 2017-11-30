@@ -117,8 +117,8 @@ func (e *encodeGen) structmap(s *Struct) {
 	nfields := len(s.Fields) - s.SkipCount
 	var data []byte
 	fast := !e.cfg.UseMsgp2
-	empty := "empty_" + randIdent()
-	inUse := "fieldsInUse_" + randIdent()
+	empty := "empty_" + gensym()
+	inUse := "fieldsInUse_" + gensym()
 	// if fast, then always omit-empty.
 	if fast || s.hasOmitEmptyTags {
 		e.p.printf("\n\n// honor the omitempty tags\n")
@@ -171,8 +171,9 @@ func (e *encodeGen) structmap(s *Struct) {
 		if fast {
 			// sanity check
 			if s.Fields[i].ZebraId < 0 {
-				fmt.Fprintf(os.Stderr, "\nzebrapack error: field '%s' is missing a zid number; cannot proceed under -fast\n", s.Fields[i].FieldTag)
-				os.Exit(1)
+				fmt.Fprintf(os.Stderr, "\nzebrapack warning: field '%s' is missing a zid number; cannot generate zebrapack code for '%s'\n", s.Fields[i].FieldTag, s.alias)
+				s.skip = true
+				return
 			}
 			// proceed
 			data = msgp.AppendInt64(nil, s.Fields[i].ZebraId)

@@ -105,7 +105,7 @@ func (u *unmarshalGen) gStruct(s *Struct) {
 func (u *unmarshalGen) tuple(s *Struct) {
 
 	// open block
-	sz := randIdent()
+	sz := gensym()
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.arrayCheck(strconv.Itoa(len(s.Fields)-s.SkipCount), sz, "")
@@ -188,7 +188,7 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 	lowered := b.Varname() // passed as argument
 	if b.Convert {
 		// begin 'tmp' block
-		refname = randIdent()
+		refname = gensym()
 		lowered = b.ToBase() + "(" + lowered + ")"
 		u.p.printf("\n{\nvar %s %s", refname, b.BaseType())
 	}
@@ -230,7 +230,7 @@ func (u *unmarshalGen) gArray(a *Array) {
 		return
 	}
 
-	sz := randIdent()
+	sz := gensym()
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.arrayCheck(a.SizeResolved, sz, "!nbs.IsNil(bts) && ")
@@ -243,7 +243,7 @@ func (u *unmarshalGen) gSlice(s *Slice) {
 	}
 	u.p.printf("\n if nbs.AlwaysNil { %s \n} else {\n",
 		s.ZeroLiteral(`(`+s.Varname()+`)`))
-	sz := randIdent()
+	sz := gensym()
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, arrayHeader)
 	u.p.resizeSlice(sz, s)
@@ -262,7 +262,7 @@ func (u *unmarshalGen) gMap(m *Map) {
 	}
 	u.p.printf("\n if nbs.AlwaysNil { %s \n} else {\n",
 		m.ZeroLiteral(m.Varname()))
-	sz := randIdent()
+	sz := gensym()
 	u.p.declare(sz, u32)
 	u.assignAndCheck(sz, mapHeader)
 

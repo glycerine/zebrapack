@@ -144,7 +144,7 @@ func (d *decodeGen) assignAndCheck(name string, typ string) {
 func (d *decodeGen) structAsTuple(s *Struct) {
 	nfields := len(s.Fields) - s.SkipCount
 
-	sz := randIdent()
+	sz := gensym()
 	d.p.declare(sz, u32)
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.arrayCheck(strconv.Itoa(nfields), sz, "")
@@ -248,7 +248,7 @@ func (d *decodeGen) gBase(b *BaseElem) {
 	// open block for 'tmp'
 	var tmp string
 	if b.Convert {
-		tmp = randIdent()
+		tmp = gensym()
 		d.p.printf("\n{ var %s %s", tmp, b.BaseType())
 	}
 
@@ -294,7 +294,7 @@ func (d *decodeGen) gMap(m *Map) {
 	if !d.p.ok() {
 		return
 	}
-	sz := randIdent()
+	sz := gensym()
 
 	// resize or allocate map
 	d.p.declare(sz, u32)
@@ -316,7 +316,7 @@ func (d *decodeGen) gSlice(s *Slice) {
 	if !d.p.ok() {
 		return
 	}
-	sz := randIdent()
+	sz := gensym()
 	d.p.declare(sz, u32)
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.resizeSlice(sz, s)
@@ -345,7 +345,7 @@ func (d *decodeGen) gArray(a *Array) {
 	} else {
 		d.p.printf(" else {\n")
 	}
-	sz := randIdent()
+	sz := gensym()
 	d.p.declare(sz, u32)
 	d.assignAndCheck(sz, arrayHeader)
 	d.p.arrayCheck(a.SizeResolved, sz, "!dc.IsNil() && ")

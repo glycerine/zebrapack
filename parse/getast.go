@@ -330,12 +330,14 @@ func (f *FileSet) PrintTo(p *gen.Printer) error {
 	sort.Strings(names)
 	for _, name := range names {
 		el := f.Identities[name]
-		el.SetVarname("z")
-		pushstate(el.TypeName())
-		err := p.Print(el)
-		popstate()
-		if err != nil {
-			return err
+		if !el.SkipMe() {
+			el.SetVarname("z")
+			pushstate(el.TypeName())
+			err := p.Print(el)
+			popstate()
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil

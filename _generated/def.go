@@ -7,6 +7,7 @@ import (
 )
 
 //go:generate zebrapack -msgp -o generated.go
+//go:generate zebrapack -o zebra_generated.go -method-prefix Zebra
 
 // All of the struct
 // definitions in this
@@ -37,6 +38,11 @@ type Fixed struct {
 	B bool
 }
 
+type PreviouslyAnon struct {
+	ValueA string `msg:"value_a"`
+	ValueB []byte `msg:"value_b"`
+}
+
 type TestType struct {
 	F   *float64          `msg:"float"`
 	Els map[string]string `msg:"elements"`
@@ -52,6 +58,12 @@ type TestType struct {
 	Slice1   []string
 	Slice2   []string
 	SlicePtr *[]string
+}
+
+type SimpleTestType struct {
+	F   *float64          `msg:"float" zid:"0"`
+	Els map[string]string `msg:"elements" zid:"1"`
+	Obj *PreviouslyAnon   `msg:"object" zid:"2"`
 }
 
 //msgp:tuple Object
