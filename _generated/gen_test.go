@@ -135,36 +135,3 @@ func TestIssue168(t *testing.T) {
 		t.Fatalf("got back %+v", test)
 	}
 }
-
-func Test11111HonorDefaultOmitEmpty(t *testing.T) {
-	// test that an empty struct is minimally
-	// encoding, as if omitempty is applied
-	// everywhere possible.
-	//
-
-	tt := &SimpleTestType{}
-
-	var buf bytes.Buffer
-
-	err := msgp.Encode(&buf, tt)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(buf.Bytes()) != 1 {
-		t.Fatalf("should have encoding of 1 byte since omitempty is on by default, had %v", len(buf.Bytes()))
-	}
-
-	tnew := new(SimpleTestType)
-
-	err = msgp.Decode(&buf, tnew)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if !reflect.DeepEqual(tt, tnew) {
-		t.Logf("in: %#v", tt)
-		t.Logf("out: %#v", tnew)
-		t.Fatal("objects not equal")
-	}
-}

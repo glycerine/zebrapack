@@ -7,7 +7,6 @@ import (
 )
 
 //go:generate zebrapack -msgp -o generated.go
-//go:generate zebrapack -o zebra_generated.go -method-prefix Zebra
 
 // All of the struct
 // definitions in this

@@ -420,7 +420,10 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) (out []gen.StructField, mis
 			if x.ZebraId >= 0 {
 				zidSet = append(zidSet, zid{zid: x.ZebraId, fieldName: x.FieldName})
 			} else {
-				missingZid = true
+				// allows mixed zid:"0" and msg:"-" fields.
+				if x.ZebraId < -2 {
+					missingZid = true
+				}
 			}
 		}
 		if len(fds) > 0 {
@@ -465,7 +468,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 	var skip bool
 	var deprecated bool
 	var showzero bool
-	var zebraId int64 = -2 // means NA. Use -1 for struct name if need be.
+	var zebraId int64 = -3 // means NA. Use -1 for struct name if need be. -2 means msg:"-" deliberately.
 	var isIface bool
 
 	// parse tag; otherwise field name is field tag
@@ -495,6 +498,7 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 		// ignore "-" fields
 		if tags[0] == "-" {
 			skip = true
+			zebraId = -2
 			// can't return early, need to track deprecated zids.
 			//return nil, nil
 		}
@@ -533,8 +537,10 @@ func (fs *FileSet) getField(f *ast.Field) ([]gen.StructField, error) {
 				if id < 0 {
 					skip = true
 				} else {
-					zebraId = int64(id)
-					//fmt.Printf("\n we see zebraId: %v\n", zebraId)
+					if !skip {
+						zebraId = int64(id)
+						//fmt.Printf("\n we see zebraId: %v\n", zebraId)
+					}
 				}
 			}
 			if len(f.Names) > 1 {
