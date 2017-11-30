@@ -14,7 +14,7 @@ import (
 
 func Test070PuttingZebrapackSchemaAtTopOfFileOnce(t *testing.T) {
 
-	cv.Convey("In a typical use case for ZebraPack, the schema can be written once at the top of the file, and then afterwards used to interpret the rest of the file.\n", t, func() {
+	cv.Convey("In a typical use case for ZebraPack, the schema can be written once at the top of the file, and then afterwards used to interpret the rest of the file. We don't test that fully yet (as the generated bindings are used below instead of purely library calls), but we do check that interfaces and slices of interfaces work here.\n", t, func() {
 
 		msgp2schema := FileHeaderplus{}.ZebraSchemaInMsgpack2Format()
 		var zSchema zebra.Schema
