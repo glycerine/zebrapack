@@ -8,7 +8,7 @@ import (
 //go:generate zebrapack
 //go:generate zebrapack -msgp -o my_msgp_gen.go -method-prefix=MSGP -io=false -tests=false
 
-const zebraSchemaId64 = 0x6eb25cc0f9a3e
+const zebraSchemaId64 int64 = 0x115d33d9fb554 // 305471992870228
 
 //func main() {}
 
