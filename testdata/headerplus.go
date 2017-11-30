@@ -39,20 +39,21 @@ type Header struct {
 }
 
 type Plus struct {
-	Tm  time.Time `zid:"0"`
-	N   int64     `zid:"1"`
-	S   string    `zid:"2"`
-	F   float64   `zid:"3"`
-	Pet Familiar  `msg:",iface" zid:"4"`
+	Tm    time.Time  `zid:"0"`
+	N     int64      `zid:"1"`
+	S     string     `zid:"2"`
+	F     float64    `zid:"3"`
+	Pet   Familiar   `msg:",iface" zid:"4"`
+	Flock []Familiar `msg:",iface" zid:"5"`
 }
 
 func (pl *Plus) NewValueAsInterface(typename string) interface{} {
-	fmt.Printf("\n DEBUG! NewValueAsInterface called with typename='%s'\n", typename)
+	//fmt.Printf("\n DEBUG! NewValueAsInterface called with typename='%s'\n", typename)
 	switch typename {
 	case "Dog":
 		return &Dog{}
 	case "Owl":
 		return &Owl{}
 	}
-	panic(fmt.Sprintf("unknown "))
+	panic(fmt.Sprintf("unknown typename '%s'", typename))
 }

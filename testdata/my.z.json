@@ -3,53 +3,6 @@
     "SourcePackage": "testdata",
     "ZebraSchemaId": 305471992870228,
     "Structs": {
-        "Tree": {
-            "StructName": "Tree",
-            "Fields": [
-                {
-                    "Zid": 0,
-                    "FieldGoName": "Chld",
-                    "FieldTagName": "Chld",
-                    "FieldTypeStr": "[]Tree",
-                    "FieldCategory": 26,
-                    "FieldFullType": {
-                        "Kind": 26,
-                        "Str": "Slice",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "Tree"
-                        }
-                    }
-                },
-                {
-                    "Zid": 1,
-                    "FieldGoName": "Str",
-                    "FieldTagName": "Str",
-                    "FieldTypeStr": "string",
-                    "FieldCategory": 23,
-                    "FieldPrimitive": 2,
-                    "FieldFullType": {
-                        "Kind": 2,
-                        "Str": "string"
-                    }
-                },
-                {
-                    "Zid": 2,
-                    "FieldGoName": "Par",
-                    "FieldTagName": "Par",
-                    "FieldTypeStr": "*S2",
-                    "FieldCategory": 28,
-                    "FieldFullType": {
-                        "Kind": 28,
-                        "Str": "Pointer",
-                        "Domain": {
-                            "Kind": 22,
-                            "Str": "S2"
-                        }
-                    }
-                }
-            ]
-        },
         "Big": {
             "StructName": "Big",
             "Fields": [
@@ -352,6 +305,53 @@
                         "Domain": {
                             "Kind": 22,
                             "Str": "Tree"
+                        }
+                    }
+                }
+            ]
+        },
+        "Tree": {
+            "StructName": "Tree",
+            "Fields": [
+                {
+                    "Zid": 0,
+                    "FieldGoName": "Chld",
+                    "FieldTagName": "Chld",
+                    "FieldTypeStr": "[]Tree",
+                    "FieldCategory": 26,
+                    "FieldFullType": {
+                        "Kind": 26,
+                        "Str": "Slice",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "Tree"
+                        }
+                    }
+                },
+                {
+                    "Zid": 1,
+                    "FieldGoName": "Str",
+                    "FieldTagName": "Str",
+                    "FieldTypeStr": "string",
+                    "FieldCategory": 23,
+                    "FieldPrimitive": 2,
+                    "FieldFullType": {
+                        "Kind": 2,
+                        "Str": "string"
+                    }
+                },
+                {
+                    "Zid": 2,
+                    "FieldGoName": "Par",
+                    "FieldTagName": "Par",
+                    "FieldTypeStr": "*S2",
+                    "FieldCategory": 28,
+                    "FieldFullType": {
+                        "Kind": 28,
+                        "Str": "Pointer",
+                        "Domain": {
+                            "Kind": 22,
+                            "Str": "S2"
                         }
                     }
                 }
