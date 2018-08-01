@@ -7,7 +7,7 @@ import (
 	"github.com/glycerine/zebrapack/msgp"
 	"github.com/glycerine/zebrapack/zebra"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 )
 
 func Test060ConvertZebraPackToMsgpack2(t *testing.T) {

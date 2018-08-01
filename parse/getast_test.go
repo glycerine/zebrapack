@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 	"github.com/glycerine/zebrapack/cfg"
 	"testing"
 )
