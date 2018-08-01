@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 )
 
 // run 'addzid -unexported' to see zid being added.

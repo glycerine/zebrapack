@@ -8,7 +8,7 @@ import (
 	"github.com/glycerine/zebrapack/msgp"
 	"github.com/glycerine/zebrapack/zebra"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 )
 
 func Test080ShowZero(t *testing.T) {

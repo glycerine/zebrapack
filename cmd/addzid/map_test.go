@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 )
 
 func Test910MapAddZid(t *testing.T) {

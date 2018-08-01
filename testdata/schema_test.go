@@ -9,7 +9,7 @@ import (
 	"github.com/glycerine/zebrapack/msgp"
 	"github.com/glycerine/zebrapack/zebra"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 )
 
 func Test070PuttingZebrapackSchemaAtTopOfFileOnce(t *testing.T) {

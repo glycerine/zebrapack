@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	cv "github.com/glycerine/goconvey/convey"
+	cv "github.com/smartystreets/goconvey/convey"
 )
 
 func TestCpCopiesFilesIntoDirHier(t *testing.T) {
