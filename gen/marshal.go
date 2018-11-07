@@ -175,6 +175,7 @@ func (m *marshalGen) mapstruct(s *Struct) {
 			m.p.printf("\n// string %q", s.Fields[i].FieldTag)
 		}
 		m.Fuse(data)
+		m.fuseHook()
 		next(m, s.Fields[i].FieldElem)
 
 		if fast || (s.hasOmitEmptyTags && s.Fields[i].OmitEmpty) {

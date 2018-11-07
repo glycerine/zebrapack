@@ -184,6 +184,7 @@ func (e *encodeGen) structmap(s *Struct) {
 			e.p.printf("\n// write %q", s.Fields[i].FieldTag)
 		}
 		e.Fuse(data)
+		e.fuseHook()
 		next(e, s.Fields[i].FieldElem)
 
 		if fast || (s.hasOmitEmptyTags && s.Fields[i].OmitEmpty) {
